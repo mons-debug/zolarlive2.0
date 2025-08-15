@@ -104,6 +104,12 @@ body {
 }
 
 .story-side {
+  transform: translateZ(1px);
+}
+
+/* iOS backface rendering fix */
+.story-front, .story-back {
+  -webkit-transform: translateZ(0);
   transform: translateZ(0);
 }
 

@@ -99,7 +99,7 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
                   alt={`${product.name} front`} 
                   fill 
                   sizes="100vw" 
-                  className="object-cover"
+                  className="object-cover will-change-transform"
                   priority={index === 0}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
@@ -154,7 +154,7 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
                     alt={`${product.name} back`} 
                     fill 
                     sizes="100vw" 
-                    className="object-cover opacity-40"
+                    className="object-cover opacity-40 will-change-transform"
                   />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-black via-gray-900 to-black" />
@@ -487,25 +487,26 @@ export default function ZolarShowcase() {
             // Card entrance with 3D rotation
             gsap.fromTo(
               storyCard,
-              { 
-                rotateX: -25,
-                rotateY: -10,
-                scale: 0.85,
-                opacity: 0,
-                transformPerspective: 1200
+              {
+                rotateX: -12,
+                rotateY: -4,
+                scale: 0.98,
+                opacity: 1,
+                transformPerspective: 1200,
               },
               {
                 rotateX: 0,
                 rotateY: 0,
                 scale: 1,
                 opacity: 1,
-                duration: 1.2,
+                duration: 0.8,
                 ease: "power3.out",
+                immediateRender: false,
                 scrollTrigger: {
                   trigger: storyWrapper,
-                  start: "top 80%",
-                  end: "top 40%",
-                  scrub: 1,
+                  start: "top 90%",
+                  end: "top 60%",
+                  scrub: 0.6,
                 },
               }
             );
@@ -514,16 +515,16 @@ export default function ZolarShowcase() {
             if (storyContent) {
               gsap.fromTo(
                 storyContent,
-                { y: 40, opacity: 0 },
+                { y: 16, opacity: 0.98 },
                 {
                   y: 0,
                   opacity: 1,
-                  duration: 0.8,
-                  delay: 0.3,
+                  duration: 0.6,
                   ease: "power3.out",
+                  immediateRender: false,
                   scrollTrigger: {
                     trigger: storyWrapper,
-                    start: "top 70%",
+                    start: "top 95%",
                     toggleActions: "play none none reverse",
                   },
                 }
