@@ -20,16 +20,35 @@ function MobileCarousel({ products }: { products: Product[] }) {
   const carouselRef = useRef<HTMLDivElement>(null);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
+  const [touchStartY, setTouchStartY] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStart(e.targetTouches[0].clientX);
+    setTouchStartY(e.targetTouches[0].clientY);
+    setIsDragging(false);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     setTouchEnd(e.targetTouches[0].clientX);
+    
+    const xDiff = Math.abs(e.targetTouches[0].clientX - touchStart);
+    const yDiff = Math.abs(e.targetTouches[0].clientY - touchStartY);
+    
+    // If horizontal movement is greater than vertical, prevent vertical scroll
+    if (xDiff > yDiff && xDiff > 10) {
+      e.preventDefault();
+      setIsDragging(true);
+      
+      // Prevent body scroll during horizontal swipe
+      document.body.style.overflow = 'hidden';
+    }
   };
 
   const handleTouchEnd = () => {
+    // Re-enable body scroll
+    document.body.style.overflow = '';
+    
     if (!touchStart || !touchEnd) return;
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > 50;
@@ -41,21 +60,31 @@ function MobileCarousel({ products }: { products: Product[] }) {
     if (isRightSwipe && currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
     }
+    
+    setIsDragging(false);
   };
 
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
   };
 
+  // Cleanup effect to ensure scroll is re-enabled
+  useLayoutEffect(() => {
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
+
   return (
     <div className="relative">
       {/* Carousel Container */}
       <div 
         ref={carouselRef}
-        className="overflow-hidden"
+        className={`overflow-hidden ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        style={{ touchAction: 'pan-x' }}
       >
         <div 
           className="flex transition-transform duration-300 ease-out"
