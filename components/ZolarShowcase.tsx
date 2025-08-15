@@ -14,10 +14,11 @@ if (typeof window !== "undefined") {
 // Size options
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 
-// Mobile Carousel Component for smooth swiping
+// Mobile Carousel Component with scroll-triggered auto-swipe
 function MobileCarousel({ products }: { products: Product[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const [touchStartY, setTouchStartY] = useState(0);
@@ -76,7 +77,7 @@ function MobileCarousel({ products }: { products: Product[] }) {
   }, []);
 
   return (
-    <div className="relative">
+    <div ref={containerRef} className="relative">
       {/* Carousel Container */}
       <div 
         ref={carouselRef}
@@ -124,37 +125,32 @@ function MobileCarousel({ products }: { products: Product[] }) {
 // Mobile Product Story Component - Interactive flip card with storytelling
 function MobileProductStory({ product, index }: { product: Product; index: number }) {
   const [isFlipped, setIsFlipped] = useState(false);
-  const [selectedSize, setSelectedSize] = useState<string>("");
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Story content for front/back
+  // Minimal story content - Morocco 2025 edition
   const storyContent = {
     borderline: {
       front: {
+        subtitle: product.subtitle,
         title: "The Night Vision",
-        story: "Born in LA's underground scene, where neon meets shadow.",
-        details: ["Glow-in-dark edges", "Heavyweight cotton", "Street-ready cut"],
-        mood: "For those who stand out in the dark"
+        mood: "For those who stand out"
       },
       back: {
-        title: "Borderline Philosophy",
-        story: "More than a print—it's a statement about living on the edge.",
-        details: ["Hand-printed locally", "Limited run", "Each piece unique"],
-        mood: "Where boundaries blur, style emerges"
+        subtitle: "Back View",
+        title: "Borderline",
+        mood: "Limited Edition"
       }
     },
     spin: {
       front: {
+        subtitle: product.subtitle,
         title: "Kinetic Energy",
-        story: "Inspired by motion, designed for movement.",
-        details: ["Dual-tone gradient", "Breathable fabric", "Athletic fit"],
-        mood: "Keep spinning, keep winning"
+        mood: "Keep spinning"
       },
       back: {
-        title: "Purpose in Motion",
-        story: "Every rotation has meaning, every move has purpose.",
-        details: ["Screen-printed art", "Soft premium cotton", "Versatile style"],
-        mood: "Find your purpose, spin your story"
+        subtitle: "Back View",
+        title: "Purpose",
+        mood: "Limited Edition"
       }
     }
   };
@@ -164,16 +160,6 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
-  };
-
-  const handleWhatsAppOrder = () => {
-    if (!selectedSize) {
-      alert("Please select a size first!");
-      return;
-    }
-    const message = `Hi! I want to order the ${product.name} in size ${selectedSize}. Please let me know the price and availability.`;
-    const whatsappUrl = `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
   };
 
   return (
@@ -221,45 +207,30 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
               </div>
               
-              {/* Story Content */}
-              <div className="relative z-10 h-full flex flex-col justify-between p-6">
-                {/* Top: Flip hint */}
-                <div className="flex justify-between items-start">
-                  <div className="flex gap-1">
-                    <span className="w-8 h-1 bg-white rounded-full"></span>
-                    <span className="w-8 h-1 bg-white/30 rounded-full"></span>
-                  </div>
-                  <button 
-                    onClick={handleFlip}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur text-white/80 text-sm hover:bg-white/20 transition-colors"
-                  >
-                    <span>View back</span>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                  </button>
-                </div>
-                
-                {/* Bottom: Story content */}
-                <div className="story-content">
-                  <p className={`text-xs uppercase tracking-[0.3em] ${product.theme.accentTextClass} mb-2`}>
-                    {product.subtitle}
-                  </p>
-                  <h3 className="text-4xl font-bold text-white mb-3">{currentStory.title}</h3>
-                  <p className="text-white/90 text-lg leading-relaxed mb-4">{currentStory.story}</p>
-                  
-                  {/* Story details */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {currentStory.details.map((detail, i) => (
-                      <span key={i} className="story-detail px-3 py-1 bg-white/10 backdrop-blur rounded-full text-xs text-white/80">
-                        {detail}
-                      </span>
-                    ))}
+                              {/* Minimal Content Overlay */}
+                <div className="relative z-10 h-full flex flex-col justify-between p-6">
+                  {/* Top: Flip hint */}
+                  <div className="flex justify-end">
+                    <button 
+                      onClick={handleFlip}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur text-white/80 text-sm hover:bg-white/20 transition-colors"
+                    >
+                      <span>View back</span>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                    </button>
                   </div>
                   
-                  <p className="text-sm text-white/60 italic">{currentStory.mood}</p>
+                  {/* Bottom: Minimal text */}
+                  <div className="story-content">
+                    <p className={`text-xs uppercase tracking-[0.3em] ${product.theme.accentTextClass} mb-2`}>
+                      {currentStory.subtitle}
+                    </p>
+                    <h3 className="text-3xl font-bold text-white mb-2">{currentStory.title}</h3>
+                    <p className="text-sm text-white/60 italic">{currentStory.mood}</p>
+                  </div>
                 </div>
-              </div>
             </div>
           </div>
           
@@ -292,14 +263,10 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
               </div>
               
-              {/* Back content */}
+              {/* Minimal Back content */}
               <div className="relative z-10 h-full flex flex-col justify-between p-6">
                 {/* Top: Flip back */}
-                <div className="flex justify-between items-start">
-                  <div className="flex gap-1">
-                    <span className="w-8 h-1 bg-white/30 rounded-full"></span>
-                    <span className="w-8 h-1 bg-white rounded-full"></span>
-                  </div>
+                <div className="flex justify-end">
                   <button 
                     onClick={handleFlip}
                     className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur text-white/80 text-sm hover:bg-white/20 transition-colors"
@@ -311,57 +278,13 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
                   </button>
                 </div>
                 
-                {/* Middle: Back story */}
+                {/* Bottom: Minimal back text */}
                 <div className="story-content">
-                  <h3 className="text-3xl font-bold text-white mb-3">{story.back.title}</h3>
-                  <p className="text-white/90 text-base leading-relaxed mb-4">{story.back.story}</p>
-                  
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {story.back.details.map((detail, i) => (
-                      <span key={i} className="story-detail px-3 py-1 bg-white/10 backdrop-blur rounded-full text-xs text-white/80">
-                        {detail}
-                      </span>
-                    ))}
-                  </div>
-                  
-                  <p className="text-sm text-white/60 italic mb-6">{story.back.mood}</p>
-                  
-                  {/* Size selection */}
-                  <div className="space-y-4">
-                    <p className="text-sm text-white/80 font-medium">Select your size:</p>
-                    <div className="grid grid-cols-3 gap-2">
-                      {SIZES.map((size) => (
-                        <button
-                          key={size}
-                          onClick={() => setSelectedSize(size)}
-                          className={`px-3 py-2 text-sm rounded-lg border transition-all ${
-                            selectedSize === size
-                              ? `${product.theme.buttonClass} border-transparent scale-105`
-                              : "border-white/20 bg-black/40 text-white hover:border-white/40"
-                          }`}
-                        >
-                          {size}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Bottom: Price and order */}
-                <div className="flex items-end justify-between">
-                  <div>
-                    <p className="text-sm text-white/60">Limited edition</p>
-                    <p className="text-4xl font-bold text-white">$45</p>
-                  </div>
-                  <button
-                    onClick={handleWhatsAppOrder}
-                    className={`inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all ${product.theme.buttonClass} shadow-lg hover:scale-105`}
-                  >
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.787"/>
-                    </svg>
-                    Order Now
-                  </button>
+                  <p className={`text-xs uppercase tracking-[0.3em] ${product.theme.accentTextClass} mb-2`}>
+                    {story.back.subtitle}
+                  </p>
+                  <h3 className="text-3xl font-bold text-white mb-2">{story.back.title}</h3>
+                  <p className="text-sm text-white/60 italic">{story.back.mood}</p>
                 </div>
               </div>
             </div>
@@ -754,7 +677,7 @@ export default function ZolarShowcase() {
       <div ref={headerRef} className="relative z-10 mx-auto max-w-7xl px-4 md:px-8 pt-16 md:pt-24 pb-8 md:pb-16 text-center">
         <h2 className="text-4xl md:text-6xl font-bold text-white">
           <span className="shop-word inline-block">Shop</span>{" "}
-          <span className="shop-word inline-block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-sky-400">Collection</span>
+          <span className="shop-word inline-block">Collection</span>
         </h2>
         <p className="mt-4 text-white/60 text-lg">
           <span className="shop-word inline-block">Limited</span>{" "}

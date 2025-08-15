@@ -29,43 +29,44 @@ const MACRO = [
 export default function MaterialFocus() {
   const root = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+    useEffect(() => {
     const el = root.current;
     if (!el || typeof window === "undefined") return;
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    
+
     const mm = gsap.matchMedia();
-    
-    // Desktop animations
+
+    // Desktop animations with proper scroll-based animation
     mm.add("(min-width: 768px)", () => {
       const cards = gsap.utils.toArray<HTMLElement>(".m-card");
+      
+      // Create a timeline that's scrubbed with scroll
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: el,
+          start: "top 50%",
+          end: "bottom 50%",
+          scrub: 0.5,
+        }
+      });
+      
+      // Add animations to timeline
       cards.forEach((card, i) => {
-        gsap.fromTo(
+        tl.fromTo(
           card,
-          { y: 24, opacity: 0.9 },
+          { 
+            y: 80, 
+            opacity: 0,
+            scale: 0.85,
+          },
           {
             y: 0,
             opacity: 1,
-            scrollTrigger: {
-              trigger: card,
-              start: "top 85%",
-              end: "bottom 45%",
-              scrub: reduce ? false : 0.6,
-            },
-          }
-        );
-        gsap.fromTo(
-          card,
-          { xPercent: (i - 1) * 6 },
-          {
-            xPercent: 0,
-            scrollTrigger: {
-              trigger: card,
-              start: "top 80%",
-              end: "bottom 40%",
-              scrub: reduce ? false : 0.6,
-            },
-          }
+            scale: 1,
+            duration: 1,
+            ease: "power2.out"
+          },
+          i * 0.1 // Slight stagger
         );
       });
     });
@@ -194,11 +195,18 @@ export default function MaterialFocus() {
     <section
       ref={root}
       id="materials"
-      className="relative z-10 w-[min(1100px,86vw)] mx-auto py-12 md:py-16"
+      className="relative z-10 w-[min(1100px,86vw)] mx-auto py-16 md:py-24"
     >
-      <h3 className="text-white text-2xl md:text-4xl font-semibold mb-4 md:mb-6 px-4 md:px-0">
-        Materials & Details
-      </h3>
+      <div className="text-center mb-12 md:mb-16">
+        <h3 className="text-white text-3xl md:text-5xl font-bold mb-3">
+          <span className="inline-block animate-fade-up">Materials</span>{" "}
+          <span className="inline-block animate-fade-up animation-delay-100">&</span>{" "}
+          <span className="inline-block animate-fade-up animation-delay-200">Details</span>
+        </h3>
+        <p className="text-white/60 text-base md:text-lg animate-fade-up animation-delay-300">
+          Crafted with precision, built to last
+        </p>
+      </div>
       
       {/* Mobile: Scroll-triggered animated cards */}
       <div className="md:hidden">
