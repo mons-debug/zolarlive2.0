@@ -33,49 +33,106 @@ export default function MaterialFocus() {
     const el = root.current;
     if (!el || typeof window === "undefined") return;
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const cards = gsap.utils.toArray<HTMLElement>(".m-card");
-    cards.forEach((card, i) => {
-      gsap.fromTo(
-        card,
-        { y: 24, opacity: 0.9 },
-        {
-          y: 0,
-          opacity: 1,
-          scrollTrigger: {
-            trigger: card,
-            start: "top 85%",
-            end: "bottom 45%",
-            scrub: reduce ? false : 0.6,
-          },
-        }
-      );
-      gsap.fromTo(
-        card,
-        { xPercent: (i - 1) * 6 },
-        {
-          xPercent: 0,
-          scrollTrigger: {
-            trigger: card,
-            start: "top 80%",
-            end: "bottom 40%",
-            scrub: reduce ? false : 0.6,
-          },
-        }
-      );
+    
+    const mm = gsap.matchMedia();
+    
+    // Desktop animations
+    mm.add("(min-width: 768px)", () => {
+      const cards = gsap.utils.toArray<HTMLElement>(".m-card");
+      cards.forEach((card, i) => {
+        gsap.fromTo(
+          card,
+          { y: 24, opacity: 0.9 },
+          {
+            y: 0,
+            opacity: 1,
+            scrollTrigger: {
+              trigger: card,
+              start: "top 85%",
+              end: "bottom 45%",
+              scrub: reduce ? false : 0.6,
+            },
+          }
+        );
+        gsap.fromTo(
+          card,
+          { xPercent: (i - 1) * 6 },
+          {
+            xPercent: 0,
+            scrollTrigger: {
+              trigger: card,
+              start: "top 80%",
+              end: "bottom 40%",
+              scrub: reduce ? false : 0.6,
+            },
+          }
+        );
+      });
     });
-    return () => ScrollTrigger.getAll().forEach((t) => t.kill());
+
+    // Mobile animations - simpler
+    mm.add("(max-width: 767px)", () => {
+      const cards = gsap.utils.toArray<HTMLElement>(".m-card");
+      cards.forEach((card) => {
+        gsap.fromTo(
+          card,
+          { y: 16, opacity: 0.8 },
+          {
+            y: 0,
+            opacity: 1,
+            scrollTrigger: {
+              trigger: card,
+              start: "top 90%",
+              end: "bottom 60%",
+              scrub: reduce ? false : 0.3,
+            },
+          }
+        );
+      });
+    });
+
+    return () => {
+      mm.revert();
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+    };
   }, []);
 
   return (
     <section
       ref={root}
       id="materials"
-      className="relative z-10 w-[min(1100px,86vw)] mx-auto py-16"
+      className="relative z-10 w-[min(1100px,86vw)] mx-auto py-12 md:py-16"
     >
-      <h3 className="text-white text-3xl md:text-4xl font-semibold mb-6">
+      <h3 className="text-white text-2xl md:text-4xl font-semibold mb-4 md:mb-6 px-4 md:px-0">
         Materials & Details
       </h3>
-      <div className="grid md:grid-cols-3 gap-6">
+      
+      {/* Mobile: Horizontal scroll */}
+      <div className="md:hidden -mx-4 px-4 overflow-x-auto">
+        <div className="flex gap-3 pb-4">
+          {MACRO.map((m, i) => (
+            <div
+              key={i}
+              className="m-card flex-none w-[280px] rounded-2xl border border-white/10 bg-black/40 backdrop-blur overflow-hidden"
+            >
+              <div className="relative h-40 overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={m.img} alt={m.title} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <div className="text-white text-lg font-semibold">{m.title}</div>
+                </div>
+              </div>
+              <div className="p-4">
+                <p className="text-white/70 text-sm">{m.body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: Grid */}
+      <div className="hidden md:grid md:grid-cols-3 gap-6">
         {MACRO.map((m, i) => (
           <div
             key={i}
