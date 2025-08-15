@@ -1,4 +1,5 @@
 import CTASticky from "@/components/CTASticky";
+import LoadingScreen from "@/components/LoadingScreen";
 import OriginSection from "@/components/OriginSection";
 import MaterialFocus from "@/components/MaterialFocus";
 import LookbookStrip from "@/components/LookbookStrip";
@@ -8,6 +9,7 @@ import ZolarShowcase from "@/components/ZolarShowcase";
 export default function Home() {
   return (
     <div className="min-h-screen">
+      <LoadingScreen />
       {/* Make Origin the first section */}
       <OriginSection />
       {/* ScrollStage: keep existing gradient stage and cards */}

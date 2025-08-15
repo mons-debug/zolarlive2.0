@@ -83,6 +83,10 @@ export default function OriginSection() {
       <div ref={heroImgRef} className="absolute inset-0 z-0 pointer-events-none select-none mix-blend-screen">
         <Image src="/images/banner.png" alt="Zolar hero" fill priority className="object-cover" />
       </div>
+      {/* Welcome Text Overlay */}
+      <div className="absolute top-20 left-0 right-0 z-20 text-center">
+        <h1 className="text-5xl md:text-7xl font-bold text-white">Welcome to Zolar</h1>
+      </div>
       {/* Top clean — global background stays black until this section scrolls in */}
       {/* No per-section background; global gradient renders behind */}
       <div className="relative z-10 w-[min(1000px,86vw)] text-center">
