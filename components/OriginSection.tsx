@@ -99,25 +99,32 @@ export default function OriginSection() {
           fill
           sizes="100vw"
           priority
-          className="object-cover md:hidden"
-          style={{ objectPosition: "center top" }}
+          className="object-contain md:hidden"
+          style={{ objectPosition: "center center" }}
         />
         {/* Desktop: keep screen blend */}
         <div className="hidden md:block mix-blend-screen">
-          <Image src="/images/banner.png" alt="Zolar hero" fill priority className="object-cover" />
+          <Image 
+            src="/images/banner.png" 
+            alt="Zolar hero" 
+            fill 
+            priority 
+            className="object-contain"
+            style={{ objectPosition: "center center" }}
+          />
         </div>
       </div>
       {/* Welcome Text Overlay */}
-      <div className="absolute top-20 left-0 right-0 z-50 text-center">
-        <h1 className="text-5xl md:text-7xl font-bold text-white animate-fade-in">Welcome to Zolar</h1>
-        <div className="text-xs tracking-[0.3em] text-white/40 uppercase mt-4 font-medium animate-fade-in animation-delay-200">
+      <div className="absolute top-16 md:top-20 left-0 right-0 z-50 text-center">
+        <h1 className="text-5xl md:text-7xl font-bold text-white animate-fade-in mb-2">Welcome to Zolar</h1>
+        <div className="text-xs tracking-[0.3em] text-white/40 uppercase font-medium animate-fade-in animation-delay-200">
           Established 2025 — Morocco
         </div>
       </div>
       {/* Top clean — global background stays black until this section scrolls in */}
       {/* No per-section background; global gradient renders behind */}
       <div className="relative z-10 w-[min(1000px,86vw)] text-center">
-        <div ref={logoRef} className="mx-auto mt-8 mb-4 sm:mb-6 w-[160px] sm:w-[220px] will-change-transform">
+        <div ref={logoRef} className="mx-auto mt-12 md:mt-16 mb-6 sm:mb-8 w-[160px] sm:w-[220px] will-change-transform">
           <Image src="/images/zolar-wordmark.svg" alt="Zolar wordmark" width={220} height={80} className="w-full h-auto" />
         </div>
         <div className="o-line text-xs tracking-[0.2em] text-white/60 uppercase">

@@ -4,6 +4,7 @@ import MaterialFocus from "@/components/MaterialFocus";
 import LookbookStrip from "@/components/LookbookStrip";
 import OutroCinematic from "@/components/OutroCinematic";
 import ZolarShowcase from "@/components/ZolarShowcase";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -14,11 +15,11 @@ export default function Home() {
       {/* ScrollStage: keep existing gradient stage and cards */}
       <div id="scroll-stage" className="relative">
         <ZolarShowcase />
-      </div>
+        </div>
       <MaterialFocus />
       <LookbookStrip />
       <OutroCinematic />
-      <footer id="page-footer" className="h-24" />
+      <Footer />
     </div>
   );
 }
