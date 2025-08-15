@@ -160,6 +160,25 @@ body {
   animation-delay: 0.3s;
 }
 
+/* SVG Icon animations */
+.svg-icon-wrapper {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.svg-icon-wrapper:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.svg-icon-wrapper svg {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  transition: all 0.3s ease;
+}
+
+.svg-icon-wrapper:hover svg {
+  filter: drop-shadow(0 6px 12px rgba(255, 255, 255, 0.1));
+}
+
 /* Prevent page background seams on ultra-wide with a fallback outer vignette */
 .page-vignette::before {
   content: "";
