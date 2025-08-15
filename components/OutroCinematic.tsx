@@ -141,70 +141,7 @@ export default function OutroCinematic({
               </div>
             </div>
 
-            {/* Per-product controls */}
-            {selectedBlack && (
-              <div className="grid md:grid-cols-12 gap-3 items-center">
-                <div className="md:col-span-3 flex items-center gap-3">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/p8.png" alt="Borderline Black" className="h-20 w-20 md:h-24 md:w-24 rounded-xl object-cover ring-1 ring-white/10 shadow" />
-                  <div className="text-white font-medium">Borderline Black</div>
-                </div>
-                <div className="md:col-span-6">
-                  <div className="text-white/70 text-xs mb-2">Size</div>
-                  <div className="flex flex-wrap gap-2">
-                    {SIZES.map((s) => (
-                      <button
-                        key={`b-${s}`}
-                        type="button"
-                        onClick={() => setSizeBlack(s)}
-                        className={`px-3 py-1.5 rounded-md text-xs border transition ${
-                          sizeBlack === s ? "bg-emerald-400 text-black border-transparent" : "bg-black/40 text-white border-white/20 hover:border-white/40"
-                        }`}
-                      >
-                        {s}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div className="md:col-span-3 flex items-center justify-end gap-2">
-                  <button type="button" aria-label="decrease" className="px-2 py-1 rounded-md bg-white/10 text-white" onClick={() => setQtyBlack((q) => Math.max(1, q - 1))}>-</button>
-                  <span className="min-w-6 text-center text-white">{qtyBlack}</span>
-                  <button type="button" aria-label="increase" className="px-2 py-1 rounded-md bg-white text-black" onClick={() => setQtyBlack((q) => q + 1)}>+</button>
-                </div>
-              </div>
-            )}
 
-            {selectedWhite && (
-              <div className="grid md:grid-cols-12 gap-3 items-center">
-                <div className="md:col-span-3 flex items-center gap-3">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/p5.png" alt="Spin for Purpose White" className="h-20 w-20 md:h-24 md:w-24 rounded-xl object-cover ring-1 ring-white/10 shadow" />
-                  <div className="text-white font-medium">Spin White</div>
-                </div>
-                <div className="md:col-span-6">
-                  <div className="text-white/70 text-xs mb-2">Size</div>
-                  <div className="flex flex-wrap gap-2">
-                    {SIZES.map((s) => (
-                      <button
-                        key={`w-${s}`}
-                        type="button"
-                        onClick={() => setSizeWhite(s)}
-                        className={`px-3 py-1.5 rounded-md text-xs border transition ${
-                          sizeWhite === s ? "bg-sky-400 text-black border-transparent" : "bg-black/40 text-white border-white/20 hover:border-white/40"
-                        }`}
-                      >
-                        {s}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div className="md:col-span-3 flex items-center justify-end gap-2">
-                  <button type="button" aria-label="decrease" className="px-2 py-1 rounded-md bg-white/10 text-white" onClick={() => setQtyWhite((q) => Math.max(1, q - 1))}>-</button>
-                  <span className="min-w-6 text-center text-white">{qtyWhite}</span>
-                  <button type="button" aria-label="increase" className="px-2 py-1 rounded-md bg-white text-black" onClick={() => setQtyWhite((q) => q + 1)}>+</button>
-                </div>
-              </div>
-            )}
 
             {/* WhatsApp CTA */}
             <div className="flex justify-end">
