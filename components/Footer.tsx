@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="relative bg-black/80 backdrop-blur-sm border-t border-white/10">
+    <footer className="relative zolar-gradient-vars border-t border-white/10">
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           {/* Logo and tagline */}

@@ -92,14 +92,14 @@ export default function OriginSection() {
     >
       {/* Image overlay: mobile full-bleed, desktop blended */}
       <div ref={heroImgRef} className="absolute inset-0 z-0 pointer-events-none select-none">
-        {/* Mobile: ensure full coverage and no bottom band */}
+        {/* Mobile: full screen coverage */}
         <Image
           src="/images/banner.png"
           alt="Zolar hero"
           fill
           sizes="100vw"
           priority
-          className="object-contain md:hidden"
+          className="object-cover md:hidden"
           style={{ objectPosition: "center center" }}
         />
         {/* Desktop: keep screen blend */}
@@ -109,7 +109,7 @@ export default function OriginSection() {
             alt="Zolar hero" 
             fill 
             priority 
-            className="object-contain"
+            className="object-cover"
             style={{ objectPosition: "center center" }}
           />
         </div>
