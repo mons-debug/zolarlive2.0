@@ -54,8 +54,17 @@ export default function OutroCinematic({
   }, []);
 
   return (
-    <section id="outro" ref={root} className="relative h-[90svh] grid place-items-center overflow-clip">
-      <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-black/30 backdrop-blur">
+    <section id="outro" ref={root} className="relative min-h-screen flex flex-col justify-center items-center px-4 overflow-clip">
+      {/* Title and CTA moved to top */}
+      <div className="out-text text-center mb-8">
+        <h3 className="text-white text-4xl md:text-5xl font-bold mb-4">
+          Borderline — Limited Release
+        </h3>
+        <p className="text-white/60 text-lg">Secure Yours</p>
+      </div>
+      
+      {/* Glassmorphic product selection card */}
+      <div className="relative rounded-3xl overflow-hidden bg-white/5 backdrop-blur-xl border border-white/20 shadow-2xl">
         {video ? (
           <video
             src={video}
@@ -74,9 +83,9 @@ export default function OutroCinematic({
           />
         )}
 
-        {/* Order panel inside the media card */}
-        <div className="absolute inset-x-4 md:inset-x-6 bottom-4 md:bottom-5 z-10">
-          <div className="rounded-2xl bg-black/70 backdrop-blur-md ring-1 ring-white/10 p-4 md:p-6 grid gap-4">
+        {/* Glassmorphic order panel */}
+        <div className="absolute inset-x-4 md:inset-x-6 bottom-4 md:bottom-6 z-10">
+          <div className="rounded-2xl bg-white/10 backdrop-blur-2xl border border-white/30 shadow-xl p-5 md:p-7 grid gap-4">
             {/* Summary row (top right) */}
             <div className="flex items-start justify-between">
               <div className="text-white/70 text-xs md:text-sm">Buy both and save <span className="text-emerald-300">20%</span></div>
@@ -94,7 +103,7 @@ export default function OutroCinematic({
             {/* Two product blocks side-by-side with larger images */}
             <div className="grid md:grid-cols-2 gap-4">
               {/* Black product block */}
-              <div className={`rounded-xl ring-1 ring-white/10 bg-white/5 p-3 md:p-4 ${selectedBlack ? "" : "opacity-60"}`}>
+              <div className={`rounded-xl bg-white/5 backdrop-blur-md border border-white/20 p-4 md:p-5 transition-all hover:bg-white/10 ${selectedBlack ? "" : "opacity-60"}`}>
                 <div className="flex items-center gap-3 md:gap-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/images/p8.png" alt="Borderline Black" className="h-24 w-24 md:h-32 md:w-32 rounded-2xl object-cover shadow" />
@@ -123,7 +132,7 @@ export default function OutroCinematic({
               </div>
 
               {/* White product block */}
-              <div className={`rounded-xl ring-1 ring-white/10 bg-white/5 p-3 md:p-4 ${selectedWhite ? "" : "opacity-60"}`}>
+              <div className={`rounded-xl bg-white/5 backdrop-blur-md border border-white/20 p-4 md:p-5 transition-all hover:bg-white/10 ${selectedWhite ? "" : "opacity-60"}`}>
                 <div className="flex items-center gap-3 md:gap-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/images/p5.png" alt="Spin for Purpose White" className="h-24 w-24 md:h-32 md:w-32 rounded-2xl object-cover shadow" />
@@ -239,17 +248,6 @@ export default function OutroCinematic({
             </div>
           </div>
         </div>
-      </div>
-      <div className="out-text text-center mt-6">
-        <h3 className="text-white text-3xl md:text-4xl font-semibold">
-          Borderline — Limited Release
-        </h3>
-        <a
-          href={ctaHref}
-          className="mt-4 inline-flex px-5 py-2 rounded-full bg-white text-black hover:opacity-90"
-        >
-          Secure Yours
-        </a>
       </div>
     </section>
   );
