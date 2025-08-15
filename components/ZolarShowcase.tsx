@@ -14,109 +14,334 @@ if (typeof window !== "undefined") {
 // Size options
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 
-// Horizontal Carousel Component - Scroll-driven horizontal cards
-function HorizontalCarousel({ products }: { products: Product[] }) {
-  const containerRef = useRef<HTMLDivElement>(null);
+// Mobile Carousel Component for smooth swiping
+function MobileCarousel({ products }: { products: Product[] }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
 
-  useLayoutEffect(() => {
-    if (typeof window === "undefined") return;
-    const container = containerRef.current;
-    const carousel = carouselRef.current;
-    if (!container || !carousel) return;
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
 
-    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
 
-    const ctx = gsap.context(() => {
-      // Pin the container and animate horizontal movement
-      const totalWidth = (products.length - 1) * 100;
-      
-      gsap.to(carousel, {
-        xPercent: -totalWidth,
-        ease: "none",
-        scrollTrigger: {
-          trigger: container,
-          start: "top top",
-          end: () => `+=${window.innerHeight * 1.5}`,
-          pin: true,
-          scrub: 1,
-          anticipatePin: 1,
-        },
-      });
-    }, container);
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
 
-    return () => ctx.revert();
-  }, [products.length]);
+    if (isLeftSwipe && currentIndex < products.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    }
+    if (isRightSwipe && currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrentIndex(index);
+  };
 
   return (
-    <div ref={containerRef} className="relative">
-      <div className="h-screen flex items-center overflow-hidden">
+    <div className="relative">
+      {/* Carousel Container */}
+      <div 
+        ref={carouselRef}
+        className="overflow-hidden"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         <div 
-          ref={carouselRef}
-          className="flex w-full"
+          className="flex transition-transform duration-300 ease-out"
+          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
           {products.map((product, index) => (
-            <div key={product.id} className="w-full flex-shrink-0 px-4">
-              <div className="h-[80vh] rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10 bg-black/60 backdrop-blur relative">
-                {/* Product Image */}
-                <div className="absolute inset-0">
-                  <Image 
-                    src={product.image} 
-                    alt={product.name} 
-                    fill 
-                    sizes="100vw" 
-                    className="object-cover"
-                    priority={index === 0}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-                </div>
-                
-                {/* Product Info */}
-                <div className="relative z-10 h-full flex flex-col justify-end p-6">
-                  <div className="text-center">
-                    <p className={`text-xs uppercase tracking-[0.3em] ${product.theme.accentTextClass} mb-2`}>
-                      {product.subtitle}
-                    </p>
-                    <h3 className="text-4xl font-bold text-white mb-3">{product.name}</h3>
-                    <p className="text-white/90 text-base mb-4">{product.description}</p>
-                    
-                    {/* Features */}
-                    <div className="flex justify-center gap-2 mb-6">
-                      {product.bullets.slice(0, 2).map((bullet, i) => (
-                        <span key={i} className="px-3 py-1 bg-white/10 backdrop-blur rounded-full text-xs text-white/80">
-                          {bullet}
-                        </span>
-                      ))}
-                    </div>
-                    
-                    <div className="flex justify-center">
-                      <button
-                        className={`inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all ${product.theme.buttonClass} shadow-lg hover:scale-105`}
-                      >
-                        <span>Shop Now</span>
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div key={product.id} className="w-full flex-shrink-0">
+              <MobileProductStory product={product} index={index} />
             </div>
           ))}
         </div>
       </div>
-      
-      {/* Scroll hint */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center">
-        <p className="text-white/60 text-sm">Scroll down to explore</p>
+
+      {/* Dots Indicator */}
+      <div className="flex justify-center mt-6 gap-2">
+        {products.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => goToSlide(index)}
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              index === currentIndex
+                ? 'bg-white scale-110'
+                : 'bg-white/30 hover:bg-white/50'
+            }`}
+          />
+        ))}
+      </div>
+
+      {/* Swipe Hint */}
+      <div className="text-center mt-4">
+        <p className="text-white/60 text-sm">Swipe to explore • Tap to flip</p>
       </div>
     </div>
   );
 }
 
+// Mobile Product Story Component - Interactive flip card with storytelling
+function MobileProductStory({ product, index }: { product: Product; index: number }) {
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [selectedSize, setSelectedSize] = useState<string>("");
+  const cardRef = useRef<HTMLDivElement>(null);
 
+  // Story content for front/back
+  const storyContent = {
+    borderline: {
+      front: {
+        title: "The Night Vision",
+        story: "Born in LA's underground scene, where neon meets shadow.",
+        details: ["Glow-in-dark edges", "Heavyweight cotton", "Street-ready cut"],
+        mood: "For those who stand out in the dark"
+      },
+      back: {
+        title: "Borderline Philosophy",
+        story: "More than a print—it's a statement about living on the edge.",
+        details: ["Hand-printed locally", "Limited run", "Each piece unique"],
+        mood: "Where boundaries blur, style emerges"
+      }
+    },
+    spin: {
+      front: {
+        title: "Kinetic Energy",
+        story: "Inspired by motion, designed for movement.",
+        details: ["Dual-tone gradient", "Breathable fabric", "Athletic fit"],
+        mood: "Keep spinning, keep winning"
+      },
+      back: {
+        title: "Purpose in Motion",
+        story: "Every rotation has meaning, every move has purpose.",
+        details: ["Screen-printed art", "Soft premium cotton", "Versatile style"],
+        mood: "Find your purpose, spin your story"
+      }
+    }
+  };
+
+  const story = product.id === "borderline-black" ? storyContent.borderline : storyContent.spin;
+  const currentStory = isFlipped ? story.back : story.front;
+
+  const handleFlip = () => {
+    setIsFlipped(!isFlipped);
+  };
+
+  const handleWhatsAppOrder = () => {
+    if (!selectedSize) {
+      alert("Please select a size first!");
+      return;
+    }
+    const message = `Hi! I want to order the ${product.name} in size ${selectedSize}. Please let me know the price and availability.`;
+    const whatsappUrl = `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  return (
+    <div ref={cardRef} className="mobile-story-wrapper relative h-[85vh] px-4 py-8">
+      {/* 3D Flip Card Container */}
+      <div className="story-card-container relative h-full" style={{ perspective: '1000px' }}>
+        <div 
+          className="story-card"
+          style={{
+            transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+            WebkitTransform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+            transformStyle: 'preserve-3d',
+            WebkitTransformStyle: 'preserve-3d',
+            transition: 'transform 0.7s',
+            WebkitTransition: '-webkit-transform 0.7s',
+            position: 'relative',
+            width: '100%',
+            height: '100%'
+          }}
+        >
+          
+          {/* Front Side */}
+          <div 
+            className="story-side story-front"
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              transform: 'rotateY(0deg)'
+            }}
+          >
+            <div className={`relative h-full rounded-3xl overflow-hidden shadow-2xl ring-1 ${product.theme.ringClass} bg-black/60`}>
+              {/* Product Image */}
+              <div className="absolute inset-0">
+                <Image 
+                  src={product.image} 
+                  alt={`${product.name} front`} 
+                  fill 
+                  sizes="100vw" 
+                  className="object-cover"
+                  priority={index === 0}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+              </div>
+              
+              {/* Story Content */}
+              <div className="relative z-10 h-full flex flex-col justify-between p-6">
+                {/* Top: Flip hint */}
+                <div className="flex justify-between items-start">
+                  <div className="flex gap-1">
+                    <span className="w-8 h-1 bg-white rounded-full"></span>
+                    <span className="w-8 h-1 bg-white/30 rounded-full"></span>
+                  </div>
+                  <button 
+                    onClick={handleFlip}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur text-white/80 text-sm hover:bg-white/20 transition-colors"
+                  >
+                    <span>View back</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                  </button>
+                </div>
+                
+                {/* Bottom: Story content */}
+                <div className="story-content">
+                  <p className={`text-xs uppercase tracking-[0.3em] ${product.theme.accentTextClass} mb-2`}>
+                    {product.subtitle}
+                  </p>
+                  <h3 className="text-4xl font-bold text-white mb-3">{currentStory.title}</h3>
+                  <p className="text-white/90 text-lg leading-relaxed mb-4">{currentStory.story}</p>
+                  
+                  {/* Story details */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {currentStory.details.map((detail, i) => (
+                      <span key={i} className="story-detail px-3 py-1 bg-white/10 backdrop-blur rounded-full text-xs text-white/80">
+                        {detail}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  <p className="text-sm text-white/60 italic">{currentStory.mood}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Back Side */}
+          <div 
+            className="story-side story-back"
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              transform: 'rotateY(180deg)'
+            }}
+          >
+            <div className={`relative h-full rounded-3xl overflow-hidden shadow-2xl ring-1 ${product.theme.ringClass} bg-black/80 backdrop-blur`}>
+              {/* Back view image */}
+              <div className="absolute inset-0">
+                {product.backImage ? (
+                  <Image 
+                    src={product.backImage} 
+                    alt={`${product.name} back`} 
+                    fill 
+                    sizes="100vw" 
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-black via-gray-900 to-black" />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+              </div>
+              
+              {/* Back content */}
+              <div className="relative z-10 h-full flex flex-col justify-between p-6">
+                {/* Top: Flip back */}
+                <div className="flex justify-between items-start">
+                  <div className="flex gap-1">
+                    <span className="w-8 h-1 bg-white/30 rounded-full"></span>
+                    <span className="w-8 h-1 bg-white rounded-full"></span>
+                  </div>
+                  <button 
+                    onClick={handleFlip}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur text-white/80 text-sm hover:bg-white/20 transition-colors"
+                  >
+                    <span>View front</span>
+                    <svg className="w-4 h-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                  </button>
+                </div>
+                
+                {/* Middle: Back story */}
+                <div className="story-content">
+                  <h3 className="text-3xl font-bold text-white mb-3">{story.back.title}</h3>
+                  <p className="text-white/90 text-base leading-relaxed mb-4">{story.back.story}</p>
+                  
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {story.back.details.map((detail, i) => (
+                      <span key={i} className="story-detail px-3 py-1 bg-white/10 backdrop-blur rounded-full text-xs text-white/80">
+                        {detail}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  <p className="text-sm text-white/60 italic mb-6">{story.back.mood}</p>
+                  
+                  {/* Size selection */}
+                  <div className="space-y-4">
+                    <p className="text-sm text-white/80 font-medium">Select your size:</p>
+                    <div className="grid grid-cols-3 gap-2">
+                      {SIZES.map((size) => (
+                        <button
+                          key={size}
+                          onClick={() => setSelectedSize(size)}
+                          className={`px-3 py-2 text-sm rounded-lg border transition-all ${
+                            selectedSize === size
+                              ? `${product.theme.buttonClass} border-transparent scale-105`
+                              : "border-white/20 bg-black/40 text-white hover:border-white/40"
+                          }`}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Bottom: Price and order */}
+                <div className="flex items-end justify-between">
+                  <div>
+                    <p className="text-sm text-white/60">Limited edition</p>
+                    <p className="text-4xl font-bold text-white">$45</p>
+                  </div>
+                  <button
+                    onClick={handleWhatsAppOrder}
+                    className={`inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all ${product.theme.buttonClass} shadow-lg hover:scale-105`}
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.787"/>
+                    </svg>
+                    Order Now
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // ProductCard component with size selection
 function ProductCard({ product }: { product: Product }) {
@@ -508,10 +733,10 @@ export default function ZolarShowcase() {
           <span className="shop-word inline-block">01</span>
         </p>
       </div>
-
-      {/* Mobile Horizontal Carousel */}
-      <div className="md:hidden">
-        <HorizontalCarousel products={products} />
+      
+      {/* Mobile Carousel */}
+      <div className="md:hidden px-4 pb-16">
+        <MobileCarousel products={products} />
       </div>
 
       {/* Desktop Layout */}
@@ -522,8 +747,9 @@ export default function ZolarShowcase() {
           const copyLift = idx === 1 ? " md:-translate-y-72 lg:-translate-y-80" : "";
           const mediaLift = idx === 1 ? " md:translate-y-40 lg:translate-y-48" : "";
           return (
-            <article key={product.id} id={product.id} className="gta-item">
-              <div className="grid md:grid-cols-12 gap-6 md:gap-10 items-center">
+            <article key={product.id} id={product.id} className="gta-item mobile-product-story">
+              {/* Desktop Layout */}
+              <div className="hidden md:grid md:grid-cols-12 gap-6 md:gap-10 items-center">
                 {/* Media */}
                 <div className={(isLeft ? "md:col-span-7 order-1" : "md:col-start-6 md:col-span-7 order-1") + mediaLift}>
                   <div className={`gta-media relative overflow-hidden rounded-3xl shadow-2xl ring-1 ${product.theme.ringClass} bg-black/60` } aria-label={`${product.name} media`}>
@@ -534,8 +760,8 @@ export default function ZolarShowcase() {
                 </div>
 
                 {/* Copy */}
-                <div className={(isLeft ? "md:col-start-9 md:col-span-4 order-2" : "md:col-start-1 md:col-span-4 order-2") + copyLift}>
-                  <ProductCard product={product} />
+                               <div className={(isLeft ? "md:col-start-9 md:col-span-4 order-2" : "md:col-start-1 md:col-span-4 order-2") + copyLift}>
+                   <ProductCard product={product} />
                 </div>
               </div>
             </article>
