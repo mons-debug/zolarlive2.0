@@ -70,24 +70,117 @@ export default function MaterialFocus() {
       });
     });
 
-    // Mobile animations - simpler
+    // Mobile animations - enhanced with parallax and stagger
     mm.add("(max-width: 767px)", () => {
-      const cards = gsap.utils.toArray<HTMLElement>(".m-card");
+      const cards = gsap.utils.toArray<HTMLElement>(".mobile-material-card");
+      
       cards.forEach((card) => {
+        const bg = card.querySelector(".mobile-material-bg img") as HTMLElement;
+        const content = card.querySelector(".mobile-material-content") as HTMLElement;
+        const title = card.querySelector(".mobile-material-title") as HTMLElement;
+        const text = card.querySelector(".mobile-material-text") as HTMLElement;
+        const indicator = card.querySelector(".mobile-material-indicator") as HTMLElement;
+        
+        // Card entrance with rotation
         gsap.fromTo(
           card,
-          { y: 16, opacity: 0.8 },
+          { 
+            y: 80, 
+            opacity: 0,
+            rotateX: -15,
+            transformPerspective: 1000
+          },
           {
             y: 0,
             opacity: 1,
+            rotateX: 0,
+            duration: 1,
+            ease: "power3.out",
             scrollTrigger: {
               trigger: card,
-              start: "top 90%",
-              end: "bottom 60%",
-              scrub: reduce ? false : 0.3,
+              start: "top 85%",
+              end: "top 60%",
+              scrub: 0.8,
             },
           }
         );
+        
+        // Background parallax
+        if (bg) {
+          gsap.fromTo(
+            bg,
+            { scale: 1.1, x: "10%" },
+            {
+              scale: 1.2,
+              x: "-10%",
+              ease: "none",
+              scrollTrigger: {
+                trigger: card,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 0.5,
+              },
+            }
+          );
+        }
+        
+        // Content slide in from left
+        if (content) {
+          gsap.fromTo(
+            content,
+            { x: -60, opacity: 0 },
+            {
+              x: 0,
+              opacity: 1,
+              duration: 0.8,
+              delay: 0.2,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: card,
+                start: "top 75%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+        
+        // Title and text stagger
+        if (title && text) {
+          gsap.fromTo(
+            [title, text],
+            { y: 20, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.6,
+              stagger: 0.1,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: card,
+                start: "top 70%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+        
+        // Indicator grow animation
+        if (indicator) {
+          gsap.fromTo(
+            indicator,
+            { scaleX: 0, transformOrigin: "left center" },
+            {
+              scaleX: 1,
+              duration: 0.8,
+              ease: "power2.inOut",
+              scrollTrigger: {
+                trigger: card,
+                start: "top 65%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
       });
     });
 
@@ -107,24 +200,29 @@ export default function MaterialFocus() {
         Materials & Details
       </h3>
       
-      {/* Mobile: Horizontal scroll */}
-      <div className="md:hidden -mx-4 px-4 overflow-x-auto">
-        <div className="flex gap-3 pb-4">
+      {/* Mobile: Scroll-triggered animated cards */}
+      <div className="md:hidden">
+        <div className="mobile-materials-wrapper space-y-4 px-4">
           {MACRO.map((m, i) => (
             <div
               key={i}
-              className="m-card flex-none w-[280px] rounded-2xl border border-white/10 bg-black/40 backdrop-blur overflow-hidden"
+              className="m-card mobile-material-card relative rounded-3xl overflow-hidden"
+              style={{ transform: 'translateZ(0)' }} // Hardware acceleration
             >
-              <div className="relative h-40 overflow-hidden">
+              {/* Background with parallax */}
+              <div className="mobile-material-bg absolute inset-0">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={m.img} alt={m.title} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <div className="text-white text-lg font-semibold">{m.title}</div>
-                </div>
+                <img src={m.img} alt={m.title} className="w-full h-full object-cover scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent" />
               </div>
-              <div className="p-4">
-                <p className="text-white/70 text-sm">{m.body}</p>
+              
+              {/* Content */}
+              <div className="relative z-10 h-48 flex items-center">
+                <div className="mobile-material-content p-6 max-w-[70%]">
+                  <h4 className="mobile-material-title text-2xl font-bold text-white mb-2">{m.title}</h4>
+                  <p className="mobile-material-text text-white/80 text-sm leading-relaxed">{m.body}</p>
+                  <div className="mobile-material-indicator mt-3 w-12 h-1 bg-gradient-to-r from-emerald-400 to-sky-400 rounded-full" />
+                </div>
               </div>
             </div>
           ))}

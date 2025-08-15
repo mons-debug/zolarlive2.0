@@ -250,38 +250,148 @@ export default function ZolarShowcase() {
 
         // Mobile parallax (lighter)
         mm.add("(max-width: 767px)", () => {
-          gsap.fromTo(
-            media,
-            { yPercent: -3, scale: 1.0 },
-            {
-              yPercent: 3,
-              scale: 1.01,
-              ease: "none",
-              scrollTrigger: {
-                trigger: row,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: 0.5,
-                invalidateOnRefresh: true,
-              },
-            }
-          );
+          // Mobile card animations
+          const mobileCard = row.querySelector(".mobile-card-wrapper") as HTMLElement | null;
+          const mobileBg = row.querySelector(".mobile-card-bg") as HTMLElement | null;
+          const mobileContent = row.querySelector(".mobile-content-inner") as HTMLElement | null;
+          const mobilePills = row.querySelectorAll(".mobile-feature-pill");
+          const mobileBtn = row.querySelector(".mobile-cta-btn") as HTMLElement | null;
 
-          gsap.fromTo(
-            copy,
-            { y: 10 },
-            {
-              y: -8,
-              ease: "none",
-              scrollTrigger: {
-                trigger: row,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: 0.5,
-                invalidateOnRefresh: true,
-              },
+          if (mobileCard) {
+            // Card entrance animation
+            gsap.fromTo(
+              mobileCard,
+              { y: 100, opacity: 0.7, scale: 0.95 },
+              {
+                y: 0,
+                opacity: 1,
+                scale: 1,
+                duration: 1,
+                ease: "power2.out",
+                scrollTrigger: {
+                  trigger: mobileCard,
+                  start: "top 85%",
+                  end: "top 50%",
+                  scrub: 0.8,
+                },
+              }
+            );
+
+            // Background parallax
+            if (mobileBg) {
+              gsap.fromTo(
+                mobileBg,
+                { yPercent: -10, scale: 1.1 },
+                {
+                  yPercent: 10,
+                  scale: 1.15,
+                  ease: "none",
+                  scrollTrigger: {
+                    trigger: mobileCard,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: 0.5,
+                  },
+                }
+              );
             }
-          );
+
+            // Content slide up
+            if (mobileContent) {
+              gsap.fromTo(
+                mobileContent,
+                { y: 60, opacity: 0 },
+                {
+                  y: 0,
+                  opacity: 1,
+                  duration: 0.8,
+                  ease: "power3.out",
+                  scrollTrigger: {
+                    trigger: mobileCard,
+                    start: "top 70%",
+                    toggleActions: "play none none reverse",
+                  },
+                }
+              );
+            }
+
+            // Pills stagger animation
+            if (mobilePills.length > 0) {
+              gsap.fromTo(
+                mobilePills,
+                { x: -20, opacity: 0 },
+                {
+                  x: 0,
+                  opacity: 1,
+                  duration: 0.5,
+                  stagger: 0.1,
+                  ease: "power2.out",
+                  scrollTrigger: {
+                    trigger: mobileCard,
+                    start: "top 65%",
+                    toggleActions: "play none none reverse",
+                  },
+                }
+              );
+            }
+
+            // Button bounce
+            if (mobileBtn) {
+              gsap.fromTo(
+                mobileBtn,
+                { scale: 0, opacity: 0 },
+                {
+                  scale: 1,
+                  opacity: 1,
+                  duration: 0.6,
+                  ease: "back.out(1.7)",
+                  scrollTrigger: {
+                    trigger: mobileCard,
+                    start: "top 60%",
+                    toggleActions: "play none none reverse",
+                  },
+                }
+              );
+            }
+          }
+
+          // Desktop elements (hidden on mobile, but still process for safety)
+          if (media) {
+            gsap.fromTo(
+              media,
+              { yPercent: -3, scale: 1.0 },
+              {
+                yPercent: 3,
+                scale: 1.01,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: row,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: 0.5,
+                  invalidateOnRefresh: true,
+                },
+              }
+            );
+          }
+
+          if (copy) {
+            gsap.fromTo(
+              copy,
+              { y: 10 },
+              {
+                y: -8,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: row,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: 0.5,
+                  invalidateOnRefresh: true,
+                },
+              }
+            );
+          }
         });
       });
     };
@@ -314,32 +424,47 @@ export default function ZolarShowcase() {
           const copyLift = idx === 1 ? " md:-translate-y-72 lg:-translate-y-80" : "";
           const mediaLift = idx === 1 ? " md:translate-y-40 lg:translate-y-48" : "";
           return (
-            <article key={product.id} id={product.id} className="gta-item">
+            <article key={product.id} id={product.id} className="gta-item mobile-product-card">
               {/* Mobile Layout */}
               <div className="md:hidden">
-                {/* Mobile: Full-width image with overlay info */}
-                <div className="relative group">
-                  <div className={`relative overflow-hidden rounded-2xl shadow-xl ring-1 ${product.theme.ringClass} bg-black/60 transition-all duration-300 group-active:scale-[0.98]`}>
-                    <div className="h-[50vh]">
-                      <Image src={product.image} alt={`${product.name} — ${product.subtitle ?? product.name}`} fill sizes="100vw" className="object-cover transition-transform duration-500 group-active:scale-105" priority={idx===0} />
+                {/* Mobile: Animated card with scroll effects */}
+                <div className="relative">
+                  <div className={`mobile-card-wrapper relative overflow-hidden rounded-3xl shadow-2xl ring-1 ${product.theme.ringClass} bg-black/50 backdrop-blur-sm`}>
+                    {/* Background image with parallax */}
+                    <div className="mobile-card-bg absolute inset-0 scale-110">
+                      <Image src={product.image} alt={`${product.name} — ${product.subtitle ?? product.name}`} fill sizes="100vw" className="object-cover" priority={idx===0} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
                     </div>
-                    {/* Overlay gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                    {/* Quick info overlay */}
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <p className={`text-xs uppercase tracking-[0.2em] ${product.theme.accentTextClass}`}>{product.subtitle}</p>
-                      <h3 className="text-2xl font-semibold text-white mt-1">{product.name}</h3>
-                      <p className="text-white/80 text-sm mt-2 line-clamp-2">{product.description}</p>
-                      <div className="mt-3 flex items-center justify-between">
-                        <span className="text-2xl font-bold text-white">$45</span>
-                        <span className={`text-xs px-3 py-1 rounded-full ${product.theme.buttonClass}`}>Quick Shop</span>
+                    
+                    {/* Content with slide-up animation */}
+                    <div className="mobile-card-content relative z-10 h-[65vh] flex flex-col justify-end p-6">
+                      <div className="mobile-content-inner">
+                        <p className={`text-xs uppercase tracking-[0.3em] ${product.theme.accentTextClass} mb-2`}>{product.subtitle}</p>
+                        <h3 className="text-3xl font-bold text-white mb-3">{product.name}</h3>
+                        <p className="text-white/90 text-base leading-relaxed mb-4">{product.description}</p>
+                        
+                        {/* Features pills */}
+                        <div className="flex flex-wrap gap-2 mb-6">
+                          {product.bullets.map((b, i) => (
+                            <span key={i} className="mobile-feature-pill inline-block px-3 py-1 bg-white/10 backdrop-blur rounded-full text-xs text-white/80">
+                              {b}
+                            </span>
+                          ))}
+                        </div>
+                        
+                        {/* Price and CTA */}
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm text-white/60">Starting at</p>
+                            <p className="text-4xl font-bold text-white">$45</p>
+                          </div>
+                          <button className={`mobile-cta-btn px-6 py-3 rounded-full font-medium transition-all ${product.theme.buttonClass} shadow-lg`}>
+                            Shop Now
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                {/* Mobile: Compact card below */}
-                <div className="mt-4">
-                  <ProductCard product={product} />
                 </div>
               </div>
 
