@@ -677,7 +677,7 @@ export default function ZolarShowcase() {
       <div ref={headerRef} className="relative z-10 mx-auto max-w-7xl px-4 md:px-8 pt-16 md:pt-24 pb-8 md:pb-16 text-center">
         <h2 className="text-4xl md:text-6xl font-bold text-white">
           <span className="shop-word inline-block">Shop</span>{" "}
-          <span className="shop-word inline-block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-sky-400">Collection</span>
+          <span className="shop-word inline-block">Collection</span>
         </h2>
         <p className="mt-4 text-white/60 text-lg">
           <span className="shop-word inline-block">Limited</span>{" "}
