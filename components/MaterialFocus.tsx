@@ -10,12 +10,12 @@ if (typeof window !== "undefined") {
 
 const MACRO = [
   {
-    img: "/images/macro-stitch.png",
+    img: "/images/IMG_9627.jpg",
     title: "Seams",
     body: "Durable ribbing and reinforced seams built to last.",
   },
   {
-    img: "/images/p9.png",
+    img: "/images/IMG_9620.jpg",
     title: "Print",
     body: "Soft-hand inks with crisp edges and deep blacks.",
   },
