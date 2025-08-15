@@ -1,4 +1,3 @@
-import CTASticky from "@/components/CTASticky";
 import LoadingScreen from "@/components/LoadingScreen";
 import OriginSection from "@/components/OriginSection";
 import MaterialFocus from "@/components/MaterialFocus";
@@ -18,7 +17,6 @@ export default function Home() {
       </div>
       <MaterialFocus />
       <LookbookStrip />
-      <CTASticky buyLink="#" />
       <OutroCinematic />
       <footer id="page-footer" className="h-24" />
     </div>

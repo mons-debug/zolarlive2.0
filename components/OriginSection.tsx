@@ -79,9 +79,22 @@ export default function OriginSection() {
       id="origin"
       className="relative h-[85svh] md:h-[100svh] grid place-items-center overflow-clip"
     >
-      {/* Image overlay that blends with the global green gradient and fades on scroll */}
-      <div ref={heroImgRef} className="absolute inset-0 z-0 pointer-events-none select-none mix-blend-screen">
-        <Image src="/images/banner.png" alt="Zolar hero" fill priority className="object-cover" />
+      {/* Image overlay: mobile full-bleed, desktop blended */}
+      <div ref={heroImgRef} className="absolute inset-0 z-0 pointer-events-none select-none">
+        {/* Mobile: ensure full coverage and no bottom band */}
+        <Image
+          src="/images/banner.png"
+          alt="Zolar hero"
+          fill
+          sizes="100vw"
+          priority
+          className="object-cover md:hidden"
+          style={{ objectPosition: "center center" }}
+        />
+        {/* Desktop: keep screen blend */}
+        <div className="hidden md:block mix-blend-screen">
+          <Image src="/images/banner.png" alt="Zolar hero" fill priority className="object-cover" />
+        </div>
       </div>
       {/* Welcome Text Overlay */}
       <div className="absolute top-20 left-0 right-0 z-20 text-center">
