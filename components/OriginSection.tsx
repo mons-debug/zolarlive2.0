@@ -117,22 +117,22 @@ export default function OriginSection() {
       {/* Top clean — global background stays black until this section scrolls in */}
       {/* No per-section background; global gradient renders behind */}
       <div className="relative z-10 w-[min(1000px,86vw)] text-center">
-        <div ref={logoRef} className="mx-auto mb-6 sm:mb-8 w-[160px] sm:w-[220px] will-change-transform">
+        <div ref={logoRef} className="mx-auto mt-8 mb-4 sm:mb-6 w-[160px] sm:w-[220px] will-change-transform">
           <Image src="/images/zolar-wordmark.svg" alt="Zolar wordmark" width={220} height={80} className="w-full h-auto" />
         </div>
         <div className="o-line text-xs tracking-[0.2em] text-white/60 uppercase">
           Drop 01 — Borderline
         </div>
-        <h2 className="o-line mt-3 text-5xl md:text-6xl font-semibold text-white">
+        <h2 className="o-line mt-2 text-5xl md:text-6xl font-semibold text-white">
           Made for Motion
         </h2>
-        <p className="o-line mt-4 text-white/70 max-w-2xl mx-auto text-lg">
+        <p className="o-line mt-3 text-white/70 max-w-2xl mx-auto text-lg">
           Premium streetwear crafted in Casablanca. Where North African heritage 
           meets contemporary design. First drop, infinite possibilities.
         </p>
         
         {/* Bottom SVG Icons */}
-        <div className="o-line mt-8 md:mt-12 flex justify-center items-center gap-12 md:gap-16">
+        <div className="o-line mt-6 md:mt-8 flex justify-center items-center gap-12 md:gap-16">
           {/* SVG Icon 1 */}
           <div className="svg-icon-wrapper opacity-0 transform translate-y-4">
             <svg className="w-20 h-20 md:w-24 md:h-24 text-white/80 hover:text-white transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 274.72 182.92">
