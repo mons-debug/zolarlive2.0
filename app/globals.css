@@ -98,6 +98,15 @@ body {
   transform: rotateY(180deg);
 }
 
+/* Ensure GPU for flip card container */
+.story-card, .story-side {
+  will-change: transform;
+}
+
+.story-side {
+  transform: translateZ(0);
+}
+
 /* Prevent page background seams on ultra-wide with a fallback outer vignette */
 .page-vignette::before {
   content: "";

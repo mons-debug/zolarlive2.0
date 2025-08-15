@@ -19,6 +19,7 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
   const [isFlipped, setIsFlipped] = useState(false);
   const [selectedSize, setSelectedSize] = useState<string>("");
   const cardRef = useRef<HTMLDivElement>(null);
+  const storyCardRef = useRef<HTMLDivElement>(null);
 
   // Story content for front/back
   const storyContent = {
@@ -59,6 +60,19 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
     setIsFlipped(!isFlipped);
   };
 
+  // Animate rotationY so it doesn't conflict with other GSAP transforms
+  useLayoutEffect(() => {
+    const el = storyCardRef.current;
+    if (!el) return;
+    gsap.to(el, {
+      rotationY: isFlipped ? 180 : 0,
+      duration: 0.6,
+      ease: "power2.out",
+      transformPerspective: 1200,
+      force3D: true,
+    });
+  }, [isFlipped]);
+
   const handleWhatsAppOrder = () => {
     if (!selectedSize) {
       alert("Please select a size first!");
@@ -73,7 +87,7 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
     <div ref={cardRef} className="mobile-story-wrapper relative h-[85vh] px-4 py-8">
       {/* 3D Flip Card Container */}
       <div className="story-card-container relative h-full perspective-1000">
-        <div className={`story-card relative w-full h-full transition-transform duration-700 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
+        <div ref={storyCardRef} className={`story-card relative w-full h-full transform-style-3d`}>
           
           {/* Front Side */}
           <div className="story-side story-front absolute inset-0 backface-hidden">
