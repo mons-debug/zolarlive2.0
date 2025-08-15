@@ -77,7 +77,7 @@ export default function OriginSection() {
     <section
       ref={root}
       id="origin"
-      className="relative h-[85svh] md:h-[100svh] grid place-items-center overflow-clip"
+      className="relative h-[100svh] md:h-[100svh] grid place-items-center overflow-clip"
     >
       {/* Image overlay: mobile full-bleed, desktop blended */}
       <div ref={heroImgRef} className="absolute inset-0 z-0 pointer-events-none select-none">
@@ -89,7 +89,7 @@ export default function OriginSection() {
           sizes="100vw"
           priority
           className="object-cover md:hidden"
-          style={{ objectPosition: "center center" }}
+          style={{ objectPosition: "center top" }}
         />
         {/* Desktop: keep screen blend */}
         <div className="hidden md:block mix-blend-screen">
