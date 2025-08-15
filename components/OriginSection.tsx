@@ -48,11 +48,11 @@ export default function OriginSection() {
       tl.to(document.documentElement, varTweens, 0);
 
       if (logoRef.current) {
-        // Gentle entrance without overlay; small scale drift across the pin
+        // Enhanced Borderline logo animation with rotation and glow
         tl.fromTo(
           logoRef.current,
-          { scale: 0.96, y: -8 },
-          { scale: 1.06, y: -2, ease: "none" },
+          { scale: 0.9, y: -12, rotation: -3, opacity: 0.8 },
+          { scale: 1.1, y: 4, rotation: 1, opacity: 1, ease: "none" },
           0
         );
       }
@@ -106,17 +106,28 @@ export default function OriginSection() {
         <div className="o-line text-xs tracking-[0.3em] text-white/40 uppercase mb-8 md:mb-12 font-medium">
           Established 2025 — Morocco
         </div>
-        <div ref={logoRef} className="mx-auto mb-6 sm:mb-8 w-[160px] sm:w-[220px] will-change-transform">
-          <Image src="/images/zolar-wordmark.svg" alt="Zolar wordmark" width={220} height={80} className="w-full h-auto" />
-        </div>
+                       <div ref={logoRef} className="mx-auto mb-6 sm:mb-8 w-[180px] sm:w-[260px] will-change-transform">
+                 <div className="relative">
+                   <Image 
+                     src="/images/BORDERLINE LOGOS DESIGN-04.svg" 
+                     alt="Borderline logo" 
+                     width={274} 
+                     height={182} 
+                     className="w-full h-auto drop-shadow-2xl filter brightness-110" 
+                   />
+                   <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/20 via-transparent to-sky-400/20 mix-blend-overlay rounded-lg"></div>
+                 </div>
+               </div>
         <div className="o-line text-xs tracking-[0.2em] text-white/60 uppercase">
           Drop 01 — Borderline
         </div>
-        <h2 className="o-line mt-3 text-5xl md:text-6xl font-semibold text-white">
-          Made for Motion
+                <h2 className="o-line mt-3 text-5xl md:text-6xl font-semibold text-white perspective-1000">
+          <span className="inline-block animate-fade-up">Made</span>{" "}
+          <span className="inline-block animate-fade-up animation-delay-100">for</span>{" "}
+          <span className="inline-block animate-fade-up animation-delay-200 bg-gradient-to-r from-emerald-400 to-sky-400 bg-clip-text text-transparent">Motion</span>
         </h2>
-        <p className="o-line mt-4 text-white/70 max-w-2xl mx-auto text-lg">
-          Premium streetwear crafted in Casablanca. Where North African heritage 
+        <p className="o-line mt-4 text-white/70 max-w-2xl mx-auto text-lg leading-relaxed">
+          Premium streetwear crafted in Casablanca. Where North African heritage
           meets contemporary design. First drop, infinite possibilities.
         </p>
       </div>
