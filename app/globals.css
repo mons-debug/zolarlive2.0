@@ -84,6 +84,20 @@ body {
   perspective: 1000px;
 }
 
+/* 3D flip card styles */
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
 /* Prevent page background seams on ultra-wide with a fallback outer vignette */
 .page-vignette::before {
   content: "";

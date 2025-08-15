@@ -14,6 +14,216 @@ if (typeof window !== "undefined") {
 // Size options
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 
+// Mobile Product Story Component - Interactive flip card with storytelling
+function MobileProductStory({ product, index }: { product: Product; index: number }) {
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [selectedSize, setSelectedSize] = useState<string>("");
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Story content for front/back
+  const storyContent = {
+    borderline: {
+      front: {
+        title: "The Night Vision",
+        story: "Born in LA's underground scene, where neon meets shadow.",
+        details: ["Glow-in-dark edges", "Heavyweight cotton", "Street-ready cut"],
+        mood: "For those who stand out in the dark"
+      },
+      back: {
+        title: "Borderline Philosophy",
+        story: "More than a print—it's a statement about living on the edge.",
+        details: ["Hand-printed locally", "Limited run", "Each piece unique"],
+        mood: "Where boundaries blur, style emerges"
+      }
+    },
+    spin: {
+      front: {
+        title: "Kinetic Energy",
+        story: "Inspired by motion, designed for movement.",
+        details: ["Dual-tone gradient", "Breathable fabric", "Athletic fit"],
+        mood: "Keep spinning, keep winning"
+      },
+      back: {
+        title: "Purpose in Motion",
+        story: "Every rotation has meaning, every move has purpose.",
+        details: ["Screen-printed art", "Soft premium cotton", "Versatile style"],
+        mood: "Find your purpose, spin your story"
+      }
+    }
+  };
+
+  const story = product.id === "borderline-black" ? storyContent.borderline : storyContent.spin;
+  const currentStory = isFlipped ? story.back : story.front;
+
+  const handleFlip = () => {
+    setIsFlipped(!isFlipped);
+  };
+
+  const handleWhatsAppOrder = () => {
+    if (!selectedSize) {
+      alert("Please select a size first!");
+      return;
+    }
+    const message = `Hi! I want to order the ${product.name} in size ${selectedSize}. Please let me know the price and availability.`;
+    const whatsappUrl = `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  return (
+    <div ref={cardRef} className="mobile-story-wrapper relative h-[85vh] px-4 py-8">
+      {/* 3D Flip Card Container */}
+      <div className="story-card-container relative h-full perspective-1000">
+        <div className={`story-card relative w-full h-full transition-transform duration-700 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
+          
+          {/* Front Side */}
+          <div className="story-side story-front absolute inset-0 backface-hidden">
+            <div className={`relative h-full rounded-3xl overflow-hidden shadow-2xl ring-1 ${product.theme.ringClass} bg-black/60`}>
+              {/* Product Image */}
+              <div className="absolute inset-0">
+                <Image 
+                  src={product.image} 
+                  alt={`${product.name} front`} 
+                  fill 
+                  sizes="100vw" 
+                  className="object-cover"
+                  priority={index === 0}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+              </div>
+              
+              {/* Story Content */}
+              <div className="relative z-10 h-full flex flex-col justify-between p-6">
+                {/* Top: Flip hint */}
+                <div className="text-right">
+                  <button 
+                    onClick={handleFlip}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur text-white/80 text-sm"
+                  >
+                    <span>Flip to back</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                  </button>
+                </div>
+                
+                {/* Bottom: Story content */}
+                <div className="story-content">
+                  <p className={`text-xs uppercase tracking-[0.3em] ${product.theme.accentTextClass} mb-2`}>
+                    {product.subtitle}
+                  </p>
+                  <h3 className="text-4xl font-bold text-white mb-3">{currentStory.title}</h3>
+                  <p className="text-white/90 text-lg leading-relaxed mb-4">{currentStory.story}</p>
+                  
+                  {/* Story details */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {currentStory.details.map((detail, i) => (
+                      <span key={i} className="story-detail px-3 py-1 bg-white/10 backdrop-blur rounded-full text-xs text-white/80">
+                        {detail}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  <p className="text-sm text-white/60 italic">{currentStory.mood}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Back Side */}
+          <div className="story-side story-back absolute inset-0 backface-hidden rotate-y-180">
+            <div className={`relative h-full rounded-3xl overflow-hidden shadow-2xl ring-1 ${product.theme.ringClass} bg-black/80 backdrop-blur`}>
+              {/* Back view image */}
+              <div className="absolute inset-0">
+                {product.backImage ? (
+                  <Image 
+                    src={product.backImage} 
+                    alt={`${product.name} back`} 
+                    fill 
+                    sizes="100vw" 
+                    className="object-cover opacity-40"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-black via-gray-900 to-black" />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+              </div>
+              
+              {/* Back content */}
+              <div className="relative z-10 h-full flex flex-col justify-between p-6">
+                {/* Top: Flip back */}
+                <div className="text-right">
+                  <button 
+                    onClick={handleFlip}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur text-white/80 text-sm"
+                  >
+                    <span>Flip to front</span>
+                    <svg className="w-4 h-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                  </button>
+                </div>
+                
+                {/* Middle: Back story */}
+                <div className="story-content">
+                  <h3 className="text-3xl font-bold text-white mb-3">{story.back.title}</h3>
+                  <p className="text-white/90 text-base leading-relaxed mb-4">{story.back.story}</p>
+                  
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {story.back.details.map((detail, i) => (
+                      <span key={i} className="story-detail px-3 py-1 bg-white/10 backdrop-blur rounded-full text-xs text-white/80">
+                        {detail}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  <p className="text-sm text-white/60 italic mb-6">{story.back.mood}</p>
+                  
+                  {/* Size selection */}
+                  <div className="space-y-4">
+                    <p className="text-sm text-white/80 font-medium">Select your size:</p>
+                    <div className="grid grid-cols-3 gap-2">
+                      {SIZES.map((size) => (
+                        <button
+                          key={size}
+                          onClick={() => setSelectedSize(size)}
+                          className={`px-3 py-2 text-sm rounded-lg border transition-all ${
+                            selectedSize === size
+                              ? `${product.theme.buttonClass} border-transparent scale-105`
+                              : "border-white/20 bg-black/40 text-white hover:border-white/40"
+                          }`}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Bottom: Price and order */}
+                <div className="flex items-end justify-between">
+                  <div>
+                    <p className="text-sm text-white/60">Limited edition</p>
+                    <p className="text-4xl font-bold text-white">$45</p>
+                  </div>
+                  <button
+                    onClick={handleWhatsAppOrder}
+                    className={`inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all ${product.theme.buttonClass} shadow-lg hover:scale-105`}
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.787"/>
+                    </svg>
+                    Order Now
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ProductCard component with size selection
 function ProductCard({ product }: { product: Product }) {
   const [selectedSize, setSelectedSize] = useState<string>("");
@@ -116,6 +326,7 @@ type Product = {
   description: string;
   bullets: string[];
   image: string;
+  backImage?: string; // Path to back view image
   align?: "left" | "right";
   theme: {
     accentTextClass: string;
@@ -138,6 +349,7 @@ const products: Product[] = [
       "Relaxed, slightly boxy fit",
     ],
     image: "/images/p8.png",
+    backImage: "/images/p9.png", // Back view
     align: "left",
     theme: {
       accentTextClass: "text-emerald-400",
@@ -159,6 +371,7 @@ const products: Product[] = [
       "Standard fit, true to size",
     ],
     image: "/images/p5.png",
+    backImage: "/images/p6.png", // Back view
     align: "right",
     theme: {
       accentTextClass: "text-sky-400",
@@ -250,64 +463,52 @@ export default function ZolarShowcase() {
 
         // Mobile parallax (lighter)
         mm.add("(max-width: 767px)", () => {
-          // Mobile card animations
-          const mobileCard = row.querySelector(".mobile-card-wrapper") as HTMLElement | null;
-          const mobileBg = row.querySelector(".mobile-card-bg") as HTMLElement | null;
-          const mobileContent = row.querySelector(".mobile-content-inner") as HTMLElement | null;
-          const mobilePills = row.querySelectorAll(".mobile-feature-pill");
-          const mobileBtn = row.querySelector(".mobile-cta-btn") as HTMLElement | null;
+          // Mobile story card animations
+          const storyWrapper = row.querySelector(".mobile-story-wrapper") as HTMLElement | null;
+          const storyCard = row.querySelector(".story-card") as HTMLElement | null;
+          const storyDetails = row.querySelectorAll(".story-detail");
+          const storyContent = row.querySelector(".story-content") as HTMLElement | null;
 
-          if (mobileCard) {
-            // Card entrance animation
+          if (storyWrapper && storyCard) {
+            // Card entrance with 3D rotation
             gsap.fromTo(
-              mobileCard,
-              { y: 100, opacity: 0.7, scale: 0.95 },
+              storyCard,
+              { 
+                rotateX: -25,
+                rotateY: -10,
+                scale: 0.85,
+                opacity: 0,
+                transformPerspective: 1200
+              },
               {
-                y: 0,
-                opacity: 1,
+                rotateX: 0,
+                rotateY: 0,
                 scale: 1,
-                duration: 1,
-                ease: "power2.out",
+                opacity: 1,
+                duration: 1.2,
+                ease: "power3.out",
                 scrollTrigger: {
-                  trigger: mobileCard,
-                  start: "top 85%",
-                  end: "top 50%",
-                  scrub: 0.8,
+                  trigger: storyWrapper,
+                  start: "top 80%",
+                  end: "top 40%",
+                  scrub: 1,
                 },
               }
             );
 
-            // Background parallax
-            if (mobileBg) {
+            // Story content fade in
+            if (storyContent) {
               gsap.fromTo(
-                mobileBg,
-                { yPercent: -10, scale: 1.1 },
-                {
-                  yPercent: 10,
-                  scale: 1.15,
-                  ease: "none",
-                  scrollTrigger: {
-                    trigger: mobileCard,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: 0.5,
-                  },
-                }
-              );
-            }
-
-            // Content slide up
-            if (mobileContent) {
-              gsap.fromTo(
-                mobileContent,
-                { y: 60, opacity: 0 },
+                storyContent,
+                { y: 40, opacity: 0 },
                 {
                   y: 0,
                   opacity: 1,
                   duration: 0.8,
+                  delay: 0.3,
                   ease: "power3.out",
                   scrollTrigger: {
-                    trigger: mobileCard,
+                    trigger: storyWrapper,
                     start: "top 70%",
                     toggleActions: "play none none reverse",
                   },
@@ -315,19 +516,19 @@ export default function ZolarShowcase() {
               );
             }
 
-            // Pills stagger animation
-            if (mobilePills.length > 0) {
+            // Story details stagger
+            if (storyDetails.length > 0) {
               gsap.fromTo(
-                mobilePills,
-                { x: -20, opacity: 0 },
+                storyDetails,
+                { scale: 0, opacity: 0 },
                 {
-                  x: 0,
+                  scale: 1,
                   opacity: 1,
-                  duration: 0.5,
+                  duration: 0.4,
                   stagger: 0.1,
-                  ease: "power2.out",
+                  ease: "back.out(1.7)",
                   scrollTrigger: {
-                    trigger: mobileCard,
+                    trigger: storyWrapper,
                     start: "top 65%",
                     toggleActions: "play none none reverse",
                   },
@@ -335,24 +536,20 @@ export default function ZolarShowcase() {
               );
             }
 
-            // Button bounce
-            if (mobileBtn) {
-              gsap.fromTo(
-                mobileBtn,
-                { scale: 0, opacity: 0 },
-                {
-                  scale: 1,
-                  opacity: 1,
-                  duration: 0.6,
-                  ease: "back.out(1.7)",
-                  scrollTrigger: {
-                    trigger: mobileCard,
-                    start: "top 60%",
-                    toggleActions: "play none none reverse",
-                  },
-                }
-              );
-            }
+            // Subtle floating animation while in view
+            gsap.to(storyCard, {
+              y: -10,
+              duration: 3,
+              repeat: -1,
+              yoyo: true,
+              ease: "power1.inOut",
+              scrollTrigger: {
+                trigger: storyWrapper,
+                start: "top 60%",
+                end: "bottom 40%",
+                toggleActions: "play pause resume pause",
+              },
+            });
           }
 
           // Desktop elements (hidden on mobile, but still process for safety)
@@ -424,48 +621,10 @@ export default function ZolarShowcase() {
           const copyLift = idx === 1 ? " md:-translate-y-72 lg:-translate-y-80" : "";
           const mediaLift = idx === 1 ? " md:translate-y-40 lg:translate-y-48" : "";
           return (
-            <article key={product.id} id={product.id} className="gta-item mobile-product-card">
-              {/* Mobile Layout */}
+            <article key={product.id} id={product.id} className="gta-item mobile-product-story">
+              {/* Mobile Layout - Story Card */}
               <div className="md:hidden">
-                {/* Mobile: Animated card with scroll effects */}
-                <div className="relative">
-                  <div className={`mobile-card-wrapper relative overflow-hidden rounded-3xl shadow-2xl ring-1 ${product.theme.ringClass} bg-black/50 backdrop-blur-sm`}>
-                    {/* Background image with parallax */}
-                    <div className="mobile-card-bg absolute inset-0 scale-110">
-                      <Image src={product.image} alt={`${product.name} — ${product.subtitle ?? product.name}`} fill sizes="100vw" className="object-cover" priority={idx===0} />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-                    </div>
-                    
-                    {/* Content with slide-up animation */}
-                    <div className="mobile-card-content relative z-10 h-[65vh] flex flex-col justify-end p-6">
-                      <div className="mobile-content-inner">
-                        <p className={`text-xs uppercase tracking-[0.3em] ${product.theme.accentTextClass} mb-2`}>{product.subtitle}</p>
-                        <h3 className="text-3xl font-bold text-white mb-3">{product.name}</h3>
-                        <p className="text-white/90 text-base leading-relaxed mb-4">{product.description}</p>
-                        
-                        {/* Features pills */}
-                        <div className="flex flex-wrap gap-2 mb-6">
-                          {product.bullets.map((b, i) => (
-                            <span key={i} className="mobile-feature-pill inline-block px-3 py-1 bg-white/10 backdrop-blur rounded-full text-xs text-white/80">
-                              {b}
-                            </span>
-                          ))}
-                        </div>
-                        
-                        {/* Price and CTA */}
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-sm text-white/60">Starting at</p>
-                            <p className="text-4xl font-bold text-white">$45</p>
-                          </div>
-                          <button className={`mobile-cta-btn px-6 py-3 rounded-full font-medium transition-all ${product.theme.buttonClass} shadow-lg`}>
-                            Shop Now
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <MobileProductStory product={product} index={idx} />
               </div>
 
               {/* Desktop Layout */}
