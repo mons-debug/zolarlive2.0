@@ -36,39 +36,38 @@ export default function MaterialFocus() {
 
     const mm = gsap.matchMedia();
 
-    // Desktop animations with pinning for complete animation
+    // Desktop animations with proper scroll-based animation
     mm.add("(min-width: 768px)", () => {
       const cards = gsap.utils.toArray<HTMLElement>(".m-card");
       
-      // Pin the section and animate cards
-      ScrollTrigger.create({
-        trigger: el,
-        start: "top top",
-        end: "+=100%",
-        pin: true,
-        anticipatePin: 1,
-        onEnter: () => {
-          cards.forEach((card, i) => {
-            gsap.fromTo(
-              card,
-              { 
-                y: 100, 
-                opacity: 0,
-                scale: 0.8,
-                rotateY: -15
-              },
-              {
-                y: 0,
-                opacity: 1,
-                scale: 1,
-                rotateY: 0,
-                duration: 0.8,
-                delay: i * 0.15,
-                ease: "power3.out"
-              }
-            );
-          });
+      // Create a timeline that's scrubbed with scroll
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: el,
+          start: "top 50%",
+          end: "bottom 50%",
+          scrub: 0.5,
         }
+      });
+      
+      // Add animations to timeline
+      cards.forEach((card, i) => {
+        tl.fromTo(
+          card,
+          { 
+            y: 80, 
+            opacity: 0,
+            scale: 0.85,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 1,
+            ease: "power2.out"
+          },
+          i * 0.1 // Slight stagger
+        );
       });
     });
 

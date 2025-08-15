@@ -63,29 +63,9 @@ export default function OutroCinematic({
         <p className="text-white/60 text-lg">Secure Yours</p>
       </div>
       
-      {/* Glassmorphic product selection card */}
-      <div className="relative rounded-3xl overflow-hidden bg-white/5 backdrop-blur-xl border border-white/20 shadow-2xl">
-        {video ? (
-          <video
-            src={video}
-            className="w-[min(1100px,90vw)] h-[58vh] object-cover"
-            autoPlay
-            loop
-            muted
-            playsInline
-          />
-        ) : (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={imageFallback}
-            alt="Zolar"
-            className="w-[min(1100px,90vw)] h-[58vh] object-cover"
-          />
-        )}
-
-        {/* Glassmorphic order panel */}
-        <div className="absolute inset-x-4 md:inset-x-6 bottom-4 md:bottom-6 z-10">
-          <div className="rounded-2xl bg-white/10 backdrop-blur-2xl border border-white/30 shadow-xl p-5 md:p-7 grid gap-4">
+      {/* Product selection panel without outer container */}
+      <div className="w-[min(1100px,90vw)] mx-auto">
+        <div className="rounded-2xl bg-white/10 backdrop-blur-2xl border border-white/30 shadow-xl p-5 md:p-7 grid gap-4">
             {/* Summary row (top right) */}
             <div className="flex items-start justify-between">
               <div className="text-white/70 text-xs md:text-sm">Buy both and save <span className="text-emerald-300">20%</span></div>
@@ -247,7 +227,6 @@ export default function OutroCinematic({
               </button>
             </div>
           </div>
-        </div>
       </div>
     </section>
   );
