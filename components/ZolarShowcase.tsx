@@ -53,7 +53,7 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
   };
 
   const story = product.id === "borderline-black" ? storyContent.borderline : storyContent.spin;
-  const currentStory = isFlipped ? story.back : story.front;
+  // We show fixed content per side; flip controls which side is visible
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
@@ -111,19 +111,19 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
                   <p className={`text-xs uppercase tracking-[0.3em] ${product.theme.accentTextClass} mb-2`}>
                     {product.subtitle}
                   </p>
-                  <h3 className="text-4xl font-bold text-white mb-3">{currentStory.title}</h3>
-                  <p className="text-white/90 text-lg leading-relaxed mb-4">{currentStory.story}</p>
+                  <h3 className="text-4xl font-bold text-white mb-3">{story.front.title}</h3>
+                  <p className="text-white/90 text-lg leading-relaxed mb-4">{story.front.story}</p>
                   
                   {/* Story details */}
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {currentStory.details.map((detail, i) => (
+                    {story.front.details.map((detail, i) => (
                       <span key={i} className="story-detail px-3 py-1 bg-white/10 backdrop-blur rounded-full text-xs text-white/80">
                         {detail}
                       </span>
                     ))}
                   </div>
                   
-                  <p className="text-sm text-white/60 italic">{currentStory.mood}</p>
+                  <p className="text-sm text-white/60 italic">{story.front.mood}</p>
                 </div>
               </div>
             </div>
