@@ -77,17 +77,6 @@ export default function OriginSection() {
           0.6
         );
       }
-
-      // Animate text below icons
-      const animatedText = el.querySelector(".animated-text");
-      if (animatedText) {
-        tl.fromTo(
-          animatedText,
-          { y: 20, opacity: 0 },
-          { y: 0, opacity: 1, ease: "power2.out" },
-          0.9
-        );
-      }
     }
 
     return () => {
@@ -142,20 +131,19 @@ export default function OriginSection() {
           meets contemporary design. First drop, infinite possibilities.
         </p>
         
-        {/* Bottom SVG Icons with animated text */}
-        <div className="o-line mt-8 md:mt-12 flex flex-col items-center gap-6">
-          <div className="flex justify-center items-center gap-8 md:gap-12">
-            {/* SVG Icon 1 */}
-            <div className="svg-icon-wrapper opacity-0 transform translate-y-4">
-              <svg className="w-8 h-8 md:w-12 md:h-12 text-white/80 hover:text-white transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 274.72 182.92">
+        {/* Bottom SVG Icons */}
+        <div className="o-line mt-8 md:mt-12 flex justify-center items-center gap-12 md:gap-16">
+          {/* SVG Icon 1 */}
+          <div className="svg-icon-wrapper opacity-0 transform translate-y-4">
+            <svg className="w-16 h-16 md:w-20 md:h-20 text-white/80 hover:text-white transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 274.72 182.92">
                 <path fill="currentColor" d="M71.8,154.02h132.2s-58.4-4.8-132.2,0Z"/>
                 <path fill="currentColor" d="M225.24,48.79c0-7.36-5.67-13.33-12.66-13.33s-12.66,5.97-12.66,13.33,5.24,12.86,11.86,13.29c-9.33,13.06-41.56,53.37-60.11,16.08l-11.72-33.85c6.14-.92,10.87-6.46,10.87-13.18,0-7.36-5.67-13.33-12.66-13.33s-12.66,5.97-12.66,13.33c0,6.71,4.71,12.25,10.83,13.18-5.82,18.83-26.71,75.82-55.77,35.4l-15.58-17.93c5.62-1.36,9.82-6.65,9.82-12.98,0-7.36-5.67-13.33-12.66-13.33s-12.66,5.97-12.66,13.33,5.67,13.33,12.66,13.33c.81,0,1.6-.09,2.37-.24l5.38,62.74-.47-9.5,1.66-4.25,10.6,11.1-5.35,6.85-4.75-5.8-1.68,1.61,1.85,21.55,133.6-1.32,1.87-17.84-2.46,2.46-6.79-8.97,5.96-8.34,4.33,4.88,5.75-55.01c6.32-.74,11.24-6.39,11.24-13.24ZM102.38,130.13l-6.96-10.68,6.96-8.58,8.28,11.07-8.28,8.2ZM138.48,131.87l-13.5-16.4,13.5-16.15,12.34,16.27-12.34,16.27ZM171.52,129.47l-6.79-8.97,5.96-8.34,8.53,9.61-7.7,7.7Z"/>
               </svg>
             </div>
             
-            {/* SVG Icon 2 */}
-            <div className="svg-icon-wrapper opacity-0 transform translate-y-4">
-              <svg className="w-8 h-8 md:w-12 md:h-12 text-white/80 hover:text-white transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 274.72 182.92">
+          {/* SVG Icon 2 */}
+          <div className="svg-icon-wrapper opacity-0 transform translate-y-4">
+            <svg className="w-16 h-16 md:w-20 md:h-20 text-white/80 hover:text-white transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 274.72 182.92">
                 <path fill="currentColor" stroke="currentColor" strokeMiterlimit="10" d="M75.27,37.73v90.02s31.08-18.07,63.67,0V36.72s-18.79-19.72-63.67,1.01Z"/>
                 <path fill="currentColor" stroke="currentColor" strokeMiterlimit="10" d="M84.85,129.15s40.11-.59,47.12,1.52c0,0,3.04-1.18-2.2-2.53s-40.53-2.2-41.63-1.44-1.94-.25-3.29,2.45Z"/>
                 <path fill="currentColor" stroke="currentColor" strokeMiterlimit="10" d="M70.07,42.42v92.39h68.87v8.28H63.49V46.64s1.39-3.72,6.59-4.22Z"/>
@@ -165,9 +153,9 @@ export default function OriginSection() {
               </svg>
             </div>
             
-            {/* SVG Icon 3 */}
-            <div className="svg-icon-wrapper opacity-0 transform translate-y-4">
-              <svg className="w-8 h-8 md:w-12 md:h-12 text-white/80 hover:text-white transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 274.72 182.92">
+          {/* SVG Icon 3 */}
+          <div className="svg-icon-wrapper opacity-0 transform translate-y-4">
+            <svg className="w-16 h-16 md:w-20 md:h-20 text-white/80 hover:text-white transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 274.72 182.92">
                 <rect fill="currentColor" x="162.91" y="102.43" width="44.85" height="11.21" rx="5.61" ry="5.61" transform="translate(202.85 321.85) rotate(-124.92)"/>
                 <path fill="currentColor" d="M181.71,118.05s-2.24,11.3,2.74,18.36h11.96s-14.7-18.36-14.7-18.36Z"/>
                 <rect fill="currentColor" x="99.02" y="47.11" width="44.85" height="11.21" rx="5.61" ry="5.61" transform="translate(8.7 122.12) rotate(-55.08)"/>
@@ -190,14 +178,6 @@ export default function OriginSection() {
                 <path fill="currentColor" d="M136.68,42.26s-7.02,10.96-6.71,11.09,5.86,4.67,8.35,3.55,6.73-4.98,6.73-4.98l-8.37-9.66Z"/>
               </svg>
             </div>
-          </div>
-          
-          {/* Animated text */}
-          <div className="text-center max-w-3xl mx-auto px-4">
-            <p className="animated-text text-white/60 text-sm md:text-base leading-relaxed opacity-0 transform translate-y-4">
-              Premium streetwear crafted in Casablanca. Where North African heritage meets contemporary design. First drop, infinite possibilities.
-            </p>
-          </div>
         </div>
       </div>
     </section>
