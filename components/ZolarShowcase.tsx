@@ -14,6 +14,87 @@ if (typeof window !== "undefined") {
 // Size options
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 
+// Mobile Scroll-Controlled Cards - Like Collection Gallery
+function MobileScrollCards({ products }: { products: Product[] }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (typeof window === "undefined") return;
+    const container = containerRef.current;
+    const track = trackRef.current;
+    if (!container || !track) return;
+
+    const mm = gsap.matchMedia();
+
+    // Pin and horizontal scroll like gallery
+    mm.add("(max-width: 768px)", () => {
+      const totalWidth = (products.length - 1) * 100; // Move from 0% to -100% for 2 cards
+      
+      gsap.to(track, {
+        xPercent: -totalWidth,
+        ease: "none",
+        scrollTrigger: {
+          trigger: container,
+          start: "top top",
+          end: () => `+=${window.innerHeight * 2}`, // Enough scroll distance
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+    });
+
+    return () => {
+      mm.revert();
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+    };
+  }, [products.length]);
+
+  return (
+    <section ref={containerRef} className="relative min-h-screen flex flex-col bg-gradient-to-b from-orange-900/10 via-amber-900/5 to-transparent">
+      {/* Header stays visible during pin */}
+      <div className="text-center pt-12 pb-6 px-4">
+        <h2 className="text-4xl font-bold text-white">
+          <span>Shop</span>{" "}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-sky-400">Collection</span>
+        </h2>
+        <p className="mt-2 text-white/60 text-base">Limited Drop 01</p>
+      </div>
+      
+      {/* Cards Container */}
+      <div className="relative overflow-hidden flex-1">
+        <div 
+          ref={trackRef}
+          className="flex h-full items-center"
+        >
+          {products.map((product, index) => (
+            <div key={product.id} className="w-full flex-shrink-0 px-4">
+              <MobileProductStory product={product} index={index} />
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Progress Dots */}
+      <div className="flex justify-center pb-8 gap-2">
+        {products.map((_, index) => (
+          <div
+            key={index}
+            className="w-2 h-2 rounded-full bg-white/30 transition-all duration-300"
+          />
+        ))}
+      </div>
+      
+      {/* Scroll Hint */}
+      <div className="text-center pb-4">
+        <p className="text-white/40 text-sm">Scroll to explore • Tap to flip</p>
+      </div>
+    </section>
+  );
+}
+
 // Mobile Carousel Component with scroll-triggered auto-swipe
 function MobileCarousel({ products }: { products: Product[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -777,8 +858,8 @@ export default function ZolarShowcase() {
 
   return (
     <section ref={scopeRef} aria-label="Zolar product showcase" className="relative">
-      {/* Animated section header */}
-      <div ref={headerRef} className="relative z-10 mx-auto max-w-7xl px-4 md:px-8 pt-16 md:pt-24 pb-8 md:pb-16 text-center">
+      {/* Animated section header - Desktop only */}
+      <div ref={headerRef} className="hidden md:block relative z-10 mx-auto max-w-7xl px-4 md:px-8 pt-16 md:pt-24 pb-8 md:pb-16 text-center">
         <h2 className="text-4xl md:text-6xl font-bold text-white">
           <span className="shop-word inline-block">Shop</span>{" "}
           <span className="shop-word inline-block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-sky-400">Collection</span>
@@ -790,9 +871,9 @@ export default function ZolarShowcase() {
         </p>
       </div>
       
-      {/* Mobile Carousel */}
-      <div className="md:hidden px-4 pb-16">
-        <MobileCarousel products={products} />
+      {/* Mobile Scroll-Controlled Cards */}
+      <div className="md:hidden">
+        <MobileScrollCards products={products} />
       </div>
 
       {/* Desktop Layout */}
