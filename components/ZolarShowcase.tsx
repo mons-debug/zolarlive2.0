@@ -172,13 +172,40 @@ const products: Product[] = [
 
 export default function ZolarShowcase() {
   const scopeRef = useRef<HTMLDivElement | null>(null);
+  const headerRef = useRef<HTMLDivElement | null>(null);
 
   useLayoutEffect(() => {
     if (typeof window === "undefined") return;
     const root = scopeRef.current;
+    const header = headerRef.current;
     if (!root) return;
 
     const mm = gsap.matchMedia();
+
+    // Animate header text on entry
+    if (header) {
+      gsap.fromTo(
+        header.querySelectorAll(".shop-word"),
+        {
+          y: 50,
+          opacity: 0,
+          scale: 0.8,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          duration: 1,
+          stagger: 0.15,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: header,
+            start: "top 75%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+    }
 
     const setup = () => {
       const rows = gsap.utils.toArray<HTMLElement>(root.querySelectorAll(".gta-item"));
@@ -268,7 +295,19 @@ export default function ZolarShowcase() {
 
   return (
     <section ref={scopeRef} aria-label="Zolar product showcase" className="relative">
-      <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-8 py-16 md:py-36 space-y-16 md:space-y-40">
+      {/* Animated section header */}
+      <div ref={headerRef} className="relative z-10 mx-auto max-w-7xl px-4 md:px-8 pt-16 md:pt-24 pb-8 md:pb-16 text-center">
+        <h2 className="text-4xl md:text-6xl font-bold text-white">
+          <span className="shop-word inline-block">Shop</span>{" "}
+          <span className="shop-word inline-block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-sky-400">Collection</span>
+        </h2>
+        <p className="mt-4 text-white/60 text-lg">
+          <span className="shop-word inline-block">Limited</span>{" "}
+          <span className="shop-word inline-block">Drop</span>{" "}
+          <span className="shop-word inline-block">01</span>
+        </p>
+      </div>
+      <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-8 pb-16 md:pb-36 space-y-16 md:space-y-40">
         {products.map((product, idx) => {
           const align = product.align ?? (idx % 2 === 0 ? "left" : "right");
           const isLeft = align === "left";
@@ -279,10 +318,10 @@ export default function ZolarShowcase() {
               {/* Mobile Layout */}
               <div className="md:hidden">
                 {/* Mobile: Full-width image with overlay info */}
-                <div className="relative">
-                  <div className={`relative overflow-hidden rounded-2xl shadow-xl ring-1 ${product.theme.ringClass} bg-black/60`}>
+                <div className="relative group">
+                  <div className={`relative overflow-hidden rounded-2xl shadow-xl ring-1 ${product.theme.ringClass} bg-black/60 transition-all duration-300 group-active:scale-[0.98]`}>
                     <div className="h-[50vh]">
-                      <Image src={product.image} alt={`${product.name} — ${product.subtitle ?? product.name}`} fill sizes="100vw" className="object-cover" priority={idx===0} />
+                      <Image src={product.image} alt={`${product.name} — ${product.subtitle ?? product.name}`} fill sizes="100vw" className="object-cover transition-transform duration-500 group-active:scale-105" priority={idx===0} />
                     </div>
                     {/* Overlay gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -291,6 +330,10 @@ export default function ZolarShowcase() {
                       <p className={`text-xs uppercase tracking-[0.2em] ${product.theme.accentTextClass}`}>{product.subtitle}</p>
                       <h3 className="text-2xl font-semibold text-white mt-1">{product.name}</h3>
                       <p className="text-white/80 text-sm mt-2 line-clamp-2">{product.description}</p>
+                      <div className="mt-3 flex items-center justify-between">
+                        <span className="text-2xl font-bold text-white">$45</span>
+                        <span className={`text-xs px-3 py-1 rounded-full ${product.theme.buttonClass}`}>Quick Shop</span>
+                      </div>
                     </div>
                   </div>
                 </div>

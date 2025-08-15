@@ -79,6 +79,11 @@ body {
   }
 }
 
+/* 3D perspective for text animations */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
 /* Prevent page background seams on ultra-wide with a fallback outer vignette */
 .page-vignette::before {
   content: "";
