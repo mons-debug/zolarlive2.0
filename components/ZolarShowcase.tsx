@@ -194,31 +194,33 @@ export default function ZolarShowcase() {
         mm.add("(max-width: 767px)", () => {
           gsap.fromTo(
             media,
-            { yPercent: -6, scale: 1.0 },
+            { yPercent: -3, scale: 1.0 },
             {
-              yPercent: 6,
-              scale: 1.02,
+              yPercent: 3,
+              scale: 1.01,
               ease: "none",
               scrollTrigger: {
                 trigger: row,
                 start: "top bottom",
                 end: "bottom top",
-                scrub: true,
+                scrub: 0.5,
+                invalidateOnRefresh: true,
               },
             }
           );
 
           gsap.fromTo(
             copy,
-            { y: 18 },
+            { y: 10 },
             {
-              y: -12,
+              y: -8,
               ease: "none",
               scrollTrigger: {
                 trigger: row,
                 start: "top bottom",
                 end: "bottom top",
-                scrub: true,
+                scrub: 0.5,
+                invalidateOnRefresh: true,
               },
             }
           );

@@ -53,7 +53,15 @@ export default function GlobalGradientStage() {
   }, []);
 
   return (
-    <div ref={bgRef} className="zolar-gradient-vars fixed inset-0 -z-10" aria-hidden />
+    <div 
+      ref={bgRef} 
+      className="zolar-gradient-vars fixed inset-0 -z-10" 
+      style={{ 
+        WebkitTransform: 'translate3d(0,0,0)',
+        transform: 'translate3d(0,0,0)'
+      }}
+      aria-hidden 
+    />
   );
 }
 
