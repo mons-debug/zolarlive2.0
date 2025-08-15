@@ -103,8 +103,8 @@ export default function OriginSection() {
       {/* Top clean — global background stays black until this section scrolls in */}
       {/* No per-section background; global gradient renders behind */}
       <div className="relative z-10 w-[min(1000px,86vw)] text-center">
-        <div className="o-line text-xs tracking-[0.3em] text-white/40 uppercase mb-8 md:mb-12">
-          Established 2024 — Los Angeles
+        <div className="o-line text-xs tracking-[0.3em] text-white/40 uppercase mb-8 md:mb-12 font-medium">
+          Established 2025 — Morocco
         </div>
         <div ref={logoRef} className="mx-auto mb-6 sm:mb-8 w-[160px] sm:w-[220px] will-change-transform">
           <Image src="/images/zolar-wordmark.svg" alt="Zolar wordmark" width={220} height={80} className="w-full h-auto" />
@@ -115,9 +115,9 @@ export default function OriginSection() {
         <h2 className="o-line mt-3 text-5xl md:text-6xl font-semibold text-white">
           Made for Motion
         </h2>
-        <p className="o-line mt-4 text-white/70 max-w-2xl mx-auto">
-          Heavyweight builds, soft-touch inks, clean silhouettes. Born at night
-          shoots, tuned for daily rotation.
+        <p className="o-line mt-4 text-white/70 max-w-2xl mx-auto text-lg">
+          Premium streetwear crafted in Casablanca. Where North African heritage 
+          meets contemporary design. First drop, infinite possibilities.
         </p>
       </div>
     </section>

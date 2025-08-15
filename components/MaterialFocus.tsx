@@ -29,43 +29,45 @@ const MACRO = [
 export default function MaterialFocus() {
   const root = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+    useEffect(() => {
     const el = root.current;
     if (!el || typeof window === "undefined") return;
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    
+
     const mm = gsap.matchMedia();
-    
-    // Desktop animations
+
+    // Desktop animations with better scroll sync
     mm.add("(min-width: 768px)", () => {
       const cards = gsap.utils.toArray<HTMLElement>(".m-card");
+      
+      // Create a timeline for synchronized animations
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: el,
+          start: "top 60%",
+          end: "bottom 40%",
+          scrub: 1,
+        }
+      });
+      
       cards.forEach((card, i) => {
-        gsap.fromTo(
+        tl.fromTo(
           card,
-          { y: 24, opacity: 0.9 },
+          { 
+            y: 60, 
+            opacity: 0,
+            scale: 0.9,
+            rotateX: -10
+          },
           {
             y: 0,
             opacity: 1,
-            scrollTrigger: {
-              trigger: card,
-              start: "top 85%",
-              end: "bottom 45%",
-              scrub: reduce ? false : 0.6,
-            },
-          }
-        );
-        gsap.fromTo(
-          card,
-          { xPercent: (i - 1) * 6 },
-          {
-            xPercent: 0,
-            scrollTrigger: {
-              trigger: card,
-              start: "top 80%",
-              end: "bottom 40%",
-              scrub: reduce ? false : 0.6,
-            },
-          }
+            scale: 1,
+            rotateX: 0,
+            duration: 1,
+            ease: "power2.out"
+          },
+          i * 0.2 // Stagger effect
         );
       });
     });

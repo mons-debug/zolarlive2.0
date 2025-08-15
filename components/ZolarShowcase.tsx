@@ -14,10 +14,11 @@ if (typeof window !== "undefined") {
 // Size options
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 
-// Mobile Carousel Component for smooth swiping
+// Mobile Carousel Component with scroll-triggered auto-swipe
 function MobileCarousel({ products }: { products: Product[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const [touchStartY, setTouchStartY] = useState(0);
@@ -68,15 +69,41 @@ function MobileCarousel({ products }: { products: Product[] }) {
     setCurrentIndex(index);
   };
 
-  // Cleanup effect to ensure scroll is re-enabled
+  // Auto-swipe based on scroll position
   useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container || typeof window === "undefined") return;
+
+    const ctx = gsap.context(() => {
+      // Pin the carousel section and auto-advance cards based on scroll
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: container,
+          start: "top center",
+          end: "bottom center",
+          scrub: 1,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            const targetIndex = Math.min(
+              Math.floor(progress * products.length),
+              products.length - 1
+            );
+            if (targetIndex !== currentIndex) {
+              setCurrentIndex(targetIndex);
+            }
+          }
+        }
+      });
+    }, container);
+
     return () => {
+      ctx.revert();
       document.body.style.overflow = '';
     };
-  }, []);
+  }, [currentIndex, products.length]);
 
   return (
-    <div className="relative">
+    <div ref={containerRef} className="relative min-h-[100vh]">
       {/* Carousel Container */}
       <div 
         ref={carouselRef}
@@ -127,33 +154,33 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
   const [selectedSize, setSelectedSize] = useState<string>("");
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Story content for front/back
+  // Story content for front/back - Morocco 2025 edition
   const storyContent = {
     borderline: {
       front: {
         title: "The Night Vision",
-        story: "Born in LA's underground scene, where neon meets shadow.",
-        details: ["Glow-in-dark edges", "Heavyweight cotton", "Street-ready cut"],
+        story: "Crafted in Casablanca's ateliers, where tradition meets future.",
+        details: ["Glow-in-dark edges", "Moroccan cotton", "Street-ready cut"],
         mood: "For those who stand out in the dark"
       },
       back: {
         title: "Borderline Philosophy",
-        story: "More than a print—it's a statement about living on the edge.",
-        details: ["Hand-printed locally", "Limited run", "Each piece unique"],
+        story: "Inspired by Moroccan nights and Mediterranean dreams.",
+        details: ["Hand-printed in Marrakech", "Limited run", "Each piece unique"],
         mood: "Where boundaries blur, style emerges"
       }
     },
     spin: {
       front: {
         title: "Kinetic Energy",
-        story: "Inspired by motion, designed for movement.",
+        story: "From the souks to the streets, always in motion.",
         details: ["Dual-tone gradient", "Breathable fabric", "Athletic fit"],
         mood: "Keep spinning, keep winning"
       },
       back: {
         title: "Purpose in Motion",
-        story: "Every rotation has meaning, every move has purpose.",
-        details: ["Screen-printed art", "Soft premium cotton", "Versatile style"],
+        story: "Every thread tells a story of North African craftsmanship.",
+        details: ["Artisan screen-print", "Premium cotton", "Versatile style"],
         mood: "Find your purpose, spin your story"
       }
     }
