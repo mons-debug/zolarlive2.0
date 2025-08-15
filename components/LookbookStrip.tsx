@@ -68,7 +68,7 @@ export default function LookbookStrip() {
         });
       });
 
-      // Mobile: Horizontal scroll on vertical scroll - much slower
+      // Mobile: Pin and horizontal scroll like desktop
       mm.add("(max-width: 899px)", () => {
         const total = track.scrollWidth - el.clientWidth;
         gsap.to(track, {
@@ -76,9 +76,11 @@ export default function LookbookStrip() {
           ease: "none",
           scrollTrigger: {
             trigger: el,
-            start: "top bottom",
-            end: () => `+=${window.innerHeight * 2}`, // Much more scroll distance
-            scrub: 1, // Smoother scrub
+            start: "top top",
+            end: () => `+=${total * 1.8}`, // More scroll distance for mobile
+            scrub: 1.5, // Smooth scrub
+            pin: true,
+            anticipatePin: 1,
             invalidateOnRefresh: true,
           },
         });
@@ -99,7 +101,7 @@ export default function LookbookStrip() {
           <span className="word inline-block">Gallery</span>
         </h3>
         <p className="text-white/60 text-sm md:text-base mt-3">
-          <span className="word inline-block">Swipe</span>{" "}
+          <span className="word inline-block">Scroll</span>{" "}
           <span className="word inline-block">through</span>{" "}
           <span className="word inline-block">our</span>{" "}
           <span className="word inline-block">looks</span>
