@@ -88,7 +88,7 @@ export default function OriginSection() {
     <section
       ref={root}
       id="origin"
-      className="relative h-[100svh] md:h-[100svh] grid place-items-center overflow-clip"
+      className="relative h-[85svh] md:h-[90svh] grid place-items-center overflow-clip"
     >
       {/* Image overlay: mobile full-bleed, desktop blended */}
       <div ref={heroImgRef} className="absolute inset-0 z-0 pointer-events-none select-none">
