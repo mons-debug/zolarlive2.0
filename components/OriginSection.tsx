@@ -91,7 +91,7 @@ export default function OriginSection() {
       className="relative h-[100svh] grid place-items-center overflow-clip"
     >
       {/* Image overlay: mobile full-bleed, desktop blended */}
-      <div ref={heroImgRef} className="absolute inset-0 z-0 pointer-events-none select-none">
+      <div ref={heroImgRef} className="absolute inset-0 z-0 pointer-events-none select-none scale-105 origin-center">
         {/* Mobile: full screen coverage */}
         <Image
           src="/images/banner.png"
@@ -100,7 +100,7 @@ export default function OriginSection() {
           sizes="100vw"
           priority
           className="object-cover md:hidden"
-          style={{ objectPosition: "center top" }}
+          style={{ objectPosition: "center center", objectFit: "cover", minHeight: "100%" }}
         />
         {/* Desktop: keep screen blend */}
         <div className="hidden md:block mix-blend-screen">
@@ -110,7 +110,7 @@ export default function OriginSection() {
             fill 
             priority 
             className="object-cover"
-            style={{ objectPosition: "center top" }}
+            style={{ objectPosition: "center center", objectFit: "cover", minHeight: "100%" }}
           />
         </div>
       </div>
