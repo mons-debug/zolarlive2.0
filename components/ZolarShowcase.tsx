@@ -30,7 +30,7 @@ function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <div className="gta-copy h-[58vh] md:h-[72vh] p-6 sm:p-8 rounded-3xl ring-1 ring-white/10 bg-black/60 backdrop-blur-md flex flex-col justify-center">
+    <div className="gta-copy h-auto md:h-[72vh] p-4 sm:p-6 md:p-8 rounded-3xl ring-1 ring-white/10 bg-black/60 backdrop-blur-md flex flex-col justify-center">
       {product.subtitle && (
         <p className={`text-xs uppercase tracking-[0.2em] ${product.theme.accentTextClass}`}>{product.subtitle}</p>
       )}
@@ -248,7 +248,7 @@ export default function ZolarShowcase() {
               {/* Media */}
               <div className={(isLeft ? "md:col-span-7 order-1" : "md:col-start-6 md:col-span-7 order-1") + mediaLift}>
                 <div className={`gta-media relative overflow-hidden rounded-3xl shadow-2xl ring-1 ${product.theme.ringClass} bg-black/60` } aria-label={`${product.name} media`}>
-                  <div className="h-[58vh] md:h-[72vh]">
+                  <div className="h-[45vh] md:h-[72vh]">
                     <Image src={product.image} alt={`${product.name} — ${product.subtitle ?? product.name}`} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 900px" className="object-cover" priority={idx===0} />
                   </div>
                 </div>

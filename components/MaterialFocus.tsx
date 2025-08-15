@@ -82,8 +82,8 @@ export default function MaterialFocus() {
             className="m-card rounded-3xl border border-white/10 bg-black/40 backdrop-blur overflow-hidden"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={m.img} alt={m.title} className="w-full h-64 object-cover" />
-            <div className="p-5">
+            <img src={m.img} alt={m.title} className="w-full h-48 md:h-64 object-cover" />
+            <div className="p-4 md:p-5">
               <div className="text-white text-xl font-semibold">{m.title}</div>
               <p className="text-white/70 mt-2">{m.body}</p>
             </div>

@@ -77,7 +77,7 @@ export default function OriginSection() {
     <section
       ref={root}
       id="origin"
-      className="relative h-[100svh] grid place-items-center overflow-clip"
+      className="relative h-[85svh] md:h-[100svh] grid place-items-center overflow-clip"
     >
       {/* Image overlay that blends with the global green gradient and fades on scroll */}
       <div ref={heroImgRef} className="absolute inset-0 z-0 pointer-events-none select-none mix-blend-screen">
@@ -86,6 +86,9 @@ export default function OriginSection() {
       {/* Top clean — global background stays black until this section scrolls in */}
       {/* No per-section background; global gradient renders behind */}
       <div className="relative z-10 w-[min(1000px,86vw)] text-center">
+        <div className="o-line text-xs tracking-[0.3em] text-white/40 uppercase mb-8 md:mb-12">
+          Established 2024 — Los Angeles
+        </div>
         <div ref={logoRef} className="mx-auto mb-6 sm:mb-8 w-[160px] sm:w-[220px] will-change-transform">
           <Image src="/images/zolar-wordmark.svg" alt="Zolar wordmark" width={220} height={80} className="w-full h-auto" />
         </div>
