@@ -1,0 +1,11 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" rx="36" fill="#F8FAFC"/>
+  <g transform="translate(600,400)">
+    <circle r="210" fill="#0EA5E9" fill-opacity="0.12"/>
+    <circle r="150" fill="#FB923C" fill-opacity="0.12"/>
+    <circle r="90" fill="#0EA5E9" fill-opacity="0.2"/>
+  </g>
+  <text x="600" y="420" text-anchor="middle" fill="#0F172A" font-size="42" font-family="Arial, Helvetica, sans-serif">Spin for Purpose — Blue/Orange</text>
+</svg>
+
+

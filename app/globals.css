@@ -1,8 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #050505;
+  --foreground: #e6e6e6;
+  --zolar-green: 16 185 129; /* emerald-500 */
+  --zolar-sky: 56 189 248; /* sky-400 */
+  /* Shared gradient system */
+  --h1: 160; /* primary hue seed (green) */
+  --h2: 520; /* secondary hue seed (purple/sky mix) */
+  --gx: 50%; /* gradient anchor x */
+  --gy: 30%; /* gradient anchor y */
+  --corner-radius: 24px;
+  /* Gradient alpha controls (visible on load) */
+  --ga1: 0.32; /* primary color alpha */
+  --ga2: 0.22; /* secondary color alpha */
+  --ga3: 0.06; /* white sheen alpha */
 }
 
 @theme inline {
@@ -12,15 +24,56 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* Always dark brand base */
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Animated gradient background base */
+.zolar-gradient {
+  background: radial-gradient(1200px 600px at 20% 10%, rgba(var(--zolar-green) / 0.35), transparent 60%),
+    radial-gradient(1000px 500px at 80% 20%, rgba(var(--zolar-sky) / 0.25), transparent 60%),
+    radial-gradient(900px 500px at 50% 90%, rgba(255 255 255 / 0.06), transparent 60%),
+    #050505;
+  will-change: transform, filter;
+}
+
+/* Var-driven gradient using shared CSS vars for color and anchor */
+.zolar-gradient-vars {
+  /* Use viewport-based maxima + fixed attachment so it doesn't shrink while scrolling */
+  background: radial-gradient(120vmax 80vmax at 20% 10%, hsl(var(--h1) 100% 50% / var(--ga1)), transparent 60%),
+    radial-gradient(100vmax 70vmax at 80% 20%, hsl(var(--h2) 100% 50% / var(--ga2)), transparent 60%),
+    radial-gradient(110vmax 65vmax at var(--gx) var(--gy), rgba(255 255 255 / var(--ga3)), transparent 60%),
+    #050505;
+  background-attachment: fixed, fixed, fixed, fixed;
+}
+
+/* Softer intensity for hero */
+.zolar-gradient-soft {
+  background: radial-gradient(1200px 600px at 20% 10%, hsl(var(--h1) 100% 50% / 0.18), transparent 60%),
+    radial-gradient(1000px 500px at 80% 20%, hsl(var(--h2) 100% 50% / 0.15), transparent 60%),
+    radial-gradient(900px 500px at var(--gx) var(--gy), rgba(255 255 255 / 0.04), transparent 60%),
+    #050505;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zolar-gradient {
+    background-attachment: fixed;
+  }
+  .zolar-gradient-vars, .zolar-gradient-soft {
+    background-attachment: fixed;
+  }
+}
+
+/* Prevent page background seams on ultra-wide with a fallback outer vignette */
+.page-vignette::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(120vmax 80vmax at 50% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 65%, rgba(0,0,0,0.14) 85%, rgba(0,0,0,0.22) 100%);
+  z-index: -5;
 }
