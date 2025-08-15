@@ -54,36 +54,46 @@ export default function LookbookStrip() {
           // Desktop: Pin and horizontal scroll
       mm.add("(min-width: 900px)", () => {
         const total = track.scrollWidth - el.clientWidth;
-        gsap.to(track, {
-          x: -total,
-          ease: "none",
+        
+        // Create timeline for better control
+        const tl = gsap.timeline({
           scrollTrigger: {
             trigger: el,
             start: "top top",
-            end: () => `+=${total * 1.5}`, // Slower scroll
-            scrub: 1.2, // Smoother scrub
+            end: () => `+=${total * 1.5 + window.innerHeight * 0.5}`, // Extra time to see title
+            scrub: 1.2,
             pin: true,
             anticipatePin: 1,
           },
         });
+        
+        // Hold title visible for first 30% of scroll
+        tl.to(track, { x: 0, duration: 0.3, ease: "none" });
+        // Then slide horizontally for remaining 70%
+        tl.to(track, { x: -total, duration: 0.7, ease: "none" });
       });
 
       // Mobile: Pin and horizontal scroll like desktop
       mm.add("(max-width: 899px)", () => {
         const total = track.scrollWidth - el.clientWidth;
-        gsap.to(track, {
-          x: -total,
-          ease: "none",
+        
+        // Create timeline for better control on mobile
+        const tl = gsap.timeline({
           scrollTrigger: {
             trigger: el,
-            start: "top top",
-            end: () => `+=${total * 1.8}`, // More scroll distance for mobile
-            scrub: 1.5, // Smooth scrub
+            start: "top top", 
+            end: () => `+=${total * 1.8 + window.innerHeight * 0.6}`, // Extra time to see title
+            scrub: 1.5,
             pin: true,
             anticipatePin: 1,
             invalidateOnRefresh: true,
           },
         });
+        
+        // Hold title visible for first 40% of scroll on mobile
+        tl.to(track, { x: 0, duration: 0.4, ease: "none" });
+        // Then slide horizontally for remaining 60%
+        tl.to(track, { x: -total, duration: 0.6, ease: "none" });
       });
 
     return () => {
