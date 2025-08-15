@@ -87,6 +87,7 @@ body {
 /* 3D flip card styles */
 .transform-style-3d {
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
 }
 
 .backface-hidden {
@@ -96,6 +97,34 @@ body {
 
 .rotate-y-180 {
   transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+}
+
+/* Story card specific styles */
+.story-card {
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transition: transform 0.7s;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.story-side {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.story-front {
+  z-index: 2;
+}
+
+.story-back {
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
 }
 
 /* Prevent page background seams on ultra-wide with a fallback outer vignette */

@@ -72,11 +72,34 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
   return (
     <div ref={cardRef} className="mobile-story-wrapper relative h-[85vh] px-4 py-8">
       {/* 3D Flip Card Container */}
-      <div className="story-card-container relative h-full perspective-1000">
-        <div className={`story-card relative w-full h-full transition-transform duration-700 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
+      <div className="story-card-container relative h-full" style={{ perspective: '1000px' }}>
+        <div 
+          className="story-card"
+          style={{
+            transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+            WebkitTransform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+            transformStyle: 'preserve-3d',
+            WebkitTransformStyle: 'preserve-3d',
+            transition: 'transform 0.7s',
+            WebkitTransition: '-webkit-transform 0.7s',
+            position: 'relative',
+            width: '100%',
+            height: '100%'
+          }}
+        >
           
           {/* Front Side */}
-          <div className="story-side story-front absolute inset-0 backface-hidden">
+          <div 
+            className="story-side story-front"
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              transform: 'rotateY(0deg)'
+            }}
+          >
             <div className={`relative h-full rounded-3xl overflow-hidden shadow-2xl ring-1 ${product.theme.ringClass} bg-black/60`}>
               {/* Product Image */}
               <div className="absolute inset-0">
@@ -134,7 +157,17 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
           </div>
           
           {/* Back Side */}
-          <div className="story-side story-back absolute inset-0 backface-hidden rotate-y-180">
+          <div 
+            className="story-side story-back"
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              transform: 'rotateY(180deg)'
+            }}
+          >
             <div className={`relative h-full rounded-3xl overflow-hidden shadow-2xl ring-1 ${product.theme.ringClass} bg-black/80 backdrop-blur`}>
               {/* Back view image */}
               <div className="absolute inset-0">
