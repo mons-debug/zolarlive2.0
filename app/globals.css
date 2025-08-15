@@ -98,27 +98,6 @@ body {
   transform: rotateY(180deg);
 }
 
-/* Ensure GPU for flip card container */
-.story-card, .story-side {
-  will-change: transform;
-}
-
-.story-side {
-  transform: translateZ(1px);
-}
-
-/* iOS backface rendering fix */
-.story-front, .story-back {
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-}
-
-/* z-index swap fallback for iOS backface glitch */
-.story-card[data-flipped="true"] .story-front { z-index: 1; }
-.story-card[data-flipped="true"] .story-back { z-index: 2; }
-.story-card[data-flipped="false"] .story-front { z-index: 2; }
-.story-card[data-flipped="false"] .story-back { z-index: 1; }
-
 /* Prevent page background seams on ultra-wide with a fallback outer vignette */
 .page-vignette::before {
   content: "";

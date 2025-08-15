@@ -19,7 +19,6 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
   const [isFlipped, setIsFlipped] = useState(false);
   const [selectedSize, setSelectedSize] = useState<string>("");
   const cardRef = useRef<HTMLDivElement>(null);
-  const storyCardRef = useRef<HTMLDivElement>(null);
 
   // Story content for front/back
   const storyContent = {
@@ -54,24 +53,11 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
   };
 
   const story = product.id === "borderline-black" ? storyContent.borderline : storyContent.spin;
-  // We show fixed content per side; flip controls which side is visible
+  const currentStory = isFlipped ? story.back : story.front;
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
   };
-
-  // Animate rotationY so it doesn't conflict with other GSAP transforms
-  useLayoutEffect(() => {
-    const el = storyCardRef.current;
-    if (!el) return;
-    gsap.to(el, {
-      rotationY: isFlipped ? 180 : 0,
-      duration: 0.6,
-      ease: "power2.out",
-      transformPerspective: 1200,
-      force3D: true,
-    });
-  }, [isFlipped]);
 
   const handleWhatsAppOrder = () => {
     if (!selectedSize) {
@@ -87,7 +73,7 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
     <div ref={cardRef} className="mobile-story-wrapper relative h-[85vh] px-4 py-8">
       {/* 3D Flip Card Container */}
       <div className="story-card-container relative h-full perspective-1000">
-        <div ref={storyCardRef} className={`story-card relative w-full h-full transform-style-3d`} data-flipped={isFlipped}>
+        <div className={`story-card relative w-full h-full transition-transform duration-700 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
           
           {/* Front Side */}
           <div className="story-side story-front absolute inset-0 backface-hidden">
@@ -99,7 +85,7 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
                   alt={`${product.name} front`} 
                   fill 
                   sizes="100vw" 
-                  className="object-cover will-change-transform"
+                  className="object-cover"
                   priority={index === 0}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
@@ -108,12 +94,16 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
               {/* Story Content */}
               <div className="relative z-10 h-full flex flex-col justify-between p-6">
                 {/* Top: Flip hint */}
-                <div className="text-right">
+                <div className="flex justify-between items-start">
+                  <div className="flex gap-1">
+                    <span className="w-8 h-1 bg-white rounded-full"></span>
+                    <span className="w-8 h-1 bg-white/30 rounded-full"></span>
+                  </div>
                   <button 
                     onClick={handleFlip}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur text-white/80 text-sm"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur text-white/80 text-sm hover:bg-white/20 transition-colors"
                   >
-                    <span>Flip to back</span>
+                    <span>View back</span>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
@@ -125,19 +115,19 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
                   <p className={`text-xs uppercase tracking-[0.3em] ${product.theme.accentTextClass} mb-2`}>
                     {product.subtitle}
                   </p>
-                  <h3 className="text-4xl font-bold text-white mb-3">{story.front.title}</h3>
-                  <p className="text-white/90 text-lg leading-relaxed mb-4">{story.front.story}</p>
+                  <h3 className="text-4xl font-bold text-white mb-3">{currentStory.title}</h3>
+                  <p className="text-white/90 text-lg leading-relaxed mb-4">{currentStory.story}</p>
                   
                   {/* Story details */}
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {story.front.details.map((detail, i) => (
+                    {currentStory.details.map((detail, i) => (
                       <span key={i} className="story-detail px-3 py-1 bg-white/10 backdrop-blur rounded-full text-xs text-white/80">
                         {detail}
                       </span>
                     ))}
                   </div>
                   
-                  <p className="text-sm text-white/60 italic">{story.front.mood}</p>
+                  <p className="text-sm text-white/60 italic">{currentStory.mood}</p>
                 </div>
               </div>
             </div>
@@ -154,23 +144,27 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
                     alt={`${product.name} back`} 
                     fill 
                     sizes="100vw" 
-                    className="object-cover opacity-40 will-change-transform"
+                    className="object-cover"
                   />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-black via-gray-900 to-black" />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
               </div>
               
               {/* Back content */}
               <div className="relative z-10 h-full flex flex-col justify-between p-6">
                 {/* Top: Flip back */}
-                <div className="text-right">
+                <div className="flex justify-between items-start">
+                  <div className="flex gap-1">
+                    <span className="w-8 h-1 bg-white/30 rounded-full"></span>
+                    <span className="w-8 h-1 bg-white rounded-full"></span>
+                  </div>
                   <button 
                     onClick={handleFlip}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur text-white/80 text-sm"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur text-white/80 text-sm hover:bg-white/20 transition-colors"
                   >
-                    <span>Flip to front</span>
+                    <span>View front</span>
                     <svg className="w-4 h-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
@@ -362,7 +356,7 @@ const products: Product[] = [
       "Soft hand green neon print",
       "Relaxed, slightly boxy fit",
     ],
-    image: "/images/p8.png",
+    image: "/images/p8.png", // Front view
     backImage: "/images/p9.png", // Back view
     align: "left",
     theme: {
@@ -384,8 +378,8 @@ const products: Product[] = [
       "Dual-tone screen print",
       "Standard fit, true to size",
     ],
-    image: "/images/p5.png",
-    backImage: "/images/p6.png", // Back view
+    image: "/images/p5.png", // Front view - using the provided image
+    backImage: "/images/p6.png", // Back view - using the provided image
     align: "right",
     theme: {
       accentTextClass: "text-sky-400",
@@ -484,27 +478,28 @@ export default function ZolarShowcase() {
           const storyContent = row.querySelector(".story-content") as HTMLElement | null;
 
           if (storyWrapper && storyCard) {
-            // Card entrance (no rotation to avoid conflicts with flip)
+            // Card entrance with 3D rotation
             gsap.fromTo(
               storyCard,
-              {
-                y: 16,
-                scale: 0.98,
-                opacity: 1,
-                transformPerspective: 1200,
+              { 
+                rotateX: -25,
+                rotateY: -10,
+                scale: 0.85,
+                opacity: 0,
+                transformPerspective: 1200
               },
               {
-                y: 0,
+                rotateX: 0,
+                rotateY: 0,
                 scale: 1,
                 opacity: 1,
-                duration: 0.6,
+                duration: 1.2,
                 ease: "power3.out",
-                immediateRender: false,
                 scrollTrigger: {
                   trigger: storyWrapper,
-                  start: "top 92%",
-                  end: "top 70%",
-                  scrub: 0.5,
+                  start: "top 80%",
+                  end: "top 40%",
+                  scrub: 1,
                 },
               }
             );
@@ -513,16 +508,16 @@ export default function ZolarShowcase() {
             if (storyContent) {
               gsap.fromTo(
                 storyContent,
-                { y: 16, opacity: 0.98 },
+                { y: 40, opacity: 0 },
                 {
                   y: 0,
                   opacity: 1,
-                  duration: 0.6,
+                  duration: 0.8,
+                  delay: 0.3,
                   ease: "power3.out",
-                  immediateRender: false,
                   scrollTrigger: {
                     trigger: storyWrapper,
-                    start: "top 95%",
+                    start: "top 70%",
                     toggleActions: "play none none reverse",
                   },
                 }
