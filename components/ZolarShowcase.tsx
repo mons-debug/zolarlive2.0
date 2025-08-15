@@ -87,7 +87,7 @@ function MobileProductStory({ product, index }: { product: Product; index: numbe
     <div ref={cardRef} className="mobile-story-wrapper relative h-[85vh] px-4 py-8">
       {/* 3D Flip Card Container */}
       <div className="story-card-container relative h-full perspective-1000">
-        <div ref={storyCardRef} className={`story-card relative w-full h-full transform-style-3d`}>
+        <div ref={storyCardRef} className={`story-card relative w-full h-full transform-style-3d`} data-flipped={isFlipped}>
           
           {/* Front Side */}
           <div className="story-side story-front absolute inset-0 backface-hidden">
@@ -484,29 +484,27 @@ export default function ZolarShowcase() {
           const storyContent = row.querySelector(".story-content") as HTMLElement | null;
 
           if (storyWrapper && storyCard) {
-            // Card entrance with 3D rotation
+            // Card entrance (no rotation to avoid conflicts with flip)
             gsap.fromTo(
               storyCard,
               {
-                rotateX: -12,
-                rotateY: -4,
+                y: 16,
                 scale: 0.98,
                 opacity: 1,
                 transformPerspective: 1200,
               },
               {
-                rotateX: 0,
-                rotateY: 0,
+                y: 0,
                 scale: 1,
                 opacity: 1,
-                duration: 0.8,
+                duration: 0.6,
                 ease: "power3.out",
                 immediateRender: false,
                 scrollTrigger: {
                   trigger: storyWrapper,
-                  start: "top 90%",
-                  end: "top 60%",
-                  scrub: 0.6,
+                  start: "top 92%",
+                  end: "top 70%",
+                  scrub: 0.5,
                 },
               }
             );
