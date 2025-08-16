@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, useEffect } from "react";
 
 // GSAP and ScrollTrigger
 import gsap from "gsap";
@@ -182,6 +182,11 @@ function MobileShopCard() {
   const [isInteracting, setIsInteracting] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
+  // Set initial gradient to Borderline (green) theme on component mount
+  useEffect(() => {
+    updateGlobalGradient('borderline', 'male');
+  }, []);
+
   // 📸 MEDIA CONFIGURATION - Easy to update images
   // 
   // 🎯 QUICK START:
@@ -251,74 +256,94 @@ function MobileShopCard() {
     setIsInteracting(true);
     // Subtle gradient pulse on hover/touch
     const docEl = document.documentElement;
-    docEl.style.setProperty('--ga1', '0.42');
-    docEl.style.setProperty('--ga2', '0.32');
+    docEl.style.setProperty('--ga1', '0.48');
+    docEl.style.setProperty('--ga2', '0.38');
   };
 
   const handleInteractionEnd = () => {
     setTimeout(() => {
       setIsInteracting(false);
-      // Return to default intensity
+      // Return to enhanced default intensity
       const docEl = document.documentElement;
-      docEl.style.setProperty('--ga1', '0.35');
-      docEl.style.setProperty('--ga2', '0.25');
+      docEl.style.setProperty('--ga1', '0.42');
+      docEl.style.setProperty('--ga2', '0.32');
     }, 300);
   };
 
-  const updateGlobalGradient = (newVariant: 'borderline' | 'spin') => {
+  const updateGlobalGradient = (newVariant: 'borderline' | 'spin', model: 'male' | 'female' = 'male') => {
     const docEl = document.documentElement;
+    const gradientBg = document.querySelector('.zolar-gradient-vars');
+    
+    // Bold colors for male, less colors for female
+    const intensity = model === 'male' ? 1.0 : 0.7;
     
     if (newVariant === 'borderline') {
-      // Borderline Black - Rich emerald/green theme
-      docEl.style.setProperty('--h1', '150'); // deep emerald 
+      // Borderline Black Shirt - Green theme
+      docEl.style.setProperty('--h1', '150'); // deep emerald green
       docEl.style.setProperty('--h2', '120'); // forest green
-      docEl.style.setProperty('--ga1', '0.50'); // stronger primary
-      docEl.style.setProperty('--ga2', '0.38'); // stronger secondary
-      docEl.style.setProperty('--ga3', '0.12'); // enhanced glow
+      docEl.style.setProperty('--ga1', `${0.55 * intensity}`); // adjusted for model
+      docEl.style.setProperty('--ga2', `${0.42 * intensity}`); // adjusted for model
+      docEl.style.setProperty('--ga3', `${0.15 * intensity}`); // adjusted for model
     } else {
-      // Spin White - Cool sky/blue theme  
+      // Spin White Shirt - Blue theme  
       docEl.style.setProperty('--h1', '200'); // sky blue
-      docEl.style.setProperty('--h2', '230'); // deeper azure
-      docEl.style.setProperty('--ga1', '0.50'); // stronger primary
-      docEl.style.setProperty('--ga2', '0.38'); // stronger secondary
-      docEl.style.setProperty('--ga3', '0.12'); // enhanced glow
+      docEl.style.setProperty('--h2', '230'); // deeper azure blue
+      docEl.style.setProperty('--ga1', `${0.55 * intensity}`); // adjusted for model
+      docEl.style.setProperty('--ga2', `${0.42 * intensity}`); // adjusted for model
+      docEl.style.setProperty('--ga3', `${0.15 * intensity}`); // adjusted for model
+    }
+    
+    // Add wave animation classes
+    if (gradientBg) {
+      gradientBg.classList.remove('wave-active', 'wave-intense');
+      gradientBg.classList.add(model === 'male' ? 'wave-intense' : 'wave-active');
     }
   };
 
   const resetGlobalGradient = () => {
     const docEl = document.documentElement;
-    // Reset to default green theme (Borderline default)
-    docEl.style.setProperty('--h1', '160');
-    docEl.style.setProperty('--h2', '140'); 
-    docEl.style.setProperty('--ga1', '0.35');
-    docEl.style.setProperty('--ga2', '0.25');
-    docEl.style.setProperty('--ga3', '0.08');
+    const gradientBg = document.querySelector('.zolar-gradient-vars');
+    
+    // Reset to enhanced default green theme
+    docEl.style.setProperty('--h1', '155');
+    docEl.style.setProperty('--h2', '135'); 
+    docEl.style.setProperty('--ga1', '0.42');
+    docEl.style.setProperty('--ga2', '0.32');
+    docEl.style.setProperty('--ga3', '0.12');
+    
+    // Remove wave animations
+    if (gradientBg) {
+      gradientBg.classList.remove('wave-active', 'wave-intense');
+    }
   };
 
   const handleVariantChange = (newVariant: 'borderline' | 'spin') => {
     setVariant(newVariant);
-    updateGlobalGradient(newVariant);
+    updateGlobalGradient(newVariant, model);
     handleInteractionStart();
+    // Don't reset - stay in the selected color until next interaction
     setTimeout(() => {
-      resetGlobalGradient();
       handleInteractionEnd();
-    }, 1500); // Smoother duration
+    }, 300);
   };
 
   const handleToggleChange = (type: 'view' | 'model', value: 'front' | 'back' | 'male' | 'female') => {
+    let newModel = model;
+    
     if (type === 'view' && (value === 'front' || value === 'back')) {
       setViewMode(value);
     } else if (type === 'model' && (value === 'male' || value === 'female')) {
       setModel(value);
+      newModel = value;
     }
     
-    // Brief gradient pulse effect for toggles
-    updateGlobalGradient(variant);
+    // Update gradient with current variant and new model state
+    updateGlobalGradient(variant, newModel);
     handleInteractionStart();
+    // Don't reset - stay in the selected color/intensity
     setTimeout(() => {
-      resetGlobalGradient();
       handleInteractionEnd();
-    }, 600); // Faster pulse for toggles
+    }, 300);
   };
 
   const storyContent = {
@@ -341,8 +366,8 @@ function MobileShopCard() {
           currentProduct.theme.ringClass
         } ${
           isInteracting 
-            ? `ring-2 ${variant === 'borderline' ? 'ring-emerald-400/60' : 'ring-sky-400/60'} shadow-2xl transform scale-[1.02]` 
-            : 'transform scale-100'
+            ? `ring-2 ${variant === 'borderline' ? 'ring-emerald-400/60' : 'ring-sky-400/60'} shadow-2xl` 
+            : ''
         }`}
         onTouchStart={handleInteractionStart}
         onTouchEnd={handleInteractionEnd}
@@ -444,13 +469,13 @@ function MobileShopCard() {
             </div>
                 </div>
                 
-          {/* Bottom: Product Info */}
+                    {/* Bottom: Product Info */}
                 <div className="story-content">
-            <p className={`text-xs uppercase tracking-[0.3em] ${currentProduct.theme.accentTextClass} mb-2`}>
+            <p className={`font-mono text-xs tracking-[0.25em] ${currentProduct.theme.accentTextClass} mb-3`}>
               {currentProduct.subtitle}
             </p>
-            <h3 className="text-3xl font-bold text-white mb-2">{currentStory.title}</h3>
-            <p className="text-sm text-white/60 italic">{currentStory.mood}</p>
+            <h3 className="font-display text-3xl md:text-4xl text-white mb-3 text-glow">{currentStory.title}</h3>
+            <p className="font-body text-sm text-white/70 italic leading-relaxed">{currentStory.mood}</p>
           </div>
         </div>
       </div>
@@ -1096,14 +1121,18 @@ export default function ZolarShowcase() {
     <section ref={scopeRef} aria-label="Zolar product showcase" className="relative">
       {/* Animated section header */}
       <div ref={headerRef} className="relative z-10 mx-auto max-w-7xl px-4 md:px-8 pt-8 md:pt-24 pb-4 md:pb-16 text-center">
-        <h2 className="text-4xl md:text-6xl font-bold text-white">
+        <div className="font-mono text-xs tracking-[0.3em] text-emerald-400/80 mb-4">
+          <span className="shop-word inline-block">Exclusive</span>{" "}
+          <span className="shop-word inline-block">Release</span>
+        </div>
+        <h2 className="font-display text-4xl md:text-7xl text-white text-glow">
           <span className="shop-word inline-block">Shop</span>{" "}
           <span className="shop-word inline-block">Collection</span>
         </h2>
-        <p className="mt-4 text-white/60 text-lg">
+        <p className="mt-6 font-body text-white/70 text-lg md:text-xl">
           <span className="shop-word inline-block">Limited</span>{" "}
           <span className="shop-word inline-block">Drop</span>{" "}
-          <span className="shop-word inline-block">01</span>
+          <span className="shop-word inline-block text-emerald-400">01</span>
         </p>
       </div>
       

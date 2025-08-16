@@ -198,13 +198,17 @@ export default function MaterialFocus() {
       className="relative z-10 w-[min(1100px,90vw)] mx-auto py-8 md:py-24 px-4 md:px-0"
     >
       <div className="text-center mb-12 md:mb-16">
-        <h3 className="text-white text-2xl xs:text-3xl md:text-5xl font-bold mb-3 leading-tight">
+        <div className="font-mono text-xs tracking-[0.3em] text-emerald-400/80 mb-4 animate-fade-up">
+          Technical Specifications
+        </div>
+        <h3 className="font-display text-white text-2xl xs:text-3xl md:text-6xl leading-tight text-glow mb-6">
           <span className="inline-block animate-fade-up">Materials</span>{" "}
           <span className="inline-block animate-fade-up animation-delay-100">&</span>{" "}
           <span className="inline-block animate-fade-up animation-delay-200">Details</span>
         </h3>
-        <p className="text-white/60 text-sm xs:text-base md:text-lg animate-fade-up animation-delay-300 max-w-lg mx-auto">
-          Crafted with precision, built to last
+        <p className="font-body text-white/70 text-sm xs:text-base md:text-xl animate-fade-up animation-delay-300 max-w-2xl mx-auto leading-relaxed">
+          Precision-crafted streetwear engineered for performance and style. 
+          Every detail matters in pursuit of perfection.
         </p>
       </div>
       
@@ -227,8 +231,8 @@ export default function MaterialFocus() {
               {/* Content */}
               <div className="relative z-10 h-48 flex items-center">
                 <div className="mobile-material-content p-6 max-w-[70%]">
-                  <h4 className="mobile-material-title text-xl xs:text-2xl font-bold text-white mb-2">{m.title}</h4>
-                  <p className="mobile-material-text text-white/80 text-xs xs:text-sm leading-relaxed">{m.body}</p>
+                  <h4 className="mobile-material-title font-heading text-xl xs:text-2xl text-white mb-2 text-glow-green">{m.title}</h4>
+                  <p className="mobile-material-text font-body text-white/80 text-xs xs:text-sm leading-relaxed">{m.body}</p>
                   <div className="mobile-material-indicator mt-3 w-12 h-1 bg-gradient-to-r from-emerald-400 to-sky-400 rounded-full" />
                 </div>
               </div>

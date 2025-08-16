@@ -107,15 +107,19 @@ export default function LookbookStrip() {
     <section id="lookbook" className="relative min-h-[80vh] md:min-h-screen flex flex-col">
       {/* Fixed title that stays at top */}
       <div ref={titleRef} className="text-center pt-8 xs:pt-12 pb-4 xs:pb-6 md:pt-24 md:pb-16 px-4 perspective-1000">
-        <h3 className="text-white text-2xl xs:text-3xl sm:text-4xl md:text-6xl font-semibold leading-tight">
+        <div className="font-mono text-xs tracking-[0.3em] text-emerald-400/80 mb-4">
+          <span className="word inline-block">Visual</span>{" "}
+          <span className="word inline-block">Showcase</span>
+        </div>
+        <h3 className="font-display text-white text-2xl xs:text-3xl sm:text-4xl md:text-7xl leading-tight text-glow">
           <span className="word inline-block">Collection</span>{" "}
           <span className="word inline-block">Gallery</span>
         </h3>
-        <p className="text-white/60 text-sm xs:text-base md:text-lg mt-2 xs:mt-4">
-          <span className="word inline-block">Scroll</span>{" "}
-          <span className="word inline-block">through</span>{" "}
+        <p className="font-body text-white/70 text-sm xs:text-base md:text-xl mt-4 xs:mt-6 leading-relaxed">
+          <span className="word inline-block">Explore</span>{" "}
           <span className="word inline-block">our</span>{" "}
-          <span className="word inline-block">looks</span>
+          <span className="word inline-block">signature</span>{" "}
+          <span className="word inline-block">pieces</span>
         </p>
       </div>
       {/* Gallery that pins below the title */}

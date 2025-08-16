@@ -116,9 +116,11 @@ export default function OriginSection() {
       </div>
       {/* Welcome Text Overlay */}
       <div className="absolute top-16 md:top-20 left-0 right-0 z-50 text-center">
-        <h1 className="text-5xl md:text-7xl font-bold text-white animate-fade-in mb-2">Welcome to Zolar</h1>
-        <div className="text-xs tracking-[0.3em] text-white/40 uppercase font-medium animate-fade-in animation-delay-200">
-          Established 2025 — Morocco
+        <h1 className="font-display text-5xl md:text-7xl text-white animate-fade-in mb-3 text-glow">
+          Welcome to Zolar
+        </h1>
+        <div className="font-mono text-xs tracking-[0.25em] text-white/50 animate-fade-in animation-delay-200">
+          Est. 2025 — Casablanca, Morocco
         </div>
       </div>
       {/* Top clean — global background stays black until this section scrolls in */}
@@ -127,13 +129,13 @@ export default function OriginSection() {
         <div ref={logoRef} className="mx-auto mt-12 md:mt-16 mb-6 sm:mb-8 w-[160px] sm:w-[220px] will-change-transform">
           <Image src="/images/zolar-wordmark.svg" alt="Zolar wordmark" width={220} height={80} className="w-full h-auto" />
         </div>
-        <div className="o-line text-xs tracking-[0.2em] text-white/60 uppercase">
-          Drop 01 — Borderline
+        <div className="o-line font-mono text-xs tracking-[0.3em] text-emerald-400/80">
+          Drop 01 — Borderline Collection
         </div>
-        <h2 className="o-line mt-2 text-5xl md:text-6xl font-semibold text-white">
+        <h2 className="o-line mt-4 font-display text-5xl md:text-7xl text-white text-shimmer">
           Made for Motion
         </h2>
-        <p className="o-line mt-3 text-white/70 max-w-2xl mx-auto text-lg">
+        <p className="o-line mt-6 font-body text-white/75 max-w-2xl mx-auto text-lg md:text-xl leading-relaxed">
           Premium streetwear crafted in Casablanca. Where North African heritage 
           meets contemporary design. First drop, infinite possibilities.
         </p>

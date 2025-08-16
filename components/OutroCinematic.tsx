@@ -73,11 +73,20 @@ export default function OutroCinematic({
   return (
     <section id="outro" ref={root} className="relative min-h-[90vh] md:min-h-screen flex flex-col justify-center items-center px-4 overflow-clip pb-8 md:pb-24">
       {/* Title and CTA moved to top */}
-      <div className="out-text text-center mb-8">
-        <h3 className="text-white text-4xl md:text-5xl font-bold mb-4">
+      <div className="out-text text-center mb-8 relative z-10">
+        <div className="font-mono text-xs tracking-[0.3em] text-emerald-400 mb-4" style={{
+          textShadow: '0 0 20px rgba(0,0,0,0.9), 2px 2px 4px rgba(0,0,0,0.8)'
+        }}>
+          Final Collection Drop
+        </div>
+        <h3 className="font-display text-4xl md:text-6xl text-white mb-6" style={{
+          textShadow: '0 0 30px rgba(0,0,0,0.8), 0 0 60px rgba(0,0,0,0.6), 2px 2px 4px rgba(0,0,0,0.9)'
+        }}>
           Borderline — Limited Release
         </h3>
-        <p className="text-white/60 text-lg">Secure Yours</p>
+        <p className="font-body text-white text-lg md:text-xl" style={{
+          textShadow: '0 0 20px rgba(0,0,0,0.8), 2px 2px 4px rgba(0,0,0,0.9)'
+        }}>Secure Yours</p>
       </div>
       
       {/* Product selection panel without outer container */}
@@ -142,7 +151,7 @@ export default function OutroCinematic({
                   <div className="flex items-center gap-2">
                     {IMAGES_BLACK.map((src, i) => (
                       <button key={`thumb-b-${i}`} onClick={() => setCurrentImageBlack(i)} className={`rounded-xl overflow-hidden ring-1 transition ${i === currentImageBlack ? "ring-white/60" : "ring-white/10 hover:ring-white/30"}`}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={src} alt="thumbnail" className="w-12 h-12 object-cover" />
                       </button>
                     ))}
@@ -215,7 +224,7 @@ export default function OutroCinematic({
                   <div className="flex items-center gap-2">
                     {IMAGES_WHITE.map((src, i) => (
                       <button key={`thumb-w-${i}`} onClick={() => setCurrentImageWhite(i)} className={`rounded-xl overflow-hidden ring-1 transition ${i === currentImageWhite ? "ring-white/60" : "ring-white/10 hover:ring-white/30"}`}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={src} alt="thumbnail" className="w-12 h-12 object-cover" />
                       </button>
                     ))}
