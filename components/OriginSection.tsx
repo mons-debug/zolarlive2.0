@@ -115,27 +115,27 @@ export default function OriginSection() {
         </div>
       </div>
       {/* Welcome Text Overlay - Better positioned for mobile safe areas */}
-      <div className="absolute top-16 safe-top md:top-24 lg:top-28 left-0 right-0 z-50 text-center px-4">
-        <h1 className="font-display text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl text-white animate-fade-in mb-3 md:mb-4 text-glow md:font-light">
+      <div className="absolute top-16 safe-top md:top-20 lg:top-24 left-0 right-0 z-50 text-center px-4">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white animate-fade-in mb-3 md:mb-4 text-glow">
           Welcome to Zolar
         </h1>
-        <div className="font-mono text-xs md:text-sm lg:text-sm tracking-[0.25em] md:tracking-[0.3em] text-white/50 animate-fade-in animation-delay-200 mb-4 md:mb-4">
+        <div className="font-mono text-xs md:text-sm tracking-[0.25em] md:tracking-[0.3em] text-white/50 animate-fade-in animation-delay-200 mb-4">
           Est. 2025 — From Morocco to the World
         </div>
-        <div className="font-mono text-xs md:text-sm lg:text-sm tracking-[0.3em] md:tracking-[0.35em] text-emerald-400/80 md:text-sky-400 animate-fade-in animation-delay-400">
+        <div className="font-mono text-xs md:text-sm tracking-[0.3em] md:tracking-[0.35em] text-emerald-400/80 md:text-sky-400 animate-fade-in animation-delay-400">
           Drop 01 — Borderline Collection
         </div>
       </div>
       {/* Top clean — global background stays black until this section scrolls in */}
       {/* No per-section background; global gradient renders behind */}
       <div className="relative z-10 w-[min(1000px,86vw)] md:w-[min(1200px,80vw)] md:mx-auto text-center px-4">
-        <div ref={logoRef} className="mx-auto mt-24 sm:mt-26 md:mt-32 lg:mt-36 mb-6 sm:mb-8 md:mb-10 w-[140px] sm:w-[160px] md:w-[240px] lg:w-[280px] will-change-transform">
-          <Image src="/images/zolar-wordmark.svg" alt="Zolar wordmark" width={280} height={100} className="w-full h-auto" />
+        <div ref={logoRef} className="mx-auto mt-24 sm:mt-26 md:mt-[45vh] lg:mt-[40vh] mb-6 sm:mb-8 md:mb-12 lg:mb-16 w-[140px] sm:w-[160px] md:w-[280px] lg:w-[320px] will-change-transform">
+          <Image src="/images/zolar-wordmark.svg" alt="Zolar wordmark" width={320} height={120} className="w-full h-auto" />
         </div>
-        <h2 className="o-line mt-4 md:mt-8 font-display text-4xl sm:text-5xl md:text-5xl lg:text-6xl text-white text-shimmer md:font-normal">
+        <h2 className="o-line mt-4 md:mt-8 lg:mt-12 font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white text-shimmer">
           Made for Motion
         </h2>
-        <p className="o-line mt-4 sm:mt-6 md:mt-8 font-body text-white/75 max-w-2xl md:max-w-3xl mx-auto text-base sm:text-lg md:text-lg lg:text-xl leading-relaxed px-4">
+        <p className="o-line mt-4 sm:mt-6 md:mt-8 lg:mt-10 font-body text-white/75 max-w-2xl md:max-w-4xl mx-auto text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed px-4">
           A tee for him and her — your companion on the journey to break borders. 
           Born in Morocco, forged in the streets, built to carry your story.
         </p>
