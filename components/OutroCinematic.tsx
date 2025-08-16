@@ -50,7 +50,7 @@ export default function OutroCinematic({
     };
   }, [fullscreenData?.isOpen]);
 
-  const SIZES = ["XS", "S", "M", "L", "XL", "XXL"] as const;
+  const SIZES = ["S", "M", "L", "XL"] as const;
   const SIZE_CHART: Record<string, { chest: number; length: number }> = {
     XS: { chest: 46, length: 66 },
     S: { chest: 49, length: 69 },
@@ -66,7 +66,7 @@ export default function OutroCinematic({
 
   const bothSelected = selectedBlack && selectedWhite;
   const subtotal = UNIT_PRICE * (selectedBlack ? qtyBlack : 0) + UNIT_PRICE * (selectedWhite ? qtyWhite : 0);
-  const discount = bothSelected ? Math.round(subtotal * 0.2) : 0;
+  const discount = bothSelected ? Math.round(subtotal * 0.15) : 0;
   const total = subtotal - discount;
 
   useEffect(() => {
@@ -108,13 +108,13 @@ export default function OutroCinematic({
         <div className="rounded-2xl lg:rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/30 shadow-xl p-5 md:p-7 lg:p-9 xl:p-12 grid gap-4 lg:gap-6 xl:gap-8">
             {/* Summary row (top right) */}
             <div className="flex items-start justify-between">
-              <div className="text-white/70 text-xs md:text-sm">Buy both and save <span className="text-emerald-300">20%</span></div>
+              <div className="text-white/70 text-xs md:text-sm">Buy both and save <span className="text-emerald-300">15%</span></div>
               <div className="text-right text-white text-sm">
                 <div>
                   Subtotal: <span className="font-medium">{subtotal} MAD</span>
                 </div>
                 {bothSelected && (
-                  <div className="text-emerald-300/90">20% bundle discount: -{discount} MAD</div>
+                  <div className="text-emerald-300/90">15% bundle discount: -{discount} MAD</div>
                 )}
                 <div className="text-base md:text-lg font-semibold">Total: {total} MAD</div>
               </div>
@@ -166,6 +166,11 @@ export default function OutroCinematic({
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                       </svg>
                     </button>
+
+                    {/* Price Tag */}
+                    <div className="absolute bottom-2 left-2 bg-emerald-500 text-black px-2 py-1 rounded-lg text-sm font-bold">
+                      {UNIT_PRICE} MAD
+                    </div>
 
                     {IMAGES_BLACK.length > 1 && (
                       <>
@@ -255,6 +260,11 @@ export default function OutroCinematic({
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                       </svg>
                     </button>
+
+                    {/* Price Tag */}
+                    <div className="absolute bottom-2 left-2 bg-sky-500 text-white px-2 py-1 rounded-lg text-sm font-bold">
+                      {UNIT_PRICE} MAD
+                    </div>
 
                     {IMAGES_WHITE.length > 1 && (
                       <>
