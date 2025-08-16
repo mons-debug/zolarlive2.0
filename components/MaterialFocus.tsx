@@ -195,18 +195,18 @@ export default function MaterialFocus() {
     <section
       ref={root}
       id="materials"
-      className="relative z-10 w-[min(1100px,90vw)] md:w-full md:max-w-[1400px] lg:max-w-[1600px] mx-auto py-8 md:py-20 lg:py-24 px-4 md:px-8 lg:px-12"
+      className="relative z-10 w-[min(1100px,90vw)] md:w-[min(1200px,85vw)] mx-auto py-8 md:py-16 px-4 md:px-0"
     >
-      <div className="text-center mb-12 md:mb-20 lg:mb-24">
-        <div className="font-mono text-xs md:text-base lg:text-lg tracking-[0.3em] md:tracking-[0.5em] text-emerald-400/80 mb-4 md:mb-6 animate-fade-up md:opacity-80">
+      <div className="text-center mb-12 md:mb-16">
+        <div className="font-mono text-xs md:text-sm tracking-[0.3em] text-emerald-400/80 mb-4 animate-fade-up">
           Technical Specifications
         </div>
-        <h3 className="font-display text-white text-2xl xs:text-3xl md:text-[3.5rem] lg:text-[4.5rem] xl:text-[5rem] leading-tight text-glow mb-6 md:mb-8 md:font-thin md:tracking-wide">
+        <h3 className="font-display text-white text-2xl xs:text-3xl md:text-5xl leading-tight text-glow mb-6">
           <span className="inline-block animate-fade-up">Materials</span>{" "}
           <span className="inline-block animate-fade-up animation-delay-100">&</span>{" "}
           <span className="inline-block animate-fade-up animation-delay-200">Details</span>
         </h3>
-        <p className="font-body text-white/70 text-sm xs:text-base md:text-xl lg:text-2xl animate-fade-up animation-delay-300 max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto leading-relaxed md:font-light">
+        <p className="font-body text-white/70 text-sm xs:text-base md:text-xl animate-fade-up animation-delay-300 max-w-2xl md:max-w-3xl mx-auto leading-relaxed">
           Precision-crafted streetwear engineered for performance and style. 
           Every detail matters in pursuit of perfection.
         </p>

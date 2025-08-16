@@ -113,21 +113,21 @@ export default function OutroCinematic({
   }, []);
 
   return (
-    <section id="outro" ref={root} className="relative min-h-[90vh] md:min-h-[100vh] lg:min-h-[110vh] flex flex-col justify-center items-center px-4 md:px-8 lg:px-12 overflow-clip pb-8 md:py-20 lg:py-24">
+    <section id="outro" ref={root} className="relative min-h-[90vh] md:min-h-screen flex flex-col justify-center items-center px-4 md:px-8 overflow-clip pb-8 md:pb-24">
       {/* Title and CTA moved to top */}
-      <div className="out-text text-center mb-8 md:mb-20 lg:mb-24 relative z-10">
-        <div className="font-mono text-xs md:text-base lg:text-lg tracking-[0.3em] md:tracking-[0.5em] text-emerald-400/80 mb-4 md:mb-8 lg:mb-10 md:opacity-80">
+      <div className="out-text text-center mb-8 md:mb-16 relative z-10">
+        <div className="font-mono text-xs md:text-sm tracking-[0.3em] text-emerald-400/80 mb-4 md:mb-6">
           Final Collection Drop
         </div>
-        <h3 className="font-display text-4xl md:text-[4rem] lg:text-[5rem] xl:text-[6rem] text-white text-glow mb-6 md:mb-10 lg:mb-12 md:font-thin md:tracking-wide">
+        <h3 className="font-display text-4xl md:text-5xl lg:text-6xl text-white text-glow mb-6 md:mb-8">
           Borderline — Limited Release
         </h3>
-        <p className="font-body text-white/90 text-lg md:text-2xl lg:text-3xl md:font-light">Secure Yours</p>
+        <p className="font-body text-white/90 text-lg md:text-xl">Secure Yours</p>
       </div>
       
       {/* Product selection panel without outer container */}
-      <div className="w-[min(1100px,90vw)] md:w-full md:max-w-[1400px] lg:max-w-[1600px] xl:max-w-[1800px] mx-auto md:px-8 lg:px-12">
-        <div className="rounded-2xl md:rounded-[2rem] lg:rounded-[2.5rem] bg-white/5 md:bg-white/[0.03] backdrop-blur-2xl border border-white/20 md:border-white/10 shadow-xl md:shadow-2xl p-5 md:p-10 lg:p-12 xl:p-16 grid gap-4 md:gap-8 lg:gap-10">
+      <div className="w-[min(1100px,90vw)] md:w-[min(1200px,85vw)] mx-auto">
+        <div className="rounded-2xl md:rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/30 shadow-xl p-5 md:p-8 lg:p-10 grid gap-4 md:gap-6 lg:gap-8">
             {/* Summary row (top right) */}
             <div className="flex items-start justify-between">
               <div className="text-white/70 text-xs md:text-sm">Buy both and save <span className="text-emerald-300">15%</span></div>
@@ -165,14 +165,14 @@ export default function OutroCinematic({
             </div>
 
             {/* Product blocks */}
-            <div className="grid md:grid-cols-2 gap-4 md:gap-8 lg:gap-10">
+            <div className="grid md:grid-cols-2 gap-4">
               {/* Black product block */}
-              <div className={`rounded-xl md:rounded-2xl lg:rounded-3xl bg-white/5 md:bg-white/[0.02] backdrop-blur-md border border-white/20 md:border-white/10 p-4 md:p-6 lg:p-8 transition-all md:hover:bg-white/[0.05] md:hover:border-white/20 ${activeTab === "black" ? "" : "hidden md:block"}`}>
+              <div className={`rounded-xl bg-white/5 backdrop-blur-md border border-white/20 p-4 md:p-5 transition-all hover:bg-white/10 ${activeTab === "black" ? "" : "hidden md:block"}`}>
                 <div className="flex flex-col gap-3">
                   {/* Inline product gallery */}
                   <div className="relative rounded-2xl overflow-hidden bg-black/20 group">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={IMAGES_BLACK[currentImageBlack]} alt="Borderline Black preview" className="w-full h-48 md:h-64 lg:h-72 xl:h-80 object-cover" />
+                    <img src={IMAGES_BLACK[currentImageBlack]} alt="Borderline Black preview" className="w-full h-48 md:h-64 object-cover" />
                     
                     {/* Fullscreen Button */}
                     <button
@@ -261,12 +261,12 @@ export default function OutroCinematic({
               </div>
 
               {/* White product block */}
-              <div className={`rounded-xl md:rounded-2xl lg:rounded-3xl bg-white/5 md:bg-white/[0.02] backdrop-blur-md border border-white/20 md:border-white/10 p-4 md:p-6 lg:p-8 transition-all md:hover:bg-white/[0.05] md:hover:border-white/20 ${activeTab === "white" ? "" : "hidden md:block"}`}>
+              <div className={`rounded-xl bg-white/5 backdrop-blur-md border border-white/20 p-4 md:p-5 transition-all hover:bg-white/10 ${activeTab === "white" ? "" : "hidden md:block"}`}>
                 <div className="flex flex-col gap-3">
                   {/* Inline product gallery */}
                   <div className="relative rounded-2xl overflow-hidden bg-black/20 group">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={IMAGES_WHITE[currentImageWhite]} alt="Spin White preview" className="w-full h-48 md:h-64 lg:h-72 xl:h-80 object-cover" />
+                    <img src={IMAGES_WHITE[currentImageWhite]} alt="Spin White preview" className="w-full h-48 md:h-64 object-cover" />
                     
                     {/* Fullscreen Button */}
                     <button
