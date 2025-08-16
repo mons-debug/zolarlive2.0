@@ -982,7 +982,7 @@ export default function ZolarShowcase() {
   return (
     <section ref={scopeRef} aria-label="Zolar product showcase" className="relative">
       {/* Animated section header */}
-      <div ref={headerRef} className="relative z-10 mx-auto max-w-7xl px-4 md:px-8 pt-16 md:pt-24 pb-8 md:pb-16 text-center">
+      <div ref={headerRef} className="relative z-10 mx-auto max-w-7xl px-4 md:px-8 pt-8 md:pt-24 pb-4 md:pb-16 text-center">
         <h2 className="text-4xl md:text-6xl font-bold text-white">
           <span className="shop-word inline-block">Shop</span>{" "}
           <span className="shop-word inline-block">Collection</span>
@@ -995,12 +995,12 @@ export default function ZolarShowcase() {
       </div>
       
       {/* Mobile Carousel */}
-      <div className="md:hidden px-4 pb-16">
+      <div className="md:hidden px-4 pb-8">
         <MobileCarousel products={products} />
       </div>
 
       {/* Desktop Layout */}
-      <div className="hidden md:block relative z-10 mx-auto max-w-7xl px-4 md:px-8 pb-16 md:pb-36">
+      <div className="hidden md:block relative z-10 mx-auto max-w-7xl px-4 md:px-8 pb-16 md:pb-24">
         <DesktopCarouselDeck products={products} />
       </div>
     </section>

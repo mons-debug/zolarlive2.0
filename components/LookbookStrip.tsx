@@ -104,9 +104,9 @@ export default function LookbookStrip() {
   }, []);
 
     return (
-    <section id="lookbook" className="relative min-h-screen flex flex-col bg-gradient-to-b from-teal-900/20 via-cyan-900/10 to-transparent">
+    <section id="lookbook" className="relative min-h-[80vh] md:min-h-screen flex flex-col">
       {/* Fixed title that stays at top */}
-      <div ref={titleRef} className="text-center pt-16 xs:pt-20 pb-8 xs:pb-12 md:pt-24 md:pb-16 px-4 perspective-1000">
+      <div ref={titleRef} className="text-center pt-8 xs:pt-12 pb-4 xs:pb-6 md:pt-24 md:pb-16 px-4 perspective-1000">
         <h3 className="text-white text-2xl xs:text-3xl sm:text-4xl md:text-6xl font-semibold leading-tight">
           <span className="word inline-block">Collection</span>{" "}
           <span className="word inline-block">Gallery</span>

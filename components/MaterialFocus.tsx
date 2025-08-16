@@ -195,7 +195,7 @@ export default function MaterialFocus() {
     <section
       ref={root}
       id="materials"
-      className="relative z-10 w-[min(1100px,90vw)] mx-auto py-12 md:py-24 px-4 md:px-0"
+      className="relative z-10 w-[min(1100px,90vw)] mx-auto py-8 md:py-24 px-4 md:px-0"
     >
       <div className="text-center mb-12 md:mb-16">
         <h3 className="text-white text-2xl xs:text-3xl md:text-5xl font-bold mb-3 leading-tight">
