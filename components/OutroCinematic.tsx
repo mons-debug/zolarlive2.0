@@ -33,19 +33,31 @@ export default function OutroCinematic({
 
   // Prevent body scroll when fullscreen is open
   useEffect(() => {
+    let scrollPosition = 0;
+    
     if (fullscreenData?.isOpen) {
+      // Store current scroll position
+      scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
       document.body.style.overflow = 'hidden';
       document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollPosition}px`;
       document.body.style.width = '100%';
     } else {
+      // Restore scroll position
+      const scrollY = document.body.style.top;
       document.body.style.overflow = '';
       document.body.style.position = '';
+      document.body.style.top = '';
       document.body.style.width = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
     }
     
     return () => {
       document.body.style.overflow = '';
       document.body.style.position = '';
+      document.body.style.top = '';
       document.body.style.width = '';
     };
   }, [fullscreenData?.isOpen]);
