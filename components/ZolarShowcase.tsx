@@ -14,6 +14,57 @@ if (typeof window !== "undefined") {
 // Size options
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 
+// Size measurements (approx.)
+const SIZE_CHART: Record<string, { chest: number; length: number }> = {
+  XS: { chest: 46, length: 66 },
+  S: { chest: 49, length: 69 },
+  M: { chest: 52, length: 72 },
+  L: { chest: 55, length: 74 },
+  XL: { chest: 58, length: 76 },
+  XXL: { chest: 61, length: 78 },
+};
+
+function SizeChartModal({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-2xl bg-black ring-1 ring-white/10 text-white">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
+          <h4 className="text-lg font-semibold">Size Chart</h4>
+          <button aria-label="Close size chart" onClick={onClose} className="p-2 rounded-full hover:bg-white/10">
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div className="px-5 py-4">
+          <div className="text-sm text-white/70 mb-3">Measurements are taken flat across the garment. For best fit, compare with a tee you own.</div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="text-white/70">
+                <tr>
+                  <th className="text-left py-2 pr-4 font-medium">Size</th>
+                  <th className="text-left py-2 pr-4 font-medium">Chest (cm)</th>
+                  <th className="text-left py-2 font-medium">Length (cm)</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/10">
+                {SIZES.map((s) => (
+                  <tr key={s}>
+                    <td className="py-2 pr-4">{s}</td>
+                    <td className="py-2 pr-4">{SIZE_CHART[s].chest}</td>
+                    <td className="py-2">{SIZE_CHART[s].length}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div className="px-5 pb-5">
+          <button onClick={onClose} className="w-full mt-2 inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium bg-white/10 hover:bg-white/15">Close</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // Mobile Carousel Component with scroll-triggered auto-swipe
 function MobileCarousel({ products }: { products: Product[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -40,16 +91,10 @@ function MobileCarousel({ products }: { products: Product[] }) {
     if (xDiff > yDiff && xDiff > 10) {
       e.preventDefault();
       setIsDragging(true);
-      
-      // Prevent body scroll during horizontal swipe
-      document.body.style.overflow = 'hidden';
     }
   };
 
   const handleTouchEnd = () => {
-    // Re-enable body scroll
-    document.body.style.overflow = '';
-    
     if (!touchStart || !touchEnd) return;
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > 50;
@@ -85,7 +130,7 @@ function MobileCarousel({ products }: { products: Product[] }) {
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        style={{ touchAction: 'pan-x' }}
+        style={{ touchAction: 'auto' }}
       >
         <div 
           className="flex transition-transform duration-300 ease-out"
@@ -114,9 +159,14 @@ function MobileCarousel({ products }: { products: Product[] }) {
         ))}
       </div>
 
+      {/* Slide count to hint multiple cards */}
+      <div className="text-center mt-2 text-white/70 text-sm">
+        {currentIndex + 1} of {products.length}
+      </div>
+
       {/* Swipe Hint */}
       <div className="text-center mt-4">
-        <p className="text-white/60 text-sm">Swipe to explore • Tap to flip</p>
+        <p className="text-white/80 text-sm">Swipe to explore • Tap to flip</p>
       </div>
     </div>
   );
@@ -300,6 +350,7 @@ function DesktopCarouselDeck({ products }: { products: Product[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [currentViewMode, setCurrentViewMode] = useState<'front' | 'back'>('front');
+  const [isSizeChartOpen, setIsSizeChartOpen] = useState(false);
 
   const currentProduct = products[currentIndex];
 
@@ -465,7 +516,18 @@ function DesktopCarouselDeck({ products }: { products: Product[] }) {
 
         {/* Size Selection */}
         <div>
-          <h3 className="text-lg font-semibold text-white mb-3">Select Size</h3>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-lg font-semibold text-white">Select Size</h3>
+            <button
+              type="button"
+              onClick={() => setIsSizeChartOpen(true)}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/15 text-xs text-white/80 hover:bg-white/10"
+              aria-label="Open size chart"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01"/><path d="M11 12h1v4h1"/></svg>
+              Size chart
+            </button>
+          </div>
           <div className="grid grid-cols-3 gap-3">
             {SIZES.map((size) => (
               <button
@@ -480,6 +542,11 @@ function DesktopCarouselDeck({ products }: { products: Product[] }) {
                 {size}
               </button>
             ))}
+          </div>
+          <div className="mt-2 text-sm text-white/70 min-h-[1.25rem]">
+            {selectedSize
+              ? `Chest: ${SIZE_CHART[selectedSize].chest} cm • Length: ${SIZE_CHART[selectedSize].length} cm`
+              : 'Tap a size to see measurements'}
           </div>
         </div>
 
@@ -512,6 +579,7 @@ function DesktopCarouselDeck({ products }: { products: Product[] }) {
             <p className="text-white/60 text-sm">30-day return policy</p>
           </div>
         </div>
+        {isSizeChartOpen && <SizeChartModal onClose={() => setIsSizeChartOpen(false)} />}
       </div>
     </div>
   );
@@ -520,6 +588,7 @@ function DesktopCarouselDeck({ products }: { products: Product[] }) {
 // Legacy ProductCard component for mobile (keeping for backwards compatibility)
 function ProductCard({ product }: { product: Product }) {
   const [selectedSize, setSelectedSize] = useState<string>("");
+  const [isSizeChartOpen, setIsSizeChartOpen] = useState(false);
 
   const handleWhatsAppOrder = () => {
     if (!selectedSize) {
@@ -578,7 +647,18 @@ function ProductCard({ product }: { product: Product }) {
       
       {/* Size Selection - optimized for mobile */}
       <div className="mt-4">
-        <p className="text-xs md:text-sm text-white/80 mb-2 font-medium">Select Size:</p>
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-xs md:text-sm text-white/80 font-medium">Select Size:</p>
+          <button
+            type="button"
+            onClick={() => setIsSizeChartOpen(true)}
+            className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full border border-white/15 text-[11px] text-white/80 hover:bg-white/10"
+            aria-label="Open size chart"
+          >
+            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01"/><path d="M11 12h1v4h1"/></svg>
+            Size chart
+          </button>
+        </div>
         <div className="grid grid-cols-3 gap-1.5 md:gap-2">
           {SIZES.map((size) => (
             <button
@@ -594,6 +674,11 @@ function ProductCard({ product }: { product: Product }) {
             </button>
           ))}
         </div>
+        <div className="mt-2 text-[12px] md:text-sm text-white/70 min-h-[1rem]">
+          {selectedSize
+            ? `Chest: ${SIZE_CHART[selectedSize].chest} cm • Length: ${SIZE_CHART[selectedSize].length} cm`
+            : 'Tap a size to see measurements'}
+        </div>
       </div>
 
       {/* Mobile: Fixed bottom action */}
@@ -608,6 +693,7 @@ function ProductCard({ product }: { product: Product }) {
           Order via WhatsApp
         </button>
       </div>
+      {isSizeChartOpen && <SizeChartModal onClose={() => setIsSizeChartOpen(false)} />}
     </div>
   );
 }

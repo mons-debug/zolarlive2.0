@@ -61,17 +61,17 @@ export default function LookbookStrip() {
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: () => `+=${total * 1.5 + window.innerHeight * 0.5}`, // Extra time to see title
+            end: () => `+=${total * 1.1 + window.innerHeight * 0.3}`, // Start horizontal earlier
             scrub: 1.2,
             pin: true,
             anticipatePin: 1,
           },
         });
         
-        // Hold title visible for first 30% of scroll
-        tl.to(track, { x: 0, duration: 0.3, ease: "none" });
-        // Then slide horizontally for remaining 70%
-        tl.to(track, { x: -total, duration: 0.7, ease: "none" });
+        // Hold title visible for first 15% of scroll
+        tl.to(track, { x: 0, duration: 0.15, ease: "none" });
+        // Then slide horizontally for remaining 85%
+        tl.to(track, { x: -total, duration: 0.85, ease: "none" });
       });
 
       // Mobile: Pin entire section and horizontal scroll
@@ -83,18 +83,18 @@ export default function LookbookStrip() {
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: () => `+=${total * 1.8 + window.innerHeight * 0.6}`, // Extra time to see title
-            scrub: 1.5, // Smooth scrub
+            end: () => `+=${total * 1.2 + window.innerHeight * 0.3}`, // Start horizontal earlier on mobile
+            scrub: 1.2, // Smooth scrub
             pin: true,
             anticipatePin: 1,
             invalidateOnRefresh: true,
           },
         });
         
-        // Hold title visible for first 40% of scroll on mobile
-        tl.to(track, { x: 0, duration: 0.4, ease: "none" });
-        // Then slide horizontally for remaining 60%
-        tl.to(track, { x: -total, duration: 0.6, ease: "none" });
+        // Hold title visible for first 20% of scroll on mobile
+        tl.to(track, { x: 0, duration: 0.2, ease: "none" });
+        // Then slide horizontally for remaining 80%
+        tl.to(track, { x: -total, duration: 0.8, ease: "none" });
       });
 
     return () => {
