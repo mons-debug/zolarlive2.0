@@ -115,19 +115,19 @@ export default function OutroCinematic({
   return (
     <section id="outro" ref={root} className="relative min-h-[90vh] md:min-h-screen lg:min-h-[110vh] xl:min-h-[120vh] flex flex-col justify-center items-center px-4 lg:px-8 xl:px-12 overflow-clip pb-8 md:pb-24 lg:pb-32 xl:pb-40">
       {/* Title and CTA moved to top */}
-      <div className="out-text text-center mb-8 lg:mb-12 xl:mb-16 relative z-10">
-        <div className="font-mono text-xs md:text-sm lg:text-base tracking-[0.3em] text-emerald-400/80 mb-4 lg:mb-6">
+      <div className="out-text text-center mb-8 md:mb-16 lg:mb-20 relative z-10">
+        <div className="font-mono text-xs md:text-sm lg:text-base xl:text-lg tracking-[0.3em] text-emerald-400/80 mb-4 md:mb-6 lg:mb-8">
           Final Collection Drop
         </div>
-        <h3 className="font-display text-4xl md:text-5xl text-white text-glow mb-6 lg:mb-8">
+        <h3 className="font-display text-4xl md:text-6xl lg:text-7xl xl:text-8xl text-white text-glow mb-6 md:mb-8 lg:mb-10">
           Borderline — Limited Release
         </h3>
-        <p className="font-body text-white/90 text-lg md:text-xl">Secure Yours</p>
+        <p className="font-body text-white/90 text-lg md:text-2xl lg:text-3xl">Secure Yours</p>
       </div>
       
       {/* Product selection panel without outer container */}
-      <div className="w-[min(1100px,90vw)] lg:w-[min(1300px,85vw)] xl:w-[min(1500px,80vw)] mx-auto">
-        <div className="rounded-2xl lg:rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/30 shadow-xl p-5 md:p-7 lg:p-9 xl:p-12 grid gap-4 lg:gap-6 xl:gap-8">
+      <div className="w-[min(1100px,90vw)] md:w-[min(1200px,85vw)] lg:w-[min(1400px,80vw)] xl:w-[min(1600px,75vw)] mx-auto">
+        <div className="rounded-2xl md:rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/30 shadow-xl p-5 md:p-8 lg:p-10 xl:p-14 grid gap-4 md:gap-6 lg:gap-8 xl:gap-10">
             {/* Summary row (top right) */}
             <div className="flex items-start justify-between">
               <div className="text-white/70 text-xs md:text-sm">Buy both and save <span className="text-emerald-300">15%</span></div>
@@ -172,7 +172,7 @@ export default function OutroCinematic({
                   {/* Inline product gallery */}
                   <div className="relative rounded-2xl overflow-hidden bg-black/20 group">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={IMAGES_BLACK[currentImageBlack]} alt="Borderline Black preview" className="w-full h-48 md:h-56 object-cover" />
+                    <img src={IMAGES_BLACK[currentImageBlack]} alt="Borderline Black preview" className="w-full h-48 md:h-64 lg:h-72 xl:h-80 object-cover" />
                     
                     {/* Fullscreen Button */}
                     <button
@@ -266,7 +266,7 @@ export default function OutroCinematic({
                   {/* Inline product gallery */}
                   <div className="relative rounded-2xl overflow-hidden bg-black/20 group">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={IMAGES_WHITE[currentImageWhite]} alt="Spin White preview" className="w-full h-48 md:h-56 object-cover" />
+                    <img src={IMAGES_WHITE[currentImageWhite]} alt="Spin White preview" className="w-full h-48 md:h-64 lg:h-72 xl:h-80 object-cover" />
                     
                     {/* Fullscreen Button */}
                     <button
@@ -536,17 +536,25 @@ export default function OutroCinematic({
                   const chosen: string[] = [];
                   if (selectedBlack) chosen.push(`Borderline Black x${qtyBlack} (Size ${sizeBlack})`);
                   if (selectedWhite) chosen.push(`Spin White x${qtyWhite} (Size ${sizeWhite})`);
-                  const discountLine = bothSelected ? `\nBundle discount: -${discount} MAD (20% off)` : "";
+                  const discountLine = bothSelected ? `\nBundle discount: -${discount} MAD (15% off)` : "";
                   const msg = `Hi! I want to order from Zolar:\n\n📦 Products:\n${chosen.join("\n")}\n\n💰 Total: ${total} MAD${discountLine ? `\n(Bundle discount applied: -${discount} MAD)` : ""}\n\n👤 Name: ${customerName}\n📍 City: ${customerCity}\n\nPlease confirm availability and delivery details. Thank you!`;
                   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
                   
-                  // Open WhatsApp
-                  window.open(url, "_blank");
+                  // Open WhatsApp in new tab
+                  const whatsappWindow = window.open(url, "_blank");
                   
-                  // Clear form
-                  setShowOrderForm(false);
-                  setCustomerName("");
-                  setCustomerCity("");
+                  // Only clear form if WhatsApp opened successfully
+                  if (whatsappWindow) {
+                    // Give user time to see the form before clearing (in case they need to retry)
+                    setTimeout(() => {
+                      setShowOrderForm(false);
+                      setCustomerName("");
+                      setCustomerCity("");
+                    }, 2000);
+                  } else {
+                    // If popup was blocked, try direct navigation
+                    window.location.href = url;
+                  }
                 }}
                 className={`flex-1 px-4 py-3 rounded-xl flex items-center justify-center gap-2 transition-all ${
                   customerName && customerCity
