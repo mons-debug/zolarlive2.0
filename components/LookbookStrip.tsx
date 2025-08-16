@@ -61,17 +61,17 @@ export default function LookbookStrip() {
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: () => `+=${total * 1.1 + window.innerHeight * 0.3}`, // Start horizontal earlier
+            end: () => `+=${total * 0.8 + window.innerHeight * 0.2}`, // Start horizontal much earlier
             scrub: 1.2,
             pin: true,
             anticipatePin: 1,
           },
         });
         
-        // Hold title visible for first 15% of scroll
-        tl.to(track, { x: 0, duration: 0.15, ease: "none" });
-        // Then slide horizontally for remaining 85%
-        tl.to(track, { x: -total, duration: 0.85, ease: "none" });
+        // Hold title visible for first 5% of scroll
+        tl.to(track, { x: 0, duration: 0.05, ease: "none" });
+        // Then slide horizontally for remaining 95%
+        tl.to(track, { x: -total, duration: 0.95, ease: "none" });
       });
 
       // Mobile: Pin entire section and horizontal scroll
@@ -83,7 +83,7 @@ export default function LookbookStrip() {
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: () => `+=${total * 1.2 + window.innerHeight * 0.3}`, // Start horizontal earlier on mobile
+            end: () => `+=${total * 0.7 + window.innerHeight * 0.15}`, // Start horizontal much earlier on mobile
             scrub: 1.2, // Smooth scrub
             pin: true,
             anticipatePin: 1,
@@ -91,10 +91,10 @@ export default function LookbookStrip() {
           },
         });
         
-        // Hold title visible for first 20% of scroll on mobile
-        tl.to(track, { x: 0, duration: 0.2, ease: "none" });
-        // Then slide horizontally for remaining 80%
-        tl.to(track, { x: -total, duration: 0.8, ease: "none" });
+        // Hold title visible for first 5% of scroll on mobile
+        tl.to(track, { x: 0, duration: 0.05, ease: "none" });
+        // Then slide horizontally for remaining 95%
+        tl.to(track, { x: -total, duration: 0.95, ease: "none" });
       });
 
     return () => {
@@ -106,12 +106,12 @@ export default function LookbookStrip() {
     return (
     <section id="lookbook" className="relative min-h-screen flex flex-col bg-gradient-to-b from-teal-900/20 via-cyan-900/10 to-transparent">
       {/* Fixed title that stays at top */}
-      <div ref={titleRef} className="text-center pt-20 pb-12 md:pt-24 md:pb-16 px-4 perspective-1000">
-        <h3 className="text-white text-4xl md:text-6xl font-semibold leading-tight">
+      <div ref={titleRef} className="text-center pt-16 xs:pt-20 pb-8 xs:pb-12 md:pt-24 md:pb-16 px-4 perspective-1000">
+        <h3 className="text-white text-2xl xs:text-3xl sm:text-4xl md:text-6xl font-semibold leading-tight">
           <span className="word inline-block">Collection</span>{" "}
           <span className="word inline-block">Gallery</span>
         </h3>
-        <p className="text-white/60 text-base md:text-lg mt-4">
+        <p className="text-white/60 text-sm xs:text-base md:text-lg mt-2 xs:mt-4">
           <span className="word inline-block">Scroll</span>{" "}
           <span className="word inline-block">through</span>{" "}
           <span className="word inline-block">our</span>{" "}
@@ -127,7 +127,7 @@ export default function LookbookStrip() {
           {LOOKS.map((src, i) => (
             <div
               key={i}
-              className="shrink-0 rounded-2xl md:rounded-3xl border border-white/10 bg-black/40 overflow-hidden shadow-2xl w-[80vw] h-[50vh] md:w-[45vw] md:h-[55vh] transition-transform hover:scale-[1.02]"
+              className="shrink-0 rounded-2xl md:rounded-3xl border border-white/10 bg-black/40 overflow-hidden shadow-2xl w-[85vw] xs:w-[80vw] h-[40vh] xs:h-[50vh] md:w-[45vw] md:h-[55vh] transition-transform hover:scale-[1.02]"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={src} alt={`Look ${i + 1}`} className="w-full h-full object-cover" />
@@ -135,14 +135,7 @@ export default function LookbookStrip() {
           ))}
         </div>
       </div>
-      {/* Progress indicator */}
-      <div className="text-center mt-6">
-        <div className="flex justify-center gap-1.5">
-          {LOOKS.map((_, i) => (
-            <div key={i} className="w-1.5 h-1.5 rounded-full bg-white/30 transition-all duration-300" />
-          ))}
-        </div>
-      </div>
+
     </section>
   );
 }

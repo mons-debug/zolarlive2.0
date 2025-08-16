@@ -44,9 +44,9 @@ export default function MaterialFocus() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: el,
-          start: "top 50%",
-          end: "bottom 50%",
-          scrub: 0.5,
+          start: "top 80%",
+          end: "bottom 20%",
+          scrub: 0.3,
         }
       });
       
@@ -99,9 +99,9 @@ export default function MaterialFocus() {
             ease: "power3.out",
             scrollTrigger: {
               trigger: card,
-              start: "top 85%",
-              end: "top 60%",
-              scrub: 0.8,
+              start: "top 90%",
+              end: "top 50%",
+              scrub: 0.5,
             },
           }
         );
@@ -138,7 +138,7 @@ export default function MaterialFocus() {
               ease: "power3.out",
               scrollTrigger: {
                 trigger: card,
-                start: "top 75%",
+                start: "top 85%",
                 toggleActions: "play none none reverse",
               },
             }
@@ -158,7 +158,7 @@ export default function MaterialFocus() {
               ease: "power2.out",
               scrollTrigger: {
                 trigger: card,
-                start: "top 70%",
+                start: "top 80%",
                 toggleActions: "play none none reverse",
               },
             }
@@ -176,7 +176,7 @@ export default function MaterialFocus() {
               ease: "power2.inOut",
               scrollTrigger: {
                 trigger: card,
-                start: "top 65%",
+                start: "top 75%",
                 toggleActions: "play none none reverse",
               },
             }
@@ -195,22 +195,22 @@ export default function MaterialFocus() {
     <section
       ref={root}
       id="materials"
-      className="relative z-10 w-[min(1100px,86vw)] mx-auto py-16 md:py-24"
+      className="relative z-10 w-[min(1100px,90vw)] mx-auto py-12 md:py-24 px-4 md:px-0"
     >
       <div className="text-center mb-12 md:mb-16">
-        <h3 className="text-white text-3xl md:text-5xl font-bold mb-3">
+        <h3 className="text-white text-2xl xs:text-3xl md:text-5xl font-bold mb-3 leading-tight">
           <span className="inline-block animate-fade-up">Materials</span>{" "}
           <span className="inline-block animate-fade-up animation-delay-100">&</span>{" "}
           <span className="inline-block animate-fade-up animation-delay-200">Details</span>
         </h3>
-        <p className="text-white/60 text-base md:text-lg animate-fade-up animation-delay-300">
+        <p className="text-white/60 text-sm xs:text-base md:text-lg animate-fade-up animation-delay-300 max-w-lg mx-auto">
           Crafted with precision, built to last
         </p>
       </div>
       
       {/* Mobile: Scroll-triggered animated cards */}
       <div className="md:hidden">
-        <div className="mobile-materials-wrapper space-y-4 px-4">
+        <div className="mobile-materials-wrapper space-y-4">
           {MACRO.map((m, i) => (
             <div
               key={i}
@@ -227,8 +227,8 @@ export default function MaterialFocus() {
               {/* Content */}
               <div className="relative z-10 h-48 flex items-center">
                 <div className="mobile-material-content p-6 max-w-[70%]">
-                  <h4 className="mobile-material-title text-2xl font-bold text-white mb-2">{m.title}</h4>
-                  <p className="mobile-material-text text-white/80 text-sm leading-relaxed">{m.body}</p>
+                  <h4 className="mobile-material-title text-xl xs:text-2xl font-bold text-white mb-2">{m.title}</h4>
+                  <p className="mobile-material-text text-white/80 text-xs xs:text-sm leading-relaxed">{m.body}</p>
                   <div className="mobile-material-indicator mt-3 w-12 h-1 bg-gradient-to-r from-emerald-400 to-sky-400 rounded-full" />
                 </div>
               </div>

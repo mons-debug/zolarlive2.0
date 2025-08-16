@@ -71,7 +71,7 @@ export default function OutroCinematic({
   }, []);
 
   return (
-    <section id="outro" ref={root} className="relative min-h-screen flex flex-col justify-center items-center px-4 overflow-clip">
+    <section id="outro" ref={root} className="relative min-h-screen flex flex-col justify-center items-center px-4 overflow-clip pb-16 md:pb-24">
       {/* Title and CTA moved to top */}
       <div className="out-text text-center mb-8">
         <h3 className="text-white text-4xl md:text-5xl font-bold mb-4">
