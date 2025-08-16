@@ -30,34 +30,38 @@ export default function OutroCinematic({
   const [currentImageWhite, setCurrentImageWhite] = useState<number>(0);
   const [activeTab, setActiveTab] = useState<"black" | "white">("black");
   const [fullscreenData, setFullscreenData] = useState<{isOpen: boolean, product: "black" | "white", imageIndex: number} | null>(null);
+  const scrollYRef = useRef<number>(0);
 
-  // Prevent body scroll when fullscreen is open
+  // Prevent body scroll when fullscreen is open and preserve scroll position
   useEffect(() => {
-    let scrollPosition = 0;
-    
     if (fullscreenData?.isOpen) {
-      // Store current scroll position
-      scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-      document.body.style.overflow = 'hidden';
+      // Persist scroll position in a ref to avoid losing it on re-renders
+      scrollYRef.current = window.scrollY;
       document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollPosition}px`;
+      document.body.style.top = `-${scrollYRef.current}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.overflow = 'hidden';
       document.body.style.width = '100%';
     } else {
-      // Restore scroll position
-      const scrollY = document.body.style.top;
-      document.body.style.overflow = '';
+      // Restore scroll position from ref
       document.body.style.position = '';
       document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
       document.body.style.width = '';
-      if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      if (typeof scrollYRef.current === 'number') {
+        window.scrollTo(0, scrollYRef.current);
       }
     }
     
     return () => {
-      document.body.style.overflow = '';
       document.body.style.position = '';
       document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
       document.body.style.width = '';
     };
   }, [fullscreenData?.isOpen]);

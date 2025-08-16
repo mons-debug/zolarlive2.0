@@ -181,12 +181,43 @@ function MobileShopCard() {
   const [variant, setVariant] = useState<'borderline' | 'spin'>('borderline');
   const [isInteracting, setIsInteracting] = useState(false);
   const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
+  const scrollYRef = useRef<number>(0);
   const cardRef = useRef<HTMLDivElement>(null);
 
   // Set initial gradient to Borderline (green) theme on component mount
   useEffect(() => {
     updateGlobalGradient('borderline', 'male');
   }, []);
+
+  // Prevent body scroll when fullscreen is open and preserve scroll position
+  useEffect(() => {
+    if (isFullscreenOpen) {
+      scrollYRef.current = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollYRef.current}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.overflow = 'hidden';
+      document.body.style.width = '100%';
+    } else {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollYRef.current || 0);
+    }
+    
+    return () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
+      document.body.style.width = '';
+    };
+  }, [isFullscreenOpen]);
 
   // 📸 MEDIA CONFIGURATION - Easy to update images
   // 
@@ -605,9 +636,40 @@ function DesktopProductShowcase({ products }: { products: Product[] }) {
   const [currentView, setCurrentView] = useState<'borderline' | 'spin'>('borderline');
   const [currentSide, setCurrentSide] = useState<'front' | 'back'>('front');
   const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
+  const scrollYRef = useRef<number>(0);
 
   const borderlineProduct = products.find(p => p.id.includes('borderline'));
   const spinProduct = products.find(p => p.id.includes('spin'));
+
+  // Prevent body scroll when fullscreen is open and preserve scroll position
+  useEffect(() => {
+    if (isFullscreenOpen) {
+      scrollYRef.current = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollYRef.current}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.overflow = 'hidden';
+      document.body.style.width = '100%';
+    } else {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollYRef.current || 0);
+    }
+    
+    return () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
+      document.body.style.width = '';
+    };
+  }, [isFullscreenOpen]);
 
   return (
     <div className="space-y-8">
