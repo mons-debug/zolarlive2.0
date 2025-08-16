@@ -21,6 +21,12 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Zolar — Borderline Black & Spin for Purpose",
   description: "Zolar landing — neon black and kinetic white releases.",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/zolar-logo-solid.svg", type: "image/svg+xml" }
+    ],
+  },
   openGraph: {
     title: "Zolar — Borderline Black & Spin for Purpose",
     description: "Neon black and kinetic white releases from Zolar.",

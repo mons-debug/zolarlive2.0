@@ -520,12 +520,12 @@ function MobileShopCard() {
     </div>
 
             {/* Navigation Controls Overlay */}
-            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-4">
+            <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex flex-wrap items-center justify-center gap-2 sm:gap-4 px-4 max-w-full">
               {/* Front/Back Toggle */}
               <div className="flex bg-black/70 backdrop-blur-md rounded-full border border-white/20 p-1">
                 <button
                   onClick={() => handleToggleChange('view', 'front')}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition ${
                     viewMode === 'front' 
                       ? 'bg-white text-black' 
                       : 'text-white/80 hover:text-white'
@@ -535,7 +535,7 @@ function MobileShopCard() {
                 </button>
                 <button
                   onClick={() => handleToggleChange('view', 'back')}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition ${
                     viewMode === 'back' 
                       ? 'bg-white text-black' 
                       : 'text-white/80 hover:text-white'
@@ -549,7 +549,7 @@ function MobileShopCard() {
               <div className="flex bg-black/70 backdrop-blur-md rounded-full border border-white/20 p-1">
               <button
                   onClick={() => handleToggleChange('model', 'male')}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition ${
                     model === 'male' 
                       ? 'bg-white text-black' 
                       : 'text-white/80 hover:text-white'
@@ -559,7 +559,7 @@ function MobileShopCard() {
               </button>
               <button
                   onClick={() => handleToggleChange('model', 'female')}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition ${
                     model === 'female' 
                       ? 'bg-white text-black' 
                       : 'text-white/80 hover:text-white'
@@ -571,9 +571,9 @@ function MobileShopCard() {
 
               {/* Variant Toggle */}
               <div className="flex bg-black/70 backdrop-blur-md rounded-full border border-white/20 p-1">
-              <button
+                            <button
                   onClick={() => handleVariantChange('borderline')}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition ${
                     variant === 'borderline' 
                       ? 'bg-emerald-400 text-black' 
                       : 'text-white/80 hover:text-white'
@@ -583,14 +583,14 @@ function MobileShopCard() {
               </button>
               <button
                   onClick={() => handleVariantChange('spin')}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition ${
                     variant === 'spin' 
                       ? 'bg-sky-400 text-black' 
                       : 'text-white/80 hover:text-white'
                   }`}
                 >
                   Spin
-                </button>
+              </button>
           </div>
         </div>
       </div>

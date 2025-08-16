@@ -159,7 +159,7 @@ export default function OutroCinematic({
                         e.stopPropagation();
                         setFullscreenData({isOpen: true, product: "black", imageIndex: currentImageBlack});
                       }}
-                      className="absolute top-2 right-2 z-20 w-8 h-8 bg-black/50 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-black/70 transition-all duration-200 opacity-0 group-hover:opacity-100 md:opacity-0 md:group-hover:opacity-100 touch-manipulation"
+                      className="absolute top-2 right-2 z-20 w-8 h-8 bg-black/50 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-black/70 transition-all duration-200 opacity-70 hover:opacity-100 md:opacity-0 md:group-hover:opacity-100 touch-manipulation"
                       aria-label="View fullscreen"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -253,7 +253,7 @@ export default function OutroCinematic({
                         e.stopPropagation();
                         setFullscreenData({isOpen: true, product: "white", imageIndex: currentImageWhite});
                       }}
-                      className="absolute top-2 right-2 z-20 w-8 h-8 bg-black/50 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-black/70 transition-all duration-200 opacity-0 group-hover:opacity-100 md:opacity-0 md:group-hover:opacity-100 touch-manipulation"
+                      className="absolute top-2 right-2 z-20 w-8 h-8 bg-black/50 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-black/70 transition-all duration-200 opacity-70 hover:opacity-100 md:opacity-0 md:group-hover:opacity-100 touch-manipulation"
                       aria-label="View fullscreen"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
