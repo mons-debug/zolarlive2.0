@@ -104,7 +104,7 @@ export default function LookbookStrip() {
   }, []);
 
     return (
-    <section id="lookbook" className="relative min-h-[80vh] md:min-h-screen flex flex-col">
+    <section id="lookbook" className="relative min-h-[60vh] md:min-h-[80vh] flex flex-col">
       {/* Fixed title that stays at top */}
       <div ref={titleRef} className="text-center pt-8 xs:pt-12 pb-4 xs:pb-6 md:pt-24 md:pb-16 px-4 perspective-1000">
         <div className="font-mono text-xs tracking-[0.3em] text-emerald-400/80 mb-4">
@@ -123,7 +123,7 @@ export default function LookbookStrip() {
         </p>
       </div>
       {/* Gallery that pins below the title */}
-      <div ref={wrap} className="lb-wrap relative overflow-hidden flex-1 min-h-[50vh] md:min-h-[60vh]">
+      <div ref={wrap} className="lb-wrap relative overflow-hidden flex-1 min-h-[35vh] md:min-h-[45vh]">
         <div
           ref={trackRef}
           className="lb-track flex gap-4 md:gap-6 px-6 md:px-8 h-full items-center"
