@@ -20,7 +20,7 @@ const MACRO = [
     body: "Soft-hand inks with crisp edges and deep blacks.",
   },
   {
-    img: "/images/macro-fabric.png",
+    img: "/images/macro-fabric.jpg",
     title: "Fabric",
     body: "Heavyweight cotton with a matte, structured drape.",
   },

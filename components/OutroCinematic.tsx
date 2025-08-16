@@ -17,7 +17,7 @@ export default function OutroCinematic({
 }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const [selectedBlack, setSelectedBlack] = useState<boolean>(true);
-  const [selectedWhite, setSelectedWhite] = useState<boolean>(true);
+  const [selectedWhite, setSelectedWhite] = useState<boolean>(false);
   const [sizeBlack, setSizeBlack] = useState<string>("M");
   const [sizeWhite, setSizeWhite] = useState<string>("M");
   const [qtyBlack, setQtyBlack] = useState<number>(1);
