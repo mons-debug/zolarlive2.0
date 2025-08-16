@@ -5,16 +5,16 @@
   --foreground: #e6e6e6;
   --zolar-green: 16 185 129; /* emerald-500 */
   --zolar-sky: 56 189 248; /* sky-400 */
-  /* Shared gradient system */
-  --h1: 160; /* primary hue seed (green) */
-  --h2: 520; /* secondary hue seed (purple/sky mix) */
+  /* Shared gradient system - Start with green theme */
+  --h1: 160; /* primary hue seed (emerald green) */
+  --h2: 140; /* secondary hue seed (complementary green) */
   --gx: 50%; /* gradient anchor x */
   --gy: 30%; /* gradient anchor y */
   --corner-radius: 24px;
   /* Gradient alpha controls (visible on load) */
-  --ga1: 0.32; /* primary color alpha */
-  --ga2: 0.22; /* secondary color alpha */
-  --ga3: 0.06; /* white sheen alpha */
+  --ga1: 0.35; /* primary color alpha */
+  --ga2: 0.25; /* secondary color alpha */
+  --ga3: 0.08; /* white sheen alpha */
 }
 
 @theme inline {
@@ -57,6 +57,8 @@ body {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   transform: translateZ(0);
+  /* Smooth transitions for interactive gradient changes */
+  transition: background 600ms cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 /* Softer intensity for hero */

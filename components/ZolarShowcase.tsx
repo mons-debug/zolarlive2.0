@@ -138,7 +138,9 @@ function MobileCarousel({ products }: { products: Product[] }) {
         >
           {products.map((product, index) => (
             <div key={product.id} className="w-full flex-shrink-0">
-              <MobileProductStory product={product} index={index} />
+              <div className="h-[85vh] bg-black/60 rounded-3xl flex items-center justify-center">
+                <p className="text-white">Legacy carousel - now using single card</p>
+              </div>
             </div>
           ))}
         </div>
@@ -172,172 +174,283 @@ function MobileCarousel({ products }: { products: Product[] }) {
   );
 }
 
-// Mobile Product Story Component - Interactive flip card with storytelling
-function MobileProductStory({ product, index }: { product: Product; index: number }) {
-  const [isFlipped, setIsFlipped] = useState(false);
+// Enhanced Mobile Shop Card Component - Single card with inline controls
+function MobileShopCard() {
+  const [viewMode, setViewMode] = useState<'front' | 'back'>('front');
+  const [model, setModel] = useState<'male' | 'female'>('male');
+  const [variant, setVariant] = useState<'borderline' | 'spin'>('borderline');
+  const [isInteracting, setIsInteracting] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Minimal story content - Morocco 2025 edition
-  const storyContent = {
+  // 📸 MEDIA CONFIGURATION - Easy to update images
+  // 
+  // 🎯 QUICK START:
+  // 1. Open: create-placeholders.html in your browser
+  // 2. Download all 8 placeholder images
+  // 3. Replace with your photos using the EXACT same filenames
+  // 4. Images will automatically appear in the showcase!
+  //
+  // 📁 File structure: /public/images/placeholders/
+  //    ├── borderline-black-male-front.png
+  //    ├── borderline-black-male-back.png  
+  //    ├── borderline-black-female-front.png
+  //    ├── borderline-black-female-back.png
+  //    ├── spin-white-male-front.png
+  //    ├── spin-white-male-back.png
+  //    ├── spin-white-female-front.png
+  //    └── spin-white-female-back.png
+  
+  const productData = {
     borderline: {
-      front: {
-        subtitle: product.subtitle,
-        title: "The Night Vision",
-        mood: "For those who stand out"
+      name: "Borderline Black",
+      subtitle: "Green glow print",
+      description: "Our signature black tee with a neon-green border glow. Heavyweight cotton with a matte finish.",
+      theme: {
+        accentTextClass: "text-emerald-400",
+        ringClass: "ring-emerald-500/20",
+        buttonClass: "bg-emerald-400 text-black"
       },
-      back: {
-        subtitle: "Back View",
-        title: "Borderline",
-        mood: "Limited Edition"
+      images: {
+        male: { 
+          front: "/images/placeholders/borderline-black-male-front.png", 
+          back: "/images/placeholders/borderline-black-male-back.png" 
+        },
+        female: { 
+          front: "/images/placeholders/borderline-black-female-front.png",
+          back: "/images/placeholders/borderline-black-female-back.png"
+        }
       }
     },
     spin: {
-      front: {
-        subtitle: product.subtitle,
-        title: "Kinetic Energy",
-        mood: "Keep spinning"
+      name: "Spin for Purpose White",
+      subtitle: "Blue/Orange print",
+      description: "Clean white base with kinetic blue and orange spin graphic. Light and breathable for every day.",
+      theme: {
+        accentTextClass: "text-sky-400",
+        ringClass: "ring-sky-500/20",
+        buttonClass: "bg-sky-400 text-black"
       },
-      back: {
-        subtitle: "Back View",
-        title: "Purpose",
-        mood: "Limited Edition"
+      images: {
+        male: { 
+          front: "/images/placeholders/spin-white-male-front.png", 
+          back: "/images/placeholders/spin-white-male-back.png" 
+        },
+        female: { 
+          front: "/images/placeholders/spin-white-female-front.png",
+          back: "/images/placeholders/spin-white-female-back.png"
+        }
       }
     }
   };
 
-  const story = product.id === "borderline-black" ? storyContent.borderline : storyContent.spin;
-  const currentStory = isFlipped ? story.back : story.front;
+  const currentProduct = productData[variant];
+  const currentImage = currentProduct.images[model][viewMode];
 
-  const handleFlip = () => {
-    setIsFlipped(!isFlipped);
+  // 🌍 Global gradient control effects
+  const handleInteractionStart = () => {
+    setIsInteracting(true);
+    // Subtle gradient pulse on hover/touch
+    const docEl = document.documentElement;
+    docEl.style.setProperty('--ga1', '0.42');
+    docEl.style.setProperty('--ga2', '0.32');
   };
+
+  const handleInteractionEnd = () => {
+    setTimeout(() => {
+      setIsInteracting(false);
+      // Return to default intensity
+      const docEl = document.documentElement;
+      docEl.style.setProperty('--ga1', '0.35');
+      docEl.style.setProperty('--ga2', '0.25');
+    }, 300);
+  };
+
+  const updateGlobalGradient = (newVariant: 'borderline' | 'spin') => {
+    const docEl = document.documentElement;
+    
+    if (newVariant === 'borderline') {
+      // Borderline Black - Rich emerald/green theme
+      docEl.style.setProperty('--h1', '150'); // deep emerald 
+      docEl.style.setProperty('--h2', '120'); // forest green
+      docEl.style.setProperty('--ga1', '0.50'); // stronger primary
+      docEl.style.setProperty('--ga2', '0.38'); // stronger secondary
+      docEl.style.setProperty('--ga3', '0.12'); // enhanced glow
+    } else {
+      // Spin White - Cool sky/blue theme  
+      docEl.style.setProperty('--h1', '200'); // sky blue
+      docEl.style.setProperty('--h2', '230'); // deeper azure
+      docEl.style.setProperty('--ga1', '0.50'); // stronger primary
+      docEl.style.setProperty('--ga2', '0.38'); // stronger secondary
+      docEl.style.setProperty('--ga3', '0.12'); // enhanced glow
+    }
+  };
+
+  const resetGlobalGradient = () => {
+    const docEl = document.documentElement;
+    // Reset to default green theme (Borderline default)
+    docEl.style.setProperty('--h1', '160');
+    docEl.style.setProperty('--h2', '140'); 
+    docEl.style.setProperty('--ga1', '0.35');
+    docEl.style.setProperty('--ga2', '0.25');
+    docEl.style.setProperty('--ga3', '0.08');
+  };
+
+  const handleVariantChange = (newVariant: 'borderline' | 'spin') => {
+    setVariant(newVariant);
+    updateGlobalGradient(newVariant);
+    handleInteractionStart();
+    setTimeout(() => {
+      resetGlobalGradient();
+      handleInteractionEnd();
+    }, 1500); // Smoother duration
+  };
+
+  const handleToggleChange = (type: 'view' | 'model', value: 'front' | 'back' | 'male' | 'female') => {
+    if (type === 'view' && (value === 'front' || value === 'back')) {
+      setViewMode(value);
+    } else if (type === 'model' && (value === 'male' || value === 'female')) {
+      setModel(value);
+    }
+    
+    // Brief gradient pulse effect for toggles
+    updateGlobalGradient(variant);
+    handleInteractionStart();
+    setTimeout(() => {
+      resetGlobalGradient();
+      handleInteractionEnd();
+    }, 600); // Faster pulse for toggles
+  };
+
+  const storyContent = {
+    borderline: {
+      front: { title: "The Night Vision", mood: "For those who stand out" },
+      back: { title: "Borderline", mood: "Limited Edition" }
+    },
+    spin: {
+      front: { title: "Kinetic Energy", mood: "Keep spinning" },
+      back: { title: "Purpose", mood: "Limited Edition" }
+    }
+  };
+
+  const currentStory = storyContent[variant][viewMode];
 
   return (
     <div ref={cardRef} className="mobile-story-wrapper relative h-[85vh] px-4 py-8">
-      {/* 3D Flip Card Container */}
-      <div className="story-card-container relative h-full" style={{ perspective: '1000px' }}>
-        <div 
-          className="story-card"
-          style={{
-            transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-            WebkitTransform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-            transformStyle: 'preserve-3d',
-            WebkitTransformStyle: 'preserve-3d',
-            transition: 'transform 0.7s',
-            WebkitTransition: '-webkit-transform 0.7s',
-            position: 'relative',
-            width: '100%',
-            height: '100%'
-          }}
-        >
-          
-          {/* Front Side */}
-          <div 
-            className="story-side story-front"
-            style={{
-              position: 'absolute',
-              width: '100%',
-              height: '100%',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-              transform: 'rotateY(0deg)'
-            }}
-          >
-            <div className={`relative h-full rounded-3xl overflow-hidden shadow-2xl ring-1 ${product.theme.ringClass} bg-black/60`}>
+      <div 
+        className={`relative h-full rounded-3xl overflow-hidden shadow-2xl ring-1 bg-black/60 transition-all duration-500 ease-out ${
+          currentProduct.theme.ringClass
+        } ${
+          isInteracting 
+            ? `ring-2 ${variant === 'borderline' ? 'ring-emerald-400/60' : 'ring-sky-400/60'} shadow-2xl transform scale-[1.02]` 
+            : 'transform scale-100'
+        }`}
+        onTouchStart={handleInteractionStart}
+        onTouchEnd={handleInteractionEnd}
+        onMouseEnter={handleInteractionStart}
+        onMouseLeave={handleInteractionEnd}
+      >
               {/* Product Image */}
               <div className="absolute inset-0">
                 <Image 
-                  src={product.image} 
-                  alt={`${product.name} front`} 
+            src={currentImage} 
+            alt={`${currentProduct.name} ${viewMode} ${model}`} 
                   fill 
                   sizes="100vw" 
-                  className="object-cover"
-                  priority={index === 0}
+            className="object-cover transition-opacity duration-300"
+            priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
               </div>
               
-                              {/* Minimal Content Overlay */}
+        {/* Content Overlay */}
                 <div className="relative z-10 h-full flex flex-col justify-between p-6">
-                  {/* Top: Flip hint */}
-                  <div className="flex justify-end">
+          {/* Top: Inline Controls */}
+          <div className="space-y-3">
+            {/* Variant Toggle */}
+            <div className="flex justify-center">
+              <div className="inline-flex p-1 rounded-full bg-black/50 backdrop-blur border border-white/20">
                     <button 
-                      onClick={handleFlip}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur text-white/80 text-sm hover:bg-white/20 transition-colors"
-                    >
-                      <span>View back</span>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                      </svg>
+                  onClick={() => handleVariantChange('borderline')}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${
+                    variant === 'borderline' 
+                      ? 'bg-emerald-400 text-black' 
+                      : 'text-white/80 hover:text-white'
+                  }`}
+                >
+                  Borderline
+                </button>
+                <button
+                  onClick={() => handleVariantChange('spin')}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${
+                    variant === 'spin' 
+                      ? 'bg-sky-400 text-black' 
+                      : 'text-white/80 hover:text-white'
+                  }`}
+                >
+                  Spin
                     </button>
-                  </div>
-                  
-                  {/* Bottom: Minimal text */}
-                  <div className="story-content">
-                    <p className={`text-xs uppercase tracking-[0.3em] ${product.theme.accentTextClass} mb-2`}>
-                      {currentStory.subtitle}
-                    </p>
-                    <h3 className="text-3xl font-bold text-white mb-2">{currentStory.title}</h3>
-                    <p className="text-sm text-white/60 italic">{currentStory.mood}</p>
-                  </div>
-                </div>
             </div>
           </div>
           
-          {/* Back Side */}
-          <div 
-            className="story-side story-back"
-            style={{
-              position: 'absolute',
-              width: '100%',
-              height: '100%',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-              transform: 'rotateY(180deg)'
-            }}
-          >
-            <div className={`relative h-full rounded-3xl overflow-hidden shadow-2xl ring-1 ${product.theme.ringClass} bg-black/80 backdrop-blur`}>
-              {/* Back view image */}
-              <div className="absolute inset-0">
-                {product.backImage ? (
-                  <Image 
-                    src={product.backImage} 
-                    alt={`${product.name} back`} 
-                    fill 
-                    sizes="100vw" 
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-black via-gray-900 to-black" />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+            {/* View & Model Controls */}
+            <div className="flex justify-between items-center">
+              {/* Front/Back Toggle */}
+              <div className="flex bg-black/50 backdrop-blur rounded-full border border-white/20">
+                <button
+                  onClick={() => handleToggleChange('view', 'front')}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${
+                    viewMode === 'front' 
+                      ? 'bg-white text-black' 
+                      : 'text-white/80 hover:text-white'
+                  }`}
+                >
+                  Front
+                </button>
+                <button
+                  onClick={() => handleToggleChange('view', 'back')}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${
+                    viewMode === 'back' 
+                      ? 'bg-white text-black' 
+                      : 'text-white/80 hover:text-white'
+                  }`}
+                >
+                  Back
+                </button>
               </div>
               
-              {/* Minimal Back content */}
-              <div className="relative z-10 h-full flex flex-col justify-between p-6">
-                {/* Top: Flip back */}
-                <div className="flex justify-end">
+              {/* Male/Female Toggle */}
+              <div className="flex bg-black/50 backdrop-blur rounded-full border border-white/20">
                   <button 
-                    onClick={handleFlip}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur text-white/80 text-sm hover:bg-white/20 transition-colors"
-                  >
-                    <span>View front</span>
-                    <svg className="w-4 h-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
+                  onClick={() => handleToggleChange('model', 'male')}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${
+                    model === 'male' 
+                      ? 'bg-white text-black' 
+                      : 'text-white/80 hover:text-white'
+                  }`}
+                >
+                  Male
+                </button>
+                <button
+                  onClick={() => handleToggleChange('model', 'female')}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${
+                    model === 'female' 
+                      ? 'bg-white text-black' 
+                      : 'text-white/80 hover:text-white'
+                  }`}
+                >
+                  Female
                   </button>
-                </div>
-                
-                {/* Bottom: Minimal back text */}
-                <div className="story-content">
-                  <p className={`text-xs uppercase tracking-[0.3em] ${product.theme.accentTextClass} mb-2`}>
-                    {story.back.subtitle}
-                  </p>
-                  <h3 className="text-3xl font-bold text-white mb-2">{story.back.title}</h3>
-                  <p className="text-sm text-white/60 italic">{story.back.mood}</p>
-                </div>
               </div>
             </div>
+                </div>
+                
+          {/* Bottom: Product Info */}
+                <div className="story-content">
+            <p className={`text-xs uppercase tracking-[0.3em] ${currentProduct.theme.accentTextClass} mb-2`}>
+              {currentProduct.subtitle}
+            </p>
+            <h3 className="text-3xl font-bold text-white mb-2">{currentStory.title}</h3>
+            <p className="text-sm text-white/60 italic">{currentStory.mood}</p>
           </div>
         </div>
       </div>
@@ -994,9 +1107,9 @@ export default function ZolarShowcase() {
         </p>
       </div>
       
-      {/* Mobile Carousel */}
+      {/* Mobile Shop Card */}
       <div className="md:hidden px-4 pb-8">
-        <MobileCarousel products={products} />
+        <MobileShopCard />
       </div>
 
       {/* Desktop Layout */}
