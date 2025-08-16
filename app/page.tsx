@@ -16,9 +16,9 @@ export default function Home() {
       <div id="scroll-stage" className="relative">
         <ZolarShowcase />
         </div>
+      <OutroCinematic />
       <MaterialFocus />
       <LookbookStrip />
-      <OutroCinematic />
       <Footer />
     </div>
   );

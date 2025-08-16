@@ -30,30 +30,36 @@ export default function OutroCinematic({
   const [currentImageWhite, setCurrentImageWhite] = useState<number>(0);
   const [activeTab, setActiveTab] = useState<"black" | "white">("black");
   const [fullscreenData, setFullscreenData] = useState<{isOpen: boolean, product: "black" | "white", imageIndex: number} | null>(null);
-  const scrollYRef = useRef<number>(0);
+  const scrollLockYRef = useRef<number>(0);
 
   // Prevent body scroll when fullscreen is open and preserve scroll position
   useEffect(() => {
     if (fullscreenData?.isOpen) {
-      // Persist scroll position in a ref to avoid losing it on re-renders
-      scrollYRef.current = window.scrollY;
+      // Store current scroll position in a ref (more reliable than reading style.top later)
+      scrollLockYRef.current = window.scrollY || window.pageYOffset;
       document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollYRef.current}px`;
+      document.body.style.top = `-${scrollLockYRef.current}px`;
       document.body.style.left = '0';
       document.body.style.right = '0';
-      document.body.style.overflow = 'hidden';
       document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
     } else {
-      // Restore scroll position from ref
+      // Restore scroll position exactly where user was
+      const restoreY = scrollLockYRef.current || 0;
       document.body.style.position = '';
       document.body.style.top = '';
       document.body.style.left = '';
       document.body.style.right = '';
-      document.body.style.overflow = '';
       document.body.style.width = '';
-      if (typeof scrollYRef.current === 'number') {
-        window.scrollTo(0, scrollYRef.current);
-      }
+      document.body.style.overflow = '';
+      // Force instant restore without smooth behavior and on next frame to avoid jumps
+      const { style } = document.documentElement;
+      const previousBehavior = style.scrollBehavior as string;
+      style.scrollBehavior = 'auto';
+      requestAnimationFrame(() => {
+        window.scrollTo(0, restoreY);
+        style.scrollBehavior = previousBehavior || '';
+      });
     }
     
     return () => {
@@ -61,8 +67,8 @@ export default function OutroCinematic({
       document.body.style.top = '';
       document.body.style.left = '';
       document.body.style.right = '';
-      document.body.style.overflow = '';
       document.body.style.width = '';
+      document.body.style.overflow = '';
     };
   }, [fullscreenData?.isOpen]);
 

@@ -181,8 +181,8 @@ function MobileShopCard() {
   const [variant, setVariant] = useState<'borderline' | 'spin'>('borderline');
   const [isInteracting, setIsInteracting] = useState(false);
   const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
-  const scrollYRef = useRef<number>(0);
   const cardRef = useRef<HTMLDivElement>(null);
+  const scrollLockYRef = useRef<number>(0);
 
   // Set initial gradient to Borderline (green) theme on component mount
   useEffect(() => {
@@ -192,21 +192,28 @@ function MobileShopCard() {
   // Prevent body scroll when fullscreen is open and preserve scroll position
   useEffect(() => {
     if (isFullscreenOpen) {
-      scrollYRef.current = window.scrollY;
+      scrollLockYRef.current = window.scrollY || window.pageYOffset;
       document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollYRef.current}px`;
+      document.body.style.top = `-${scrollLockYRef.current}px`;
       document.body.style.left = '0';
       document.body.style.right = '0';
-      document.body.style.overflow = 'hidden';
       document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
     } else {
+      const restoreY = scrollLockYRef.current || 0;
       document.body.style.position = '';
       document.body.style.top = '';
       document.body.style.left = '';
       document.body.style.right = '';
-      document.body.style.overflow = '';
       document.body.style.width = '';
-      window.scrollTo(0, scrollYRef.current || 0);
+      document.body.style.overflow = '';
+      const { style } = document.documentElement;
+      const previousBehavior = style.scrollBehavior as string;
+      style.scrollBehavior = 'auto';
+      requestAnimationFrame(() => {
+        window.scrollTo(0, restoreY);
+        style.scrollBehavior = previousBehavior || '';
+      });
     }
     
     return () => {
@@ -214,8 +221,8 @@ function MobileShopCard() {
       document.body.style.top = '';
       document.body.style.left = '';
       document.body.style.right = '';
-      document.body.style.overflow = '';
       document.body.style.width = '';
+      document.body.style.overflow = '';
     };
   }, [isFullscreenOpen]);
 
@@ -636,7 +643,7 @@ function DesktopProductShowcase({ products }: { products: Product[] }) {
   const [currentView, setCurrentView] = useState<'borderline' | 'spin'>('borderline');
   const [currentSide, setCurrentSide] = useState<'front' | 'back'>('front');
   const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
-  const scrollYRef = useRef<number>(0);
+  const scrollLockYRefDesktop = useRef<number>(0);
 
   const borderlineProduct = products.find(p => p.id.includes('borderline'));
   const spinProduct = products.find(p => p.id.includes('spin'));
@@ -644,21 +651,28 @@ function DesktopProductShowcase({ products }: { products: Product[] }) {
   // Prevent body scroll when fullscreen is open and preserve scroll position
   useEffect(() => {
     if (isFullscreenOpen) {
-      scrollYRef.current = window.scrollY;
+      scrollLockYRefDesktop.current = window.scrollY || window.pageYOffset;
       document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollYRef.current}px`;
+      document.body.style.top = `-${scrollLockYRefDesktop.current}px`;
       document.body.style.left = '0';
       document.body.style.right = '0';
-      document.body.style.overflow = 'hidden';
       document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
     } else {
+      const restoreY = scrollLockYRefDesktop.current || 0;
       document.body.style.position = '';
       document.body.style.top = '';
       document.body.style.left = '';
       document.body.style.right = '';
-      document.body.style.overflow = '';
       document.body.style.width = '';
-      window.scrollTo(0, scrollYRef.current || 0);
+      document.body.style.overflow = '';
+      const { style } = document.documentElement;
+      const previousBehavior = style.scrollBehavior as string;
+      style.scrollBehavior = 'auto';
+      requestAnimationFrame(() => {
+        window.scrollTo(0, restoreY);
+        style.scrollBehavior = previousBehavior || '';
+      });
     }
     
     return () => {
@@ -666,8 +680,8 @@ function DesktopProductShowcase({ products }: { products: Product[] }) {
       document.body.style.top = '';
       document.body.style.left = '';
       document.body.style.right = '';
-      document.body.style.overflow = '';
       document.body.style.width = '';
+      document.body.style.overflow = '';
     };
   }, [isFullscreenOpen]);
 
