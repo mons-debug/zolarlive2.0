@@ -145,7 +145,7 @@ export default function OutroCinematic({
             {/* Product blocks */}
             <div className="grid md:grid-cols-2 gap-4">
               {/* Black product block */}
-              <div className={`rounded-xl bg-white/5 backdrop-blur-md border border-white/20 p-4 md:p-5 transition-all hover:bg-white/10 ${selectedBlack ? "" : "opacity-60"} ${activeTab === "black" ? "" : "hidden md:block"}`}>
+              <div className={`rounded-xl bg-white/5 backdrop-blur-md border border-white/20 p-4 md:p-5 transition-all hover:bg-white/10 ${activeTab === "black" ? "" : "hidden md:block"}`}>
                 <div className="flex flex-col gap-3">
                   {/* Inline product gallery */}
                   <div className="relative rounded-2xl overflow-hidden bg-black/20 group">
@@ -204,7 +204,7 @@ export default function OutroCinematic({
                         <span className={`relative inline-block w-6 h-3 rounded-full ${selectedBlack ? "bg-black/70" : "bg-white/20"}`}>
                           <span className={`absolute top-0 left-0 h-3 w-3 rounded-full bg-white transition-transform ${selectedBlack ? "translate-x-3" : "translate-x-0"}`}></span>
                         </span>
-                        Include
+                        Add to Cart
                       </button>
                     </div>
                     <div className="mt-3">
@@ -239,7 +239,7 @@ export default function OutroCinematic({
               </div>
 
               {/* White product block */}
-              <div className={`rounded-xl bg-white/5 backdrop-blur-md border border-white/20 p-4 md:p-5 transition-all hover:bg-white/10 ${selectedWhite ? "" : "opacity-60"} ${activeTab === "white" ? "" : "hidden md:block"}`}>
+              <div className={`rounded-xl bg-white/5 backdrop-blur-md border border-white/20 p-4 md:p-5 transition-all hover:bg-white/10 ${activeTab === "white" ? "" : "hidden md:block"}`}>
                 <div className="flex flex-col gap-3">
                   {/* Inline product gallery */}
                   <div className="relative rounded-2xl overflow-hidden bg-black/20 group">
@@ -298,7 +298,7 @@ export default function OutroCinematic({
                         <span className={`relative inline-block w-6 h-3 rounded-full ${selectedWhite ? "bg-black/70" : "bg-white/20"}`}>
                           <span className={`absolute top-0 left-0 h-3 w-3 rounded-full bg-white transition-transform ${selectedWhite ? "translate-x-3" : "translate-x-0"}`}></span>
                         </span>
-                        Include
+                        Add to Cart
                       </button>
                     </div>
                     <div className="mt-3">

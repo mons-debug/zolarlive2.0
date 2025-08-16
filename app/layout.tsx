@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import GlobalGradientStage from "@/components/GlobalGradientStage";
+import { Analytics } from '@vercel/analytics/react';
 
 // Premium streetwear typography
 const inter = Inter({
@@ -51,6 +52,7 @@ export default function RootLayout({
       >
         <GlobalGradientStage />
         {children}
+        <Analytics />
       </body>
     </html>
   );
