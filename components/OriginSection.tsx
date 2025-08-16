@@ -129,8 +129,8 @@ export default function OriginSection() {
       {/* Top clean — global background stays black until this section scrolls in */}
       {/* No per-section background; global gradient renders behind */}
       <div className="relative z-10 w-[min(1000px,86vw)] md:w-[min(900px,80vw)] text-center px-4">
-        <div ref={logoRef} className="mx-auto mt-24 sm:mt-26 md:mt-28 mb-6 sm:mb-8 md:mb-8 w-[140px] sm:w-[160px] md:w-[220px] will-change-transform">
-          <Image src="/images/zolar-wordmark.svg" alt="Zolar wordmark" width={220} height={90} className="w-full h-auto" />
+        <div ref={logoRef} className="mx-auto mt-24 sm:mt-26 md:mt-28 mb-6 sm:mb-8 md:mb-8 w-[140px] sm:w-[160px] md:w-[160px] lg:w-[180px] will-change-transform">
+          <Image src="/images/zolar-wordmark.svg" alt="Zolar wordmark" width={180} height={74} className="w-full h-auto" />
         </div>
         <h2 className="o-line mt-4 md:mt-6 font-display text-4xl sm:text-5xl md:text-4xl text-white text-shimmer">
           Made for Motion
