@@ -40,13 +40,13 @@ export default function MaterialFocus() {
     mm.add("(min-width: 768px)", () => {
       const cards = gsap.utils.toArray<HTMLElement>(".m-card");
       
-      // Create a timeline that's scrubbed with scroll
+      // Create a timeline that's scrubbed with scroll - slower timing
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: el,
-          start: "top 80%",
-          end: "bottom 20%",
-          scrub: 0.3,
+          start: "top 90%",
+          end: "bottom 10%",
+          scrub: 1.5,
         }
       });
       
@@ -55,18 +55,18 @@ export default function MaterialFocus() {
         tl.fromTo(
           card,
           { 
-            y: 80, 
+            y: 60, 
             opacity: 0,
-            scale: 0.85,
+            scale: 0.9,
           },
           {
             y: 0,
             opacity: 1,
             scale: 1,
-            duration: 1,
+            duration: 1.5,
             ease: "power2.out"
           },
-          i * 0.1 // Slight stagger
+          i * 0.2 // More stagger for better visibility
         );
       });
     });
@@ -82,26 +82,26 @@ export default function MaterialFocus() {
         const text = card.querySelector(".mobile-material-text") as HTMLElement;
         const indicator = card.querySelector(".mobile-material-indicator") as HTMLElement;
         
-        // Card entrance with rotation
+        // Card entrance with rotation - slower timing
         gsap.fromTo(
           card,
           { 
-            y: 80, 
+            y: 60, 
             opacity: 0,
-            rotateX: -15,
+            rotateX: -10,
             transformPerspective: 1000
           },
           {
             y: 0,
             opacity: 1,
             rotateX: 0,
-            duration: 1,
+            duration: 1.5,
             ease: "power3.out",
             scrollTrigger: {
               trigger: card,
-              start: "top 90%",
-              end: "top 50%",
-              scrub: 0.5,
+              start: "top 95%",
+              end: "top 40%",
+              scrub: 1,
             },
           }
         );
@@ -195,18 +195,18 @@ export default function MaterialFocus() {
     <section
       ref={root}
       id="materials"
-      className="relative z-10 w-[min(1100px,90vw)] mx-auto py-8 md:py-24 px-4 md:px-0"
+      className="relative z-10 w-[min(1100px,90vw)] md:w-[min(1200px,85vw)] mx-auto py-8 md:py-16 px-4 md:px-0"
     >
       <div className="text-center mb-12 md:mb-16">
-        <div className="font-mono text-xs tracking-[0.3em] text-emerald-400/80 mb-4 animate-fade-up">
+        <div className="font-mono text-xs md:text-sm tracking-[0.3em] text-emerald-400/80 mb-4 animate-fade-up">
           Technical Specifications
         </div>
-        <h3 className="font-display text-white text-2xl xs:text-3xl md:text-6xl leading-tight text-glow mb-6">
+        <h3 className="font-display text-white text-2xl xs:text-3xl md:text-5xl leading-tight text-glow mb-6">
           <span className="inline-block animate-fade-up">Materials</span>{" "}
           <span className="inline-block animate-fade-up animation-delay-100">&</span>{" "}
           <span className="inline-block animate-fade-up animation-delay-200">Details</span>
         </h3>
-        <p className="font-body text-white/70 text-sm xs:text-base md:text-xl animate-fade-up animation-delay-300 max-w-2xl mx-auto leading-relaxed">
+        <p className="font-body text-white/70 text-sm xs:text-base md:text-xl animate-fade-up animation-delay-300 max-w-2xl md:max-w-3xl mx-auto leading-relaxed">
           Precision-crafted streetwear engineered for performance and style. 
           Every detail matters in pursuit of perfection.
         </p>
@@ -246,13 +246,13 @@ export default function MaterialFocus() {
         {MACRO.map((m, i) => (
           <div
             key={i}
-            className="m-card rounded-3xl border border-white/10 bg-black/40 backdrop-blur overflow-hidden"
+            className="m-card rounded-3xl border border-white/10 bg-black/40 backdrop-blur overflow-hidden hover:border-white/20 transition-all duration-300 hover:scale-105"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={m.img} alt={m.title} className="w-full h-48 md:h-64 object-cover" />
             <div className="p-4 md:p-5">
-              <div className="text-white text-xl font-semibold">{m.title}</div>
-              <p className="text-white/70 mt-2">{m.body}</p>
+              <div className="text-white text-xl font-semibold mb-2">{m.title}</div>
+              <p className="text-white/70 text-base leading-relaxed">{m.body}</p>
             </div>
           </div>
         ))}

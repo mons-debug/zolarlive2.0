@@ -29,6 +29,26 @@ export default function OutroCinematic({
   const [currentImageBlack, setCurrentImageBlack] = useState<number>(0);
   const [currentImageWhite, setCurrentImageWhite] = useState<number>(0);
   const [activeTab, setActiveTab] = useState<"black" | "white">("black");
+  const [fullscreenData, setFullscreenData] = useState<{isOpen: boolean, product: "black" | "white", imageIndex: number} | null>(null);
+
+  // Prevent body scroll when fullscreen is open
+  useEffect(() => {
+    if (fullscreenData?.isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    };
+  }, [fullscreenData?.isOpen]);
 
   const SIZES = ["XS", "S", "M", "L", "XL", "XXL"] as const;
   const SIZE_CHART: Record<string, { chest: number; length: number }> = {
@@ -40,9 +60,9 @@ export default function OutroCinematic({
     XXL: { chest: 61, length: 78 },
   };
   const UNIT_PRICE = 299; // MAD - Moroccan Dirham
-  const WHATSAPP_NUMBER = "212600000000"; // TODO: replace with real Morocco number
-  const IMAGES_BLACK: string[] = ["/images/p8.png", "/images/p9.png"];
-  const IMAGES_WHITE: string[] = ["/images/p5.png", "/images/p6.png", "/images/p11.png"];
+  const WHATSAPP_NUMBER = "212663406326"; // Morocco WhatsApp number
+  const IMAGES_BLACK: string[] = ["/frontartblack.png", "/black-front.png", "/black-back.png", "/3 (1).png"];
+  const IMAGES_WHITE: string[] = ["/whiteartback.png", "/images/p5.png", "/images/p6.png", "/images/p11.png"];
 
   const bothSelected = selectedBlack && selectedWhite;
   const subtotal = UNIT_PRICE * (selectedBlack ? qtyBlack : 0) + UNIT_PRICE * (selectedWhite ? qtyWhite : 0);
@@ -71,27 +91,21 @@ export default function OutroCinematic({
   }, []);
 
   return (
-    <section id="outro" ref={root} className="relative min-h-[90vh] md:min-h-screen flex flex-col justify-center items-center px-4 overflow-clip pb-8 md:pb-24">
+    <section id="outro" ref={root} className="relative min-h-[90vh] md:min-h-screen lg:min-h-[110vh] xl:min-h-[120vh] flex flex-col justify-center items-center px-4 lg:px-8 xl:px-12 overflow-clip pb-8 md:pb-24 lg:pb-32 xl:pb-40">
       {/* Title and CTA moved to top */}
-      <div className="out-text text-center mb-8 relative z-10">
-        <div className="font-mono text-xs tracking-[0.3em] text-emerald-400 mb-4" style={{
-          textShadow: '0 0 20px rgba(0,0,0,0.9), 2px 2px 4px rgba(0,0,0,0.8)'
-        }}>
+      <div className="out-text text-center mb-8 lg:mb-12 xl:mb-16 relative z-10">
+        <div className="font-mono text-xs md:text-sm lg:text-base tracking-[0.3em] text-emerald-400/80 mb-4 lg:mb-6">
           Final Collection Drop
         </div>
-        <h3 className="font-display text-4xl md:text-6xl text-white mb-6" style={{
-          textShadow: '0 0 30px rgba(0,0,0,0.8), 0 0 60px rgba(0,0,0,0.6), 2px 2px 4px rgba(0,0,0,0.9)'
-        }}>
+        <h3 className="font-display text-4xl md:text-5xl text-white text-glow mb-6 lg:mb-8">
           Borderline — Limited Release
         </h3>
-        <p className="font-body text-white text-lg md:text-xl" style={{
-          textShadow: '0 0 20px rgba(0,0,0,0.8), 2px 2px 4px rgba(0,0,0,0.9)'
-        }}>Secure Yours</p>
+        <p className="font-body text-white/90 text-lg md:text-xl">Secure Yours</p>
       </div>
       
       {/* Product selection panel without outer container */}
-      <div className="w-[min(1100px,90vw)] mx-auto">
-        <div className="rounded-2xl bg-white/10 backdrop-blur-2xl border border-white/30 shadow-xl p-5 md:p-7 grid gap-4">
+      <div className="w-[min(1100px,90vw)] lg:w-[min(1300px,85vw)] xl:w-[min(1500px,80vw)] mx-auto">
+        <div className="rounded-2xl lg:rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/30 shadow-xl p-5 md:p-7 lg:p-9 xl:p-12 grid gap-4 lg:gap-6 xl:gap-8">
             {/* Summary row (top right) */}
             <div className="flex items-start justify-between">
               <div className="text-white/70 text-xs md:text-sm">Buy both and save <span className="text-emerald-300">20%</span></div>
@@ -134,9 +148,25 @@ export default function OutroCinematic({
               <div className={`rounded-xl bg-white/5 backdrop-blur-md border border-white/20 p-4 md:p-5 transition-all hover:bg-white/10 ${selectedBlack ? "" : "opacity-60"} ${activeTab === "black" ? "" : "hidden md:block"}`}>
                 <div className="flex flex-col gap-3">
                   {/* Inline product gallery */}
-                  <div className="relative rounded-2xl overflow-hidden bg-black/20">
+                  <div className="relative rounded-2xl overflow-hidden bg-black/20 group">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={IMAGES_BLACK[currentImageBlack]} alt="Borderline Black preview" className="w-full h-48 md:h-56 object-cover" />
+                    
+                    {/* Fullscreen Button */}
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setFullscreenData({isOpen: true, product: "black", imageIndex: currentImageBlack});
+                      }}
+                      className="absolute top-2 right-2 z-20 w-8 h-8 bg-black/50 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-black/70 transition-all duration-200 opacity-0 group-hover:opacity-100 md:opacity-0 md:group-hover:opacity-100 touch-manipulation"
+                      aria-label="View fullscreen"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                      </svg>
+                    </button>
+
                     {IMAGES_BLACK.length > 1 && (
                       <>
                         <button aria-label="Previous image" onClick={() => setCurrentImageBlack((i) => (i - 1 + IMAGES_BLACK.length) % IMAGES_BLACK.length)} className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70">
@@ -207,9 +237,25 @@ export default function OutroCinematic({
               <div className={`rounded-xl bg-white/5 backdrop-blur-md border border-white/20 p-4 md:p-5 transition-all hover:bg-white/10 ${selectedWhite ? "" : "opacity-60"} ${activeTab === "white" ? "" : "hidden md:block"}`}>
                 <div className="flex flex-col gap-3">
                   {/* Inline product gallery */}
-                  <div className="relative rounded-2xl overflow-hidden bg-black/20">
+                  <div className="relative rounded-2xl overflow-hidden bg-black/20 group">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={IMAGES_WHITE[currentImageWhite]} alt="Spin White preview" className="w-full h-48 md:h-56 object-cover" />
+                    
+                    {/* Fullscreen Button */}
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setFullscreenData({isOpen: true, product: "white", imageIndex: currentImageWhite});
+                      }}
+                      className="absolute top-2 right-2 z-20 w-8 h-8 bg-black/50 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-black/70 transition-all duration-200 opacity-0 group-hover:opacity-100 md:opacity-0 md:group-hover:opacity-100 touch-manipulation"
+                      aria-label="View fullscreen"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                      </svg>
+                    </button>
+
                     {IMAGES_WHITE.length > 1 && (
                       <>
                         <button aria-label="Previous image" onClick={() => setCurrentImageWhite((i) => (i - 1 + IMAGES_WHITE.length) % IMAGES_WHITE.length)} className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70">
@@ -409,18 +455,63 @@ export default function OutroCinematic({
                 Cancel
               </button>
               <button
-                onClick={() => {
+                onClick={async () => {
                   if (!customerName || !customerCity) {
                     alert("Please fill in all fields!");
                     return;
                   }
+
+                  // Prepare order data for Brevo
+                  const orderData = {
+                    customerName,
+                    customerCity,
+                    selectedProducts: {
+                      borderlineBlack: selectedBlack ? {
+                        selected: true,
+                        size: sizeBlack,
+                        quantity: qtyBlack
+                      } : undefined,
+                      spinWhite: selectedWhite ? {
+                        selected: true,
+                        size: sizeWhite,
+                        quantity: qtyWhite
+                      } : undefined
+                    },
+                    orderTotal: total,
+                    subtotal: subtotal,
+                    discount: discount
+                  };
+
+                  try {
+                    // Send data to Brevo first
+                    const response = await fetch('/api/submit-order', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify(orderData)
+                    });
+
+                    if (!response.ok) {
+                      console.warn('Failed to send data to Brevo, but continuing with WhatsApp...');
+                    }
+                  } catch (error) {
+                    console.warn('Error sending to Brevo:', error);
+                    // Continue with WhatsApp even if Brevo fails
+                  }
+
+                  // Prepare WhatsApp message
                   const chosen: string[] = [];
                   if (selectedBlack) chosen.push(`Borderline Black x${qtyBlack} (Size ${sizeBlack})`);
                   if (selectedWhite) chosen.push(`Spin White x${qtyWhite} (Size ${sizeWhite})`);
                   const discountLine = bothSelected ? `\nBundle discount: -${discount} MAD (20% off)` : "";
                   const msg = `🛍️ *New Order from Zolar*\n\n👤 *Customer:* ${customerName}\n📍 *City:* ${customerCity}\n\n📦 *Products:*\n${chosen.join("\n")}\n\n💰 *Pricing:*\nSubtotal: ${subtotal} MAD${discountLine}\n*Total: ${total} MAD*\n\n✨ Thank you for choosing Zolar!`;
                   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+                  
+                  // Open WhatsApp
                   window.open(url, "_blank");
+                  
+                  // Clear form
                   setShowOrderForm(false);
                   setCustomerName("");
                   setCustomerCity("");
@@ -436,6 +527,126 @@ export default function OutroCinematic({
                 </svg>
                 Send via WhatsApp
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Fullscreen Gallery Modal */}
+      {fullscreenData?.isOpen && (
+        <div 
+          className="fixed inset-0 z-[110] bg-black/95 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setFullscreenData(null);
+            }
+          }}
+          onTouchMove={(e) => e.preventDefault()}
+        >
+          {/* Close Button */}
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setFullscreenData(null);
+            }}
+            className="absolute top-4 right-4 z-10 w-12 h-12 bg-black/50 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-black/70 transition-all duration-200"
+            aria-label="Close fullscreen"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* Fullscreen Image Container */}
+          <div 
+            className="relative w-full h-full max-w-6xl max-h-full flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative w-full h-full">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img 
+                src={fullscreenData.product === "black" 
+                  ? IMAGES_BLACK[fullscreenData.imageIndex] 
+                  : IMAGES_WHITE[fullscreenData.imageIndex]
+                } 
+                alt={`${fullscreenData.product === "black" ? "Borderline Black" : "Spin White"} - Fullscreen`} 
+                className="w-full h-full object-contain select-none"
+                draggable={false}
+              />
+            </div>
+
+            {/* Navigation Controls Overlay */}
+            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-4">
+              {/* Product Toggle */}
+              <div className="flex bg-black/70 backdrop-blur-md rounded-full border border-white/20 p-1">
+                <button 
+                  onClick={() => setFullscreenData({isOpen: true, product: "black", imageIndex: currentImageBlack})}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                    fullscreenData.product === "black" 
+                      ? 'bg-emerald-400 text-black' 
+                      : 'text-white/80 hover:text-white'
+                  }`}
+                >
+                  Borderline Black
+                </button>
+                <button
+                  onClick={() => setFullscreenData({isOpen: true, product: "white", imageIndex: currentImageWhite})}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                    fullscreenData.product === "white" 
+                      ? 'bg-sky-400 text-black' 
+                      : 'text-white/80 hover:text-white'
+                  }`}
+                >
+                  Spin White
+                </button>
+              </div>
+
+              {/* Image Navigation */}
+              {((fullscreenData.product === "black" && IMAGES_BLACK.length > 1) || 
+                (fullscreenData.product === "white" && IMAGES_WHITE.length > 1)) && (
+                <div className="flex bg-black/70 backdrop-blur-md rounded-full border border-white/20 p-1">
+                  <button
+                    onClick={() => {
+                      if (fullscreenData.product === "black") {
+                        const newIndex = (fullscreenData.imageIndex - 1 + IMAGES_BLACK.length) % IMAGES_BLACK.length;
+                        setCurrentImageBlack(newIndex);
+                        setFullscreenData({...fullscreenData, imageIndex: newIndex});
+                      } else {
+                        const newIndex = (fullscreenData.imageIndex - 1 + IMAGES_WHITE.length) % IMAGES_WHITE.length;
+                        setCurrentImageWhite(newIndex);
+                        setFullscreenData({...fullscreenData, imageIndex: newIndex});
+                      }
+                    }}
+                    className="px-4 py-2 rounded-full text-sm font-medium text-white/80 hover:text-white transition"
+                  >
+                    ← Previous
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (fullscreenData.product === "black") {
+                        const newIndex = (fullscreenData.imageIndex + 1) % IMAGES_BLACK.length;
+                        setCurrentImageBlack(newIndex);
+                        setFullscreenData({...fullscreenData, imageIndex: newIndex});
+                      } else {
+                        const newIndex = (fullscreenData.imageIndex + 1) % IMAGES_WHITE.length;
+                        setCurrentImageWhite(newIndex);
+                        setFullscreenData({...fullscreenData, imageIndex: newIndex});
+                      }
+                    }}
+                    className="px-4 py-2 rounded-full text-sm font-medium text-white/80 hover:text-white transition"
+                  >
+                    Next →
+                  </button>
+                </div>
+              )}
+
+              {/* Image Counter */}
+              <div className="bg-black/70 backdrop-blur-md rounded-full border border-white/20 px-4 py-2">
+                <span className="text-sm text-white/80">
+                  {fullscreenData.imageIndex + 1} / {fullscreenData.product === "black" ? IMAGES_BLACK.length : IMAGES_WHITE.length}
+                </span>
+              </div>
             </div>
           </div>
         </div>

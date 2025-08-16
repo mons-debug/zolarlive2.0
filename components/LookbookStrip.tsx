@@ -106,12 +106,12 @@ export default function LookbookStrip() {
     return (
     <section id="lookbook" className="relative min-h-[60vh] md:min-h-[80vh] flex flex-col">
       {/* Fixed title that stays at top */}
-      <div ref={titleRef} className="text-center pt-8 xs:pt-12 pb-4 xs:pb-6 md:pt-24 md:pb-16 px-4 perspective-1000">
-        <div className="font-mono text-xs tracking-[0.3em] text-emerald-400/80 mb-4">
+      <div ref={titleRef} className="text-center pt-8 xs:pt-12 pb-4 xs:pb-6 md:pt-16 md:pb-12 px-4 perspective-1000">
+        <div className="font-mono text-xs md:text-sm tracking-[0.3em] text-emerald-400/80 mb-4">
           <span className="word inline-block">Visual</span>{" "}
           <span className="word inline-block">Showcase</span>
         </div>
-        <h3 className="font-display text-white text-2xl xs:text-3xl sm:text-4xl md:text-7xl leading-tight text-glow">
+        <h3 className="font-display text-white text-2xl xs:text-3xl sm:text-4xl md:text-5xl leading-tight text-glow">
           <span className="word inline-block">Collection</span>{" "}
           <span className="word inline-block">Gallery</span>
         </h3>
@@ -123,7 +123,7 @@ export default function LookbookStrip() {
         </p>
       </div>
       {/* Gallery that pins below the title */}
-      <div ref={wrap} className="lb-wrap relative overflow-hidden flex-1 min-h-[35vh] md:min-h-[45vh]">
+      <div ref={wrap} className="lb-wrap relative overflow-hidden flex-1 min-h-[35vh] md:min-h-[50vh]">
         <div
           ref={trackRef}
           className="lb-track flex gap-4 md:gap-6 px-6 md:px-8 h-full items-center"
@@ -131,7 +131,7 @@ export default function LookbookStrip() {
           {LOOKS.map((src, i) => (
             <div
               key={i}
-              className="shrink-0 rounded-2xl md:rounded-3xl border border-white/10 bg-black/40 overflow-hidden shadow-2xl w-[85vw] xs:w-[80vw] h-[40vh] xs:h-[50vh] md:w-[45vw] md:h-[55vh] transition-transform hover:scale-[1.02]"
+              className="shrink-0 rounded-2xl md:rounded-3xl border border-white/10 bg-black/40 overflow-hidden shadow-2xl w-[85vw] xs:w-[80vw] h-[40vh] xs:h-[50vh] md:w-[40vw] md:h-[50vh] transition-transform hover:scale-[1.02] hover:border-white/20"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={src} alt={`Look ${i + 1}`} className="w-full h-full object-cover" />
