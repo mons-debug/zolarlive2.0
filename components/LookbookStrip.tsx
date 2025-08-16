@@ -106,16 +106,16 @@ export default function LookbookStrip() {
     return (
     <section id="lookbook" className="relative min-h-[60vh] md:min-h-[80vh] flex flex-col">
       {/* Fixed title that stays at top */}
-      <div ref={titleRef} className="text-center pt-8 xs:pt-12 pb-4 xs:pb-6 md:pt-16 md:pb-12 px-4 perspective-1000">
-        <div className="font-mono text-xs md:text-sm tracking-[0.3em] text-emerald-400/80 mb-4">
+      <div ref={titleRef} className="text-center pt-8 xs:pt-12 pb-4 xs:pb-6 md:pt-20 lg:pt-24 md:pb-16 lg:pb-20 px-4 perspective-1000">
+        <div className="font-mono text-xs md:text-base lg:text-lg tracking-[0.3em] md:tracking-[0.5em] text-emerald-400/80 mb-4 md:mb-6 md:opacity-80">
           <span className="word inline-block">Visual</span>{" "}
           <span className="word inline-block">Showcase</span>
         </div>
-        <h3 className="font-display text-white text-2xl xs:text-3xl sm:text-4xl md:text-5xl leading-tight text-glow">
+        <h3 className="font-display text-white text-2xl xs:text-3xl sm:text-4xl md:text-[3.5rem] lg:text-[4.5rem] xl:text-[5rem] leading-tight text-glow md:font-thin md:tracking-wide">
           <span className="word inline-block">Collection</span>{" "}
           <span className="word inline-block">Gallery</span>
         </h3>
-        <p className="font-body text-white/70 text-sm xs:text-base md:text-xl mt-4 xs:mt-6 leading-relaxed">
+        <p className="font-body text-white/70 text-sm xs:text-base md:text-xl lg:text-2xl mt-4 xs:mt-6 md:mt-8 lg:mt-10 leading-relaxed md:font-light">
           <span className="word inline-block">Explore</span>{" "}
           <span className="word inline-block">our</span>{" "}
           <span className="word inline-block">signature</span>{" "}
@@ -131,7 +131,7 @@ export default function LookbookStrip() {
           {LOOKS.map((src, i) => (
             <div
               key={i}
-              className="shrink-0 rounded-2xl md:rounded-3xl border border-white/10 bg-black/40 overflow-hidden shadow-2xl w-[85vw] xs:w-[80vw] h-[40vh] xs:h-[50vh] md:w-[40vw] md:h-[50vh] transition-transform hover:scale-[1.02] hover:border-white/20"
+              className="shrink-0 rounded-2xl md:rounded-[2rem] lg:rounded-[2.5rem] border border-white/10 md:border-white/5 bg-black/40 md:bg-black/20 overflow-hidden shadow-2xl w-[85vw] xs:w-[80vw] h-[40vh] xs:h-[50vh] md:w-[35vw] lg:w-[30vw] md:h-[60vh] lg:h-[65vh] transition-all duration-500 md:hover:scale-[1.02] md:hover:border-white/20"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={src} alt={`Look ${i + 1}`} className="w-full h-full object-cover" />

@@ -638,11 +638,12 @@ function MobileShopCard() {
   );
 }
 
-// Desktop Product Showcase - Like Mobile, Just Showcasing Products
+// Desktop Product Showcase - Premium Desktop Experience
 function DesktopProductShowcase({ products }: { products: Product[] }) {
   const [currentView, setCurrentView] = useState<'borderline' | 'spin'>('borderline');
   const [currentSide, setCurrentSide] = useState<'front' | 'back'>('front');
   const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
+  const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
   const scrollLockYRefDesktop = useRef<number>(0);
 
   const borderlineProduct = products.find(p => p.id.includes('borderline'));
@@ -686,29 +687,31 @@ function DesktopProductShowcase({ products }: { products: Product[] }) {
   }, [isFullscreenOpen]);
 
   return (
-    <div className="space-y-8">
-      {/* Product Showcase Grid - Like Mobile Cards but for Desktop */}
-      <div className="grid md:grid-cols-2 gap-6">
+    <div className="space-y-12 lg:space-y-16">
+      {/* Product Showcase Grid - Premium Desktop Layout */}
+      <div className="grid md:grid-cols-2 gap-8 lg:gap-12 xl:gap-16">
         {/* Borderline Black Showcase */}
         <div 
-          className={`group relative rounded-3xl overflow-hidden transition-all duration-500 cursor-pointer ${
+          className={`group relative rounded-[2rem] lg:rounded-[2.5rem] overflow-hidden transition-all duration-700 cursor-pointer transform ${
             currentView === 'borderline' 
-              ? 'ring-2 ring-emerald-500/20 scale-105 shadow-2xl' 
-              : 'ring-1 ring-white/10 hover:ring-white/30 hover:scale-102'
+              ? 'md:scale-[1.02] lg:scale-[1.03] shadow-2xl ring-2 ring-emerald-500/30' 
+              : 'hover:scale-[1.01] ring-1 ring-white/5 hover:ring-white/20'
           }`}
           onClick={() => setCurrentView('borderline')}
+          onMouseEnter={() => setHoveredProduct('borderline')}
+          onMouseLeave={() => setHoveredProduct(null)}
         >
-            <div className="aspect-[4/5] relative">
+            <div className="aspect-[3/4] md:aspect-[4/5] lg:aspect-[3/4] relative">
               <Image 
               src={currentView === 'borderline' && currentSide === 'back' && borderlineProduct?.backImage ? borderlineProduct.backImage : borderlineProduct?.image || '/images/p8.png'} 
               alt="Borderline Black"
                 fill 
               sizes="(max-width: 768px) 100vw, 50vw" 
-              className="object-cover transition-transform duration-700 group-hover:scale-105 will-change-transform"
+              className={`object-cover transition-transform duration-1000 will-change-transform ${hoveredProduct === 'borderline' ? 'md:scale-110' : 'md:scale-100'}`}
                 priority
               quality={85}
               />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
               
             {/* Fullscreen Button - Borderline */}
             {currentView === 'borderline' && (
@@ -724,12 +727,12 @@ function DesktopProductShowcase({ products }: { products: Product[] }) {
               )}
               
             {/* Content Overlay */}
-            <div className="absolute bottom-0 left-0 right-0 p-6">
-              <div className="text-xs uppercase tracking-wider text-emerald-400 mb-2">
+            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 lg:p-10">
+              <div className="text-xs md:text-sm uppercase tracking-[0.2em] md:tracking-[0.3em] text-emerald-400 mb-2 md:mb-3 opacity-80">
                 Green glow print
           </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Borderline Black</h3>
-              <p className="text-white/80 text-sm leading-relaxed">
+              <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold md:font-thin md:tracking-wider text-white mb-2 md:mb-3">Borderline Black</h3>
+              <p className="text-white/80 text-sm md:text-base lg:text-lg leading-relaxed md:font-light">
                 Our signature black tee with a neon-green border glow.
               </p>
             </div>
@@ -738,24 +741,26 @@ function DesktopProductShowcase({ products }: { products: Product[] }) {
 
         {/* Spin White Showcase */}
         <div 
-          className={`group relative rounded-3xl overflow-hidden transition-all duration-500 cursor-pointer ${
+          className={`group relative rounded-[2rem] lg:rounded-[2.5rem] overflow-hidden transition-all duration-700 cursor-pointer transform ${
             currentView === 'spin' 
-              ? 'ring-2 ring-sky-500/20 scale-105 shadow-2xl' 
-              : 'ring-1 ring-white/10 hover:ring-white/30 hover:scale-102'
+              ? 'md:scale-[1.02] lg:scale-[1.03] shadow-2xl ring-2 ring-sky-500/30' 
+              : 'hover:scale-[1.01] ring-1 ring-white/5 hover:ring-white/20'
           }`}
           onClick={() => setCurrentView('spin')}
+          onMouseEnter={() => setHoveredProduct('spin')}
+          onMouseLeave={() => setHoveredProduct(null)}
         >
-          <div className="aspect-[4/5] relative">
+          <div className="aspect-[3/4] md:aspect-[4/5] lg:aspect-[3/4] relative">
                 <Image 
               src={currentView === 'spin' && currentSide === 'back' && spinProduct?.backImage ? spinProduct.backImage : spinProduct?.image || '/images/p5.png'} 
               alt="Spin White"
               fill 
               sizes="(max-width: 768px) 100vw, 50vw" 
-              className="object-cover transition-transform duration-700 group-hover:scale-105 will-change-transform"
+              className={`object-cover transition-transform duration-1000 will-change-transform ${hoveredProduct === 'spin' ? 'md:scale-110' : 'md:scale-100'}`}
               priority
               quality={85}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
             
             {/* Fullscreen Button - Spin */}
             {currentView === 'spin' && (
@@ -771,12 +776,12 @@ function DesktopProductShowcase({ products }: { products: Product[] }) {
             )}
             
             {/* Content Overlay */}
-            <div className="absolute bottom-0 left-0 right-0 p-6">
-              <div className="text-xs uppercase tracking-wider text-sky-400 mb-2">
+            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 lg:p-10">
+              <div className="text-xs md:text-sm uppercase tracking-[0.2em] md:tracking-[0.3em] text-sky-400 mb-2 md:mb-3 opacity-80">
                 Blue/Orange print
           </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Spin for Purpose White</h3>
-              <p className="text-white/80 text-sm leading-relaxed">
+              <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold md:font-thin md:tracking-wider text-white mb-2 md:mb-3">Spin for Purpose White</h3>
+              <p className="text-white/80 text-sm md:text-base lg:text-lg leading-relaxed md:font-light">
                 Clean white base with kinetic blue and orange spin graphic.
               </p>
           </div>
@@ -787,23 +792,23 @@ function DesktopProductShowcase({ products }: { products: Product[] }) {
       {/* View Toggle for Selected Product */}
       {((currentView === 'borderline' && borderlineProduct?.backImage) || (currentView === 'spin' && spinProduct?.backImage)) && (
         <div className="flex justify-center">
-          <div className="inline-flex p-1 rounded-full bg-black/50 backdrop-blur border border-white/20">
+          <div className="inline-flex p-1 md:p-1.5 rounded-full bg-black/20 md:bg-black/10 backdrop-blur border border-white/20 md:border-white/10">
               <button
               onClick={() => setCurrentSide('front')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+              className={`px-4 md:px-8 lg:px-10 py-2 md:py-2.5 lg:py-3 rounded-full text-sm md:text-base font-medium transition-all duration-300 ${
                 currentSide === 'front' 
-                  ? 'bg-white text-black' 
-                  : 'text-white/80 hover:text-white'
+                  ? 'bg-white text-black shadow-lg' 
+                  : 'text-white/80 md:text-white/60 hover:text-white md:hover:text-white/90'
               }`}
             >
               Front View
               </button>
               <button
               onClick={() => setCurrentSide('back')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+              className={`px-4 md:px-8 lg:px-10 py-2 md:py-2.5 lg:py-3 rounded-full text-sm md:text-base font-medium transition-all duration-300 ${
                 currentSide === 'back' 
-                  ? 'bg-white text-black' 
-                  : 'text-white/80 hover:text-white'
+                  ? 'bg-white text-black shadow-lg' 
+                  : 'text-white/80 md:text-white/60 hover:text-white md:hover:text-white/90'
               }`}
             >
               Back View
@@ -813,14 +818,14 @@ function DesktopProductShowcase({ products }: { products: Product[] }) {
       )}
 
       {/* Product Story Section */}
-      <div className="text-center space-y-4">
-        <div className={`font-mono text-sm tracking-wider ${currentView === 'borderline' ? 'text-emerald-400' : 'text-sky-400'}`}>
+      <div className="text-center space-y-4 md:space-y-6 lg:space-y-8">
+        <div className={`font-mono text-sm md:text-base lg:text-lg tracking-wider md:tracking-[0.4em] ${currentView === 'borderline' ? 'text-emerald-400' : 'text-sky-400'} md:opacity-80`}>
           {currentView === 'borderline' ? 'Drop 01 — Borderline Collection' : 'Drop 01 — Spin Collection'}
         </div>
-        <h3 className="text-3xl md:text-4xl font-bold text-white">
+        <h3 className="text-3xl md:text-[3rem] lg:text-[4rem] font-bold md:font-thin md:tracking-wider text-white">
           {currentView === 'borderline' ? 'The Night Vision' : 'Kinetic Energy'}
         </h3>
-        <p className="text-white/70 text-lg max-w-2xl mx-auto leading-relaxed">
+        <p className="text-white/70 text-lg md:text-xl lg:text-2xl max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto leading-relaxed md:font-light">
           {currentView === 'borderline' 
             ? 'For those who stand out in the darkness. Premium streetwear with a neon edge.'
             : 'Keep spinning, keep moving. Energy in motion, captured in fabric.'
@@ -1318,16 +1323,16 @@ export default function ZolarShowcase() {
   return (
     <section ref={scopeRef} aria-label="Zolar product showcase" className="relative">
       {/* Animated section header */}
-      <div ref={headerRef} className="relative z-10 mx-auto max-w-6xl px-4 md:px-8 pt-8 md:pt-16 pb-4 md:pb-12 text-center">
-        <div className="font-mono text-xs md:text-sm tracking-[0.3em] text-emerald-400/80 mb-4">
+      <div ref={headerRef} className="relative z-10 mx-auto max-w-6xl md:max-w-7xl lg:max-w-[1600px] px-4 md:px-8 lg:px-12 pt-8 md:pt-20 lg:pt-24 pb-4 md:pb-16 lg:pb-20 text-center">
+        <div className="font-mono text-xs md:text-base lg:text-lg tracking-[0.3em] md:tracking-[0.5em] text-emerald-400/80 mb-4 md:mb-6 md:opacity-80">
           <span className="shop-word inline-block">Exclusive</span>{" "}
           <span className="shop-word inline-block">Release</span>
         </div>
-        <h2 className="font-display text-4xl md:text-5xl text-white text-glow">
+        <h2 className="font-display text-4xl md:text-[4rem] lg:text-[5rem] xl:text-[6rem] text-white text-glow md:font-thin md:tracking-wide">
           <span className="shop-word inline-block">Borderline</span>{" "}
           <span className="shop-word inline-block">Collection</span>
         </h2>
-        <p className="mt-6 font-body text-white/70 text-lg md:text-xl">
+        <p className="mt-6 md:mt-8 lg:mt-10 font-body text-white/70 text-lg md:text-xl lg:text-2xl md:font-light">
           <span className="shop-word inline-block">Limited</span>{" "}
           <span className="shop-word inline-block">Drop</span>{" "}
           <span className="shop-word inline-block text-emerald-400">01</span>
@@ -1340,7 +1345,7 @@ export default function ZolarShowcase() {
       </div>
 
       {/* Desktop Layout */}
-      <div className="hidden md:block relative z-10 mx-auto max-w-6xl px-4 md:px-8 pb-16 md:pb-24">
+      <div className="hidden md:block relative z-10 mx-auto max-w-6xl md:max-w-7xl lg:max-w-[1600px] px-4 md:px-8 lg:px-12 pb-16 md:pb-24 lg:pb-32">
         <DesktopProductShowcase products={products} />
       </div>
     </section>
