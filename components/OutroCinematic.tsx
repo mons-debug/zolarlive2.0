@@ -83,8 +83,8 @@ export default function OutroCinematic({
   };
   const UNIT_PRICE = 299; // MAD - Moroccan Dirham
   const WHATSAPP_NUMBER = "212663406326"; // Morocco WhatsApp number
-  const IMAGES_BLACK: string[] = ["/frontartblack.png", "/black-front.png", "/black-back.png", "/3 (1).png"];
-  const IMAGES_WHITE: string[] = ["/whiteartback.png", "/white-front.png", "/white-back.png"];
+  const IMAGES_BLACK: string[] = ["/black-front.png", "/black-back.png", "/frontartblack.png", "/3 (1).png"];
+  const IMAGES_WHITE: string[] = ["/white-front.png", "/white-back.png", "/whiteartback.png"];
 
   const bothSelected = selectedBlack && selectedWhite;
   const subtotal = UNIT_PRICE * (selectedBlack ? qtyBlack : 0) + UNIT_PRICE * (selectedWhite ? qtyWhite : 0);
