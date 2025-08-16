@@ -129,7 +129,7 @@ export default function OriginSection() {
       {/* Top clean — global background stays black until this section scrolls in */}
       {/* No per-section background; global gradient renders behind */}
       <div className="relative z-10 w-[min(1000px,86vw)] md:w-[min(1200px,80vw)] text-center px-4">
-        <div ref={logoRef} className="mx-auto mt-16 sm:mt-18 md:mt-32 mb-6 sm:mb-8 w-[140px] sm:w-[160px] md:w-[260px] will-change-transform">
+        <div ref={logoRef} className="mx-auto mt-20 sm:mt-22 md:mt-32 mb-6 sm:mb-8 w-[140px] sm:w-[160px] md:w-[260px] will-change-transform">
           <Image src="/images/zolar-wordmark.svg" alt="Zolar wordmark" width={260} height={95} className="w-full h-auto" />
         </div>
         <h2 className="o-line mt-4 md:mt-6 font-display text-4xl sm:text-5xl md:text-6xl text-white text-shimmer">

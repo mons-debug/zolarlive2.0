@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/zolar-logo-solid.svg", type: "image/svg+xml" }
+      { url: "/images/zolar-wordmark.svg", type: "image/svg+xml" }
     ],
   },
   openGraph: {
