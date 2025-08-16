@@ -62,7 +62,7 @@ export default function OutroCinematic({
   const UNIT_PRICE = 299; // MAD - Moroccan Dirham
   const WHATSAPP_NUMBER = "212663406326"; // Morocco WhatsApp number
   const IMAGES_BLACK: string[] = ["/frontartblack.png", "/black-front.png", "/black-back.png", "/3 (1).png"];
-  const IMAGES_WHITE: string[] = ["/whiteartback.png", "/images/p5.png", "/images/p6.png", "/images/p11.png"];
+  const IMAGES_WHITE: string[] = ["/whiteartback.png", "/white-front.png", "/white-back.png"];
 
   const bothSelected = selectedBlack && selectedWhite;
   const subtotal = UNIT_PRICE * (selectedBlack ? qtyBlack : 0) + UNIT_PRICE * (selectedWhite ? qtyWhite : 0);
@@ -505,7 +505,7 @@ export default function OutroCinematic({
                   if (selectedBlack) chosen.push(`Borderline Black x${qtyBlack} (Size ${sizeBlack})`);
                   if (selectedWhite) chosen.push(`Spin White x${qtyWhite} (Size ${sizeWhite})`);
                   const discountLine = bothSelected ? `\nBundle discount: -${discount} MAD (20% off)` : "";
-                  const msg = `🛍️ *New Order from Zolar*\n\n👤 *Customer:* ${customerName}\n📍 *City:* ${customerCity}\n\n📦 *Products:*\n${chosen.join("\n")}\n\n💰 *Pricing:*\nSubtotal: ${subtotal} MAD${discountLine}\n*Total: ${total} MAD*\n\n✨ Thank you for choosing Zolar!`;
+                  const msg = `Hi! I want to order from Zolar:\n\n📦 Products:\n${chosen.join("\n")}\n\n💰 Total: ${total} MAD${discountLine ? `\n(Bundle discount applied: -${discount} MAD)` : ""}\n\n👤 Name: ${customerName}\n📍 City: ${customerCity}\n\nPlease confirm availability and delivery details. Thank you!`;
                   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
                   
                   // Open WhatsApp
