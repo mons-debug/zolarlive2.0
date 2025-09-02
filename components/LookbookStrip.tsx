@@ -16,84 +16,130 @@ export default function LookbookStrip() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
+  const [currentX, setCurrentX] = useState(0);
+  const [startTime, setStartTime] = useState(0);
 
-  const getItemsPerView = () => {
-    if (typeof window === "undefined") return 1;
-    if (window.innerWidth >= 1024) return 3; // Desktop: 3 images
-    if (window.innerWidth >= 768) return 2;  // Tablet: 2 images
-    return 1; // Mobile: 1 image
+  // Infinite looping carousel
+  const getItemWidth = () => {
+    if (typeof window === "undefined") return 300;
+    return window.innerWidth < 768 ? Math.min(280, window.innerWidth - 80) : 320; // Better mobile sizing
   };
   
-  const [itemsPerView, setItemsPerView] = useState(getItemsPerView());
+  const [itemWidth, setItemWidth] = useState(getItemWidth());
   
-  // Calculate max slides based on items per view
-  const totalSlides = Math.ceil(LOOKS.length / itemsPerView);
-  const maxIndex = totalSlides - 1;
+  // Create infinite loop by duplicating images
+  const extendedLooks = [...LOOKS, ...LOOKS, ...LOOKS]; // Triple the images for smooth infinite scroll
+  const totalImages = extendedLooks.length;
+  const actualStartIndex = LOOKS.length; // Start in the middle set
 
-  // Navigation functions
-  const goToSlide = useCallback((slideIndex: number) => {
-    const clampedIndex = Math.max(0, Math.min(slideIndex, maxIndex));
-    setCurrentIndex(clampedIndex);
+  const goToSlide = useCallback((index: number, immediate = false) => {
+    setCurrentIndex(index);
     
-    // Calculate the translation percentage
-    const translateX = -(clampedIndex * 100);
+    const slideWidth = itemWidth + 24; // Include gap
+    const translateX = -(index * slideWidth);
     
     if (trackRef.current) {
-      gsap.to(trackRef.current, {
-        x: `${translateX}%`,
-        duration: 0.5,
-        ease: "power2.out"
-      });
+      if (immediate) {
+        gsap.set(trackRef.current, { x: `${translateX}px` });
+      } else {
+        gsap.to(trackRef.current, {
+          x: `${translateX}px`,
+          duration: 0.5,
+          ease: "power2.out"
+        });
+      }
     }
-  }, [maxIndex]);
+  }, [itemWidth]);
 
   const nextSlide = useCallback(() => {
-    if (currentIndex < maxIndex) {
-      goToSlide(currentIndex + 1);
-    }
-  }, [currentIndex, goToSlide, maxIndex]);
-
-  const prevSlide = useCallback(() => {
-    if (currentIndex > 0) {
-      goToSlide(currentIndex - 1);
+    const newIndex = currentIndex + 1;
+    
+    // If we're at the end of the second set, jump to the beginning of the first set
+    if (newIndex >= LOOKS.length * 2) {
+      goToSlide(newIndex);
+      setTimeout(() => {
+        goToSlide(LOOKS.length, true); // Jump to start of second set instantly
+      }, 500);
+    } else {
+      goToSlide(newIndex);
     }
   }, [currentIndex, goToSlide]);
 
-  // Touch/Mouse handlers
+  const prevSlide = useCallback(() => {
+    const newIndex = currentIndex - 1;
+    
+    // If we're at the beginning of the second set, jump to the end of the third set
+    if (newIndex < LOOKS.length) {
+      goToSlide(newIndex);
+      setTimeout(() => {
+        goToSlide(LOOKS.length * 2 - 1, true); // Jump to end of second set instantly
+      }, 500);
+    } else {
+      goToSlide(newIndex);
+    }
+  }, [currentIndex, goToSlide]);
+
+  // Enhanced touch handlers for mobile
   const handleStart = (clientX: number) => {
     setIsDragging(true);
     setStartX(clientX);
+    setCurrentX(clientX);
+    setStartTime(Date.now());
   };
 
-  const handleEnd = (clientX: number) => {
+  const handleMove = (clientX: number) => {
+    if (!isDragging) return;
+    setCurrentX(clientX);
+    
+    // Prevent page scroll on mobile during swipe
+    if (trackRef.current) {
+      const distance = clientX - startX;
+      const slideWidth = itemWidth + 24; // Include gap in calculation
+      const currentTranslateX = -(currentIndex * slideWidth);
+      const newTranslateX = currentTranslateX + distance * 0.3; // Add some resistance
+      
+      gsap.set(trackRef.current, { x: `${newTranslateX}px` });
+    }
+  };
+
+  const handleEnd = () => {
     if (!isDragging) return;
     setIsDragging(false);
     
-    const threshold = 50;
-    const distance = startX - clientX;
+    const distance = startX - currentX;
+    const time = Date.now() - startTime;
+    const velocity = Math.abs(distance) / time; // pixels per ms
+    
+    // Lower threshold for faster swipes, higher for slower swipes
+    const threshold = velocity > 0.5 ? 30 : 80;
     
     if (distance > threshold) {
       nextSlide();
     } else if (distance < -threshold) {
       prevSlide();
+    } else {
+      // Snap back to current position
+      goToSlide(currentIndex);
     }
   };
 
-  // Handle resize
+  // Handle resize and initialize
   useEffect(() => {
     const handleResize = () => {
-      const newItemsPerView = getItemsPerView();
-      setItemsPerView(newItemsPerView);
-      setCurrentIndex(0);
+      const newItemWidth = getItemWidth();
+      setItemWidth(newItemWidth);
+      // Reset to starting position
+      setCurrentIndex(actualStartIndex);
       if (trackRef.current) {
-        gsap.set(trackRef.current, { x: "0%" });
+        const slideWidth = newItemWidth + 24; // Include gap
+        gsap.set(trackRef.current, { x: `${-(actualStartIndex * slideWidth)}px` });
       }
     };
 
-    handleResize();
+    handleResize(); // Initialize
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [actualStartIndex]);
 
   useEffect(() => {
     const title = titleRef.current;
@@ -155,8 +201,7 @@ export default function LookbookStrip() {
         {/* Navigation Buttons - Desktop */}
         <button
           onClick={prevSlide}
-          disabled={currentIndex === 0}
-          className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-black/70 backdrop-blur-md border border-white/20 rounded-full items-center justify-center text-white/80 hover:text-white hover:bg-black/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-black/70 backdrop-blur-md border border-white/20 rounded-full items-center justify-center text-white/80 hover:text-white hover:bg-black/90 transition-all"
           aria-label="Previous images"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,8 +211,7 @@ export default function LookbookStrip() {
 
         <button
           onClick={nextSlide}
-          disabled={currentIndex >= maxIndex}
-          className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-black/70 backdrop-blur-md border border-white/20 rounded-full items-center justify-center text-white/80 hover:text-white hover:bg-black/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-black/70 backdrop-blur-md border border-white/20 rounded-full items-center justify-center text-white/80 hover:text-white hover:bg-black/90 transition-all"
           aria-label="Next images"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -176,40 +220,63 @@ export default function LookbookStrip() {
         </button>
 
         {/* Carousel Container */}
-        <div className="overflow-hidden cursor-grab active:cursor-grabbing"
-          onMouseDown={(e) => handleStart(e.clientX)}
-          onMouseUp={(e) => handleEnd(e.clientX)}
-          onMouseLeave={(e) => handleEnd(e.clientX)}
-          onTouchStart={(e) => handleStart(e.touches[0].clientX)}
-          onTouchEnd={(e) => handleEnd(e.touches[0].clientX)}
+        <div 
+          className="overflow-hidden touch-pan-y select-none cursor-grab active:cursor-grabbing"
+          style={{ 
+            touchAction: 'pan-y pinch-zoom',
+            WebkitUserSelect: 'none',
+            userSelect: 'none'
+          }}
+          onTouchStart={(e) => {
+            e.preventDefault();
+            handleStart(e.touches[0].clientX);
+          }}
+          onTouchMove={(e) => {
+            e.preventDefault();
+            handleMove(e.touches[0].clientX);
+          }}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            handleEnd();
+          }}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            handleStart(e.clientX);
+          }}
+          onMouseMove={(e) => {
+            if (isDragging) {
+              e.preventDefault();
+              handleMove(e.clientX);
+            }
+          }}
+          onMouseUp={(e) => {
+            e.preventDefault();
+            handleEnd();
+          }}
+          onMouseLeave={() => {
+            if (isDragging) handleEnd();
+          }}
         >
           <div
             ref={trackRef}
-            className="flex"
-            style={{ width: `${totalSlides * 100}%` }}
+            className="flex gap-4 md:gap-6"
+            style={{ width: `${totalImages * (itemWidth + 24)}px` }} // Adjusted gap
           >
-            {Array.from({ length: totalSlides }, (_, slideIndex) => (
+            {extendedLooks.map((src, i) => (
               <div
-                key={slideIndex}
-                className="w-full flex gap-3 md:gap-6 lg:gap-8 px-2 md:px-4"
-                style={{ width: `${100 / totalSlides}%` }}
+                key={i}
+                className="flex-shrink-0 rounded-2xl md:rounded-3xl border border-white/10 bg-black/40 overflow-hidden shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:border-white/30 hover:shadow-emerald-500/20"
+                style={{ width: `${itemWidth}px` }}
               >
-                {LOOKS.slice(slideIndex * itemsPerView, (slideIndex + 1) * itemsPerView).map((src, i) => (
-                  <div
-                    key={slideIndex * itemsPerView + i}
-                    className="flex-1 rounded-2xl md:rounded-3xl border border-white/10 bg-black/40 overflow-hidden shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:border-white/30 hover:shadow-emerald-500/20"
-                  >
-                    <div className="aspect-[3/4] md:aspect-[4/5] lg:aspect-[3/4]">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img 
-                        src={src} 
-                        alt={`Look ${slideIndex * itemsPerView + i + 1}`} 
-                        className="w-full h-full object-cover select-none transition-transform duration-300 hover:scale-105" 
-                        draggable={false}
-                      />
-                    </div>
-                  </div>
-                ))}
+                <div className="aspect-[3/4] md:aspect-[4/5] lg:aspect-[3/4]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img 
+                    src={src} 
+                    alt={`Look ${(i % LOOKS.length) + 1}`} 
+                    className="w-full h-full object-cover select-none transition-transform duration-300 hover:scale-105" 
+                    draggable={false}
+                  />
+                </div>
               </div>
             ))}
           </div>
@@ -217,16 +284,16 @@ export default function LookbookStrip() {
 
         {/* Indicator Dots */}
         <div className="flex justify-center mt-6 gap-2">
-          {Array.from({ length: totalSlides }, (_, i) => (
+          {LOOKS.map((_, i) => (
             <button
               key={i}
-              onClick={() => goToSlide(i)}
+              onClick={() => goToSlide(LOOKS.length + i)}
               className={`w-2 h-2 rounded-full transition-all ${
-                i === currentIndex 
+                (currentIndex % LOOKS.length) === i 
                   ? 'bg-emerald-400 w-6' 
                   : 'bg-white/30 hover:bg-white/50'
               }`}
-              aria-label={`Go to slide group ${i + 1}`}
+              aria-label={`Go to image ${i + 1}`}
             />
           ))}
         </div>
