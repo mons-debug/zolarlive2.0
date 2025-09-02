@@ -182,37 +182,37 @@ export default function OriginSection() {
           </div>
 
           {/* Main Title - Vertical Stack */}
-          <div className="relative mb-3 md:mb-6 mt-6">
-            <h1 className="hero-title font-display text-6xl sm:text-7xl md:text-3xl lg:text-4xl font-bold text-white leading-tight animate-fade-in">
+          <div className="relative mb-3 md:mb-6 mt-4">
+            <h1 className="hero-title font-display text-4xl sm:text-5xl md:text-3xl lg:text-4xl font-bold text-white leading-tight animate-fade-in">
               <span className="block transform hover:scale-105 transition-transform duration-300">WELCOME</span>
-              <span className="block text-5xl sm:text-6xl md:text-2xl lg:text-3xl mt-3 md:mt-2 font-light tracking-wider">TO</span>
-              <span className="block text-7xl sm:text-8xl md:text-4xl lg:text-5xl font-black mt-3 md:mt-2 bg-gradient-to-r from-emerald-400 via-sky-400 to-emerald-400 bg-clip-text text-transparent animate-pulse">ZOLAR</span>
-        </h1>
+              <span className="block text-3xl sm:text-4xl md:text-2xl lg:text-3xl mt-2 md:mt-2 font-light tracking-wider">TO</span>
+              <span className="block text-5xl sm:text-6xl md:text-4xl lg:text-5xl font-black mt-2 md:mt-2 bg-gradient-to-r from-emerald-400 via-sky-400 to-emerald-400 bg-clip-text text-transparent animate-pulse">ZOLAR</span>
+            </h1>
             
             {/* Decorative Elements */}
             <div className="absolute -top-4 -left-4 w-8 h-8 border-l-2 border-t-2 border-emerald-400/30"></div>
             <div className="absolute -bottom-4 -right-4 w-8 h-8 border-r-2 border-b-2 border-sky-400/30"></div>
           </div>
 
-                      {/* Collection Info - Enhanced Shadows */}
-            <div className="mt-6 space-y-4 md:space-y-3">
-              <div className="flex items-center justify-center gap-4 md:gap-4">
-                <div className="h-px w-8 md:w-8 bg-gradient-to-r from-transparent to-emerald-400/80"></div>
-                <div className="font-mono text-base md:text-xs tracking-[0.15em] text-white font-medium uppercase" style={{textShadow: '0 2px 4px rgba(0, 0, 0, 0.8), 0 4px 8px rgba(0, 0, 0, 0.6), 0 0 20px rgba(16, 185, 129, 0.3)'}}>
-                  Drop 01
-                </div>
-                <div className="h-px w-8 md:w-8 bg-gradient-to-l from-transparent to-sky-400/80"></div>
+          {/* Collection Info - Enhanced Shadows */}
+          <div className="mt-4 space-y-3 md:space-y-3">
+            <div className="flex items-center justify-center gap-3 md:gap-4">
+              <div className="h-px w-6 md:w-8 bg-gradient-to-r from-transparent to-emerald-400/80"></div>
+              <div className="font-mono text-sm md:text-xs tracking-[0.15em] text-white font-medium uppercase" style={{textShadow: '0 2px 4px rgba(0, 0, 0, 0.8), 0 4px 8px rgba(0, 0, 0, 0.6), 0 0 20px rgba(16, 185, 129, 0.3)'}}>
+                Drop 01
               </div>
-              
-              <h2 className="font-display text-4xl md:text-base lg:text-lg font-bold text-emerald-400 tracking-wide animate-fade-in animation-delay-200 whitespace-nowrap break-keep-all" style={{textShadow: '0 2px 6px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(16, 185, 129, 0.5), 0 0 60px rgba(16, 185, 129, 0.2)'}}>
-                BORDERLINE
-              </h2>
-              
-              <p className="font-mono text-xl md:text-sm tracking-[0.15em] text-white/90 max-w-lg mx-auto leading-relaxed animate-fade-in animation-delay-400 font-medium" style={{textShadow: '0 2px 4px rgba(0, 0, 0, 0.9), 0 4px 8px rgba(0, 0, 0, 0.7)'}}>
-                Premium streetwear designed for those who stand out.<br/>
-                <span className="text-sky-400 font-semibold" style={{textShadow: '0 2px 4px rgba(0, 0, 0, 0.9), 0 4px 8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.4)'}}>From Morocco to the World</span>
-              </p>
+              <div className="h-px w-6 md:w-8 bg-gradient-to-l from-transparent to-sky-400/80"></div>
             </div>
+            
+            <h2 className="font-display text-2xl md:text-base lg:text-lg font-bold text-emerald-400 tracking-wide animate-fade-in animation-delay-200 whitespace-nowrap break-keep-all" style={{textShadow: '0 2px 6px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(16, 185, 129, 0.5), 0 0 60px rgba(16, 185, 129, 0.2)'}}>
+              BORDERLINE
+            </h2>
+            
+            <p className="font-mono text-lg md:text-sm tracking-[0.15em] text-white/90 max-w-md mx-auto leading-relaxed animate-fade-in animation-delay-400 font-medium" style={{textShadow: '0 2px 4px rgba(0, 0, 0, 0.9), 0 4px 8px rgba(0, 0, 0, 0.7)'}}>
+              Premium streetwear designed for those who stand out.<br/>
+              <span className="text-sky-400 font-semibold" style={{textShadow: '0 2px 4px rgba(0, 0, 0, 0.9), 0 4px 8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.4)'}}>From Morocco to the World</span>
+            </p>
+          </div>
 
           {/* Scroll Indicator */}
           <div className="absolute -bottom-12 md:-bottom-16 left-1/2 -translate-x-1/2 animate-bounce">

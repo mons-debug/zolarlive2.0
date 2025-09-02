@@ -192,13 +192,13 @@ export default function LookbookStrip() {
           <div
             ref={trackRef}
             className="flex gap-3 md:gap-8 lg:gap-10 transition-transform duration-500 ease-out"
-            style={{ width: `${(LOOKS.length / itemsPerView) * 100}%` }}
+            style={{ width: `${Math.ceil(LOOKS.length / itemsPerView) * 100}%` }}
         >
           {LOOKS.map((src, i) => (
             <div
               key={i}
-                className="shrink-0 rounded-2xl md:rounded-3xl border border-white/10 bg-black/40 overflow-hidden shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:border-white/30 hover:shadow-emerald-500/20"
-                style={{ width: `${100 / LOOKS.length}%` }}
+              className="shrink-0 rounded-2xl md:rounded-3xl border border-white/10 bg-black/40 overflow-hidden shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:border-white/30 hover:shadow-emerald-500/20"
+              style={{ width: `${100 / LOOKS.length}%` }}
             >
                 <div className="aspect-[3/4] md:aspect-[4/5] lg:aspect-[3/4]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
