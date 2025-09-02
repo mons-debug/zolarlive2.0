@@ -27,16 +27,16 @@ export default function LookbookStrip() {
   };
   
   const [itemsPerView, setItemsPerView] = useState(getItemsPerView());
-  const maxIndex = LOOKS.length - itemsPerView;
+  const maxIndex = Math.max(0, LOOKS.length - itemsPerView);
 
   // Navigation functions
   const goToSlide = useCallback((index: number) => {
     const clampedIndex = Math.max(0, Math.min(index, maxIndex));
     setCurrentIndex(clampedIndex);
     
-    // Calculate the exact position for each slide group
-    const slideGroupWidth = 100 / itemsPerView;
-    const translateX = -clampedIndex * slideGroupWidth;
+    // Calculate proper translation - move by the width of each image
+    const itemWidth = 100 / itemsPerView;
+    const translateX = -clampedIndex * itemWidth;
     
     if (trackRef.current) {
       gsap.to(trackRef.current, {
@@ -91,6 +91,10 @@ export default function LookbookStrip() {
       const newItemsPerView = getItemsPerView();
       setItemsPerView(newItemsPerView);
       setCurrentIndex(0); // Reset to start when layout changes
+      // Reset transform
+      if (trackRef.current) {
+        gsap.set(trackRef.current, { x: "0%" });
+      }
     };
 
     window.addEventListener('resize', handleResize);
@@ -191,15 +195,16 @@ export default function LookbookStrip() {
         >
           <div
             ref={trackRef}
-            className="flex gap-3 md:gap-8 lg:gap-10 transition-transform duration-500 ease-out"
-            style={{ width: `${(LOOKS.length / itemsPerView) * 100}%` }}
+            className="flex transition-transform duration-500 ease-out"
+            style={{ width: `${LOOKS.length * (100 / itemsPerView)}%` }}
         >
           {LOOKS.map((src, i) => (
             <div
               key={i}
-              className="shrink-0 rounded-2xl md:rounded-3xl border border-white/10 bg-black/40 overflow-hidden shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:border-white/30 hover:shadow-emerald-500/20"
-              style={{ width: `${100 / itemsPerView}%` }}
+              className="flex-shrink-0 px-2 md:px-4"
+              style={{ width: `${100 / LOOKS.length}%` }}
             >
+              <div className="rounded-2xl md:rounded-3xl border border-white/10 bg-black/40 overflow-hidden shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:border-white/30 hover:shadow-emerald-500/20">
                 <div className="aspect-[3/4] md:aspect-[4/5] lg:aspect-[3/4]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img 
@@ -209,6 +214,7 @@ export default function LookbookStrip() {
                     draggable={false}
                   />
                 </div>
+              </div>
             </div>
           ))}
         </div>
@@ -216,7 +222,7 @@ export default function LookbookStrip() {
 
         {/* Indicator Dots */}
         <div className="flex justify-center mt-6 gap-2">
-          {Array.from({ length: Math.ceil(LOOKS.length / itemsPerView) }, (_, i) => (
+          {Array.from({ length: maxIndex + 1 }, (_, i) => (
             <button
               key={i}
               onClick={() => goToSlide(i)}
