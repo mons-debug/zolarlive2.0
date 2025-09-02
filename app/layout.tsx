@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import GlobalGradientStage from "@/components/GlobalGradientStage";
 import { Analytics } from '@vercel/analytics/react';
+import Script from 'next/script';
 
 // Premium streetwear typography
 const inter = Inter({
@@ -20,8 +21,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Zolar — Borderline Black & Spin for Purpose",
-  description: "Zolar landing — neon black and kinetic white releases.",
+  title: "Zolar — Drop 01 | Glow-Inspired Moroccan Streetwear",
+  description: "Glow-in-the-dark premium t-shirts, 100% cotton, COD available in Morocco. Limited drop now live.",
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
@@ -29,14 +30,14 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: "Zolar — Borderline Black & Spin for Purpose",
-    description: "Neon black and kinetic white releases from Zolar.",
+    title: "Zolar — Drop 01 | Glow-Inspired Moroccan Streetwear",
+    description: "Glow-in-the-dark premium t-shirts, 100% cotton, COD in Morocco.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Zolar — Borderline Black & Spin for Purpose",
-    description: "Neon black and kinetic white releases from Zolar.",
+    title: "Zolar — Drop 01 | Glow-Inspired Moroccan Streetwear",
+    description: "Glow-in-the-dark premium t-shirts, 100% cotton, COD in Morocco.",
   },
 };
 
@@ -47,6 +48,33 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Meta Pixel Code */}
+        <Script id="meta-pixel" strategy="afterInteractive">
+          {`
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '757530543681902');
+            fbq('track', 'PageView');
+          `}
+        </Script>
+        <noscript>
+          <img 
+            height="1" 
+            width="1" 
+            style={{display:'none'}}
+            src="https://www.facebook.com/tr?id=757530543681902&ev=PageView&noscript=1"
+            alt=""
+          />
+        </noscript>
+        {/* End Meta Pixel Code */}
+      </head>
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased page-vignette`}
       >

@@ -15,13 +15,13 @@ if (typeof window !== "undefined") {
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 
 // Size measurements (approx.)
-const SIZE_CHART: Record<string, { chest: number; length: number }> = {
-  XS: { chest: 46, length: 66 },
-  S: { chest: 49, length: 69 },
-  M: { chest: 52, length: 72 },
-  L: { chest: 55, length: 74 },
-  XL: { chest: 58, length: 76 },
-  XXL: { chest: 61, length: 78 },
+const SIZE_CHART: Record<string, { chest: number; length: number; shoulder: number }> = {
+  XS: { chest: 46, length: 66, shoulder: 42 },
+  S: { chest: 49, length: 69, shoulder: 44 },
+  M: { chest: 52, length: 72, shoulder: 46 },
+  L: { chest: 55, length: 74, shoulder: 48 },
+  XL: { chest: 58, length: 76, shoulder: 50 },
+  XXL: { chest: 61, length: 78, shoulder: 52 },
 };
 
 function SizeChartModal({ onClose }: { onClose: () => void }) {
@@ -42,7 +42,8 @@ function SizeChartModal({ onClose }: { onClose: () => void }) {
                 <tr>
                   <th className="text-left py-2 pr-4 font-medium">Size</th>
                   <th className="text-left py-2 pr-4 font-medium">Chest (cm)</th>
-                  <th className="text-left py-2 font-medium">Length (cm)</th>
+                  <th className="text-left py-2 pr-4 font-medium">Length (cm)</th>
+                  <th className="text-left py-2 font-medium">Shoulder (cm)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/10">
@@ -50,11 +51,16 @@ function SizeChartModal({ onClose }: { onClose: () => void }) {
                   <tr key={s}>
                     <td className="py-2 pr-4">{s}</td>
                     <td className="py-2 pr-4">{SIZE_CHART[s].chest}</td>
-                    <td className="py-2">{SIZE_CHART[s].length}</td>
+                    <td className="py-2 pr-4">{SIZE_CHART[s].length}</td>
+                    <td className="py-2">{SIZE_CHART[s].shoulder}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
+          <div className="mt-4 space-y-1 text-white/80 text-sm">
+            <p>Model is 180cm wearing size L.</p>
+            <p className="text-white/70">Oversize unisex fit – size down if in doubt.</p>
           </div>
         </div>
         <div className="px-5 pb-5">
@@ -66,6 +72,7 @@ function SizeChartModal({ onClose }: { onClose: () => void }) {
 }
 
 // Mobile Carousel Component with scroll-triggered auto-swipe
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function MobileCarousel({ products }: { products: Product[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -184,9 +191,9 @@ function MobileShopCard() {
   const cardRef = useRef<HTMLDivElement>(null);
   const scrollLockYRef = useRef<number>(0);
 
-  // Set initial gradient to Borderline (green) theme on component mount
+  // Set initial gradient to Spin (blue) theme on component mount
   useEffect(() => {
-    updateGlobalGradient('borderline', 'male');
+    updateGlobalGradient('spin', 'male');
   }, []);
 
   // Prevent body scroll when fullscreen is open and preserve scroll position
@@ -339,13 +346,14 @@ function MobileShopCard() {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const resetGlobalGradient = () => {
     const docEl = document.documentElement;
     const gradientBg = document.querySelector('.zolar-gradient-vars');
     
-    // Reset to enhanced default green theme
-    docEl.style.setProperty('--h1', '155');
-    docEl.style.setProperty('--h2', '135'); 
+    // Reset to enhanced default blue theme (maintaining consistency)
+    docEl.style.setProperty('--h1', '200');
+    docEl.style.setProperty('--h2', '230'); 
     docEl.style.setProperty('--ga1', '0.42');
     docEl.style.setProperty('--ga2', '0.32');
     docEl.style.setProperty('--ga3', '0.12');
@@ -417,7 +425,7 @@ function MobileShopCard() {
               <div className="absolute inset-0">
                 <Image 
             src={currentImage} 
-            alt={`${currentProduct.name} ${viewMode} ${model}`} 
+            alt={`${currentProduct.name} ${viewMode} ${model} tee`} 
                   fill 
                   sizes="100vw" 
             className="object-cover transition-opacity duration-300"
@@ -443,77 +451,83 @@ function MobileShopCard() {
           <div className="space-y-3">
             {/* Variant Toggle */}
             <div className="flex justify-center">
-              <div className="inline-flex p-1 rounded-full bg-black/50 backdrop-blur border border-white/20">
+              <div className="flex gap-4">
                     <button 
                   onClick={() => handleVariantChange('borderline')}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${
+                  className={`flex flex-col items-center justify-center w-18 h-18 rounded-full text-xs font-semibold transition-all duration-200 ${
                     variant === 'borderline' 
-                      ? 'bg-emerald-400 text-black' 
-                      : 'text-white/80 hover:text-white'
+                      ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/25 ring-1 ring-emerald-400/50' 
+                      : 'bg-white/10 text-white/80 hover:bg-white/15 hover:text-white border border-white/20'
                   }`}
+                  title="Borderline collection"
                 >
-                  Borderline
+                  <Image src="/images/borderline-icon.png" alt="Borderline" width={64} height={64} className="w-16 h-16 rounded-full object-cover" />
                 </button>
                 <button
                   onClick={() => handleVariantChange('spin')}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${
+                  className={`flex flex-col items-center justify-center w-18 h-18 rounded-full text-xs font-semibold transition-all duration-200 ${
                     variant === 'spin' 
-                      ? 'bg-sky-400 text-black' 
-                      : 'text-white/80 hover:text-white'
+                      ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/25 ring-1 ring-sky-400/50' 
+                      : 'bg-white/10 text-white/80 hover:bg-white/15 hover:text-white border border-white/20'
                   }`}
+                  title="Spin collection"
                 >
-                  Spin
+                  <Image src="/images/spin-icon.png" alt="Spin" width={64} height={64} className="w-16 h-16 rounded-full object-cover" />
                     </button>
             </div>
           </div>
           
-            {/* View & Model Controls */}
-            <div className="flex justify-between items-center">
-              {/* Front/Back Toggle */}
-              <div className="flex bg-black/50 backdrop-blur rounded-full border border-white/20">
+            {/* View & Model Controls - Enhanced Side Layout */}
+            <div className="flex justify-between items-center w-full px-2">
+              {/* Left Side: Male/Female Toggle */}
+              <div className="flex flex-col gap-3">
                 <button
-                  onClick={() => handleToggleChange('view', 'front')}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${
-                    viewMode === 'front' 
-                      ? 'bg-white text-black' 
-                      : 'text-white/80 hover:text-white'
-                  }`}
-                >
-                  Front
-                </button>
-                <button
-                  onClick={() => handleToggleChange('view', 'back')}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${
-                    viewMode === 'back' 
-                      ? 'bg-white text-black' 
-                      : 'text-white/80 hover:text-white'
-                  }`}
-                >
-                  Back
-                </button>
-              </div>
-              
-              {/* Male/Female Toggle */}
-              <div className="flex bg-black/50 backdrop-blur rounded-full border border-white/20">
-                  <button 
                   onClick={() => handleToggleChange('model', 'male')}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${
+                  className={`flex flex-col items-center justify-center w-14 h-14 rounded-full text-xs font-medium transition-all duration-200 ${
                     model === 'male' 
-                      ? 'bg-white text-black' 
-                      : 'text-white/80 hover:text-white'
+                      ? 'bg-sky-500 text-white shadow-md shadow-sky-500/20' 
+                      : 'bg-white/10 text-white/75 hover:bg-white/15 hover:text-white border border-white/20'
                   }`}
+                  title="Male model fit"
                 >
-                  Male
+                  <Image src="/images/male.svg" alt="Male" width={24} height={24} className="w-6 h-6 filter brightness-0 invert" />
                 </button>
                 <button
                   onClick={() => handleToggleChange('model', 'female')}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${
+                  className={`flex flex-col items-center justify-center w-14 h-14 rounded-full text-xs font-medium transition-all duration-200 ${
                     model === 'female' 
-                      ? 'bg-white text-black' 
-                      : 'text-white/80 hover:text-white'
+                      ? 'bg-pink-500 text-white shadow-md shadow-pink-500/20' 
+                      : 'bg-white/10 text-white/75 hover:bg-white/15 hover:text-white border border-white/20'
                   }`}
+                  title="Female model fit"
                 >
-                  Female
+                  <Image src="/images/female.svg" alt="Female" width={24} height={24} className="w-6 h-6 filter brightness-0 invert" />
+                </button>
+              </div>
+              
+              {/* Right Side: Front/Back Toggle */}
+              <div className="flex flex-col gap-3">
+                  <button 
+                  onClick={() => handleToggleChange('view', 'front')}
+                  className={`flex flex-col items-center justify-center w-14 h-14 rounded-full text-xs font-medium transition-all duration-200 ${
+                    viewMode === 'front' 
+                      ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20' 
+                      : 'bg-white/10 text-white/75 hover:bg-white/15 hover:text-white border border-white/20'
+                  }`}
+                  title="View front of t-shirt"
+                >
+                  <Image src="/images/front.svg" alt="Front" width={24} height={24} className="w-6 h-6 filter brightness-0 invert" />
+                </button>
+                <button
+                  onClick={() => handleToggleChange('view', 'back')}
+                  className={`flex flex-col items-center justify-center w-14 h-14 rounded-full text-xs font-medium transition-all duration-200 ${
+                    viewMode === 'back' 
+                      ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20' 
+                      : 'bg-white/10 text-white/75 hover:bg-white/15 hover:text-white border border-white/20'
+                  }`}
+                  title="View back of t-shirt"
+                >
+                  <Image src="/images/back.svg" alt="Back" width={24} height={24} className="w-6 h-6 filter brightness-0 invert" />
                   </button>
               </div>
             </div>
@@ -557,53 +571,78 @@ function MobileShopCard() {
               />
     </div>
 
-            {/* Navigation Controls Overlay */}
-            <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex flex-wrap items-center justify-center gap-2 sm:gap-4 px-4 max-w-full">
-              {/* Front/Back Toggle */}
-              <div className="flex bg-black/70 backdrop-blur-md rounded-full border border-white/20 p-1">
+                        {/* Navigation Controls Overlay - Enhanced Side Layout */}
+            <div className="absolute bottom-6 sm:bottom-8 inset-x-6 flex justify-between items-end">
+              {/* Left Side: Male/Female Toggle */}
+              <div className="flex flex-col gap-4">
                 <button
-                  onClick={() => handleToggleChange('view', 'front')}
-                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition ${
-                    viewMode === 'front' 
-                      ? 'bg-white text-black' 
-                      : 'text-white/80 hover:text-white'
+                  onClick={() => handleToggleChange('model', 'male')}
+                  className={`group relative flex flex-col items-center justify-center w-18 h-18 rounded-full text-xs font-bold transition-all duration-300 ${
+                    model === 'male' 
+                      ? 'bg-gradient-to-br from-sky-400 via-sky-500 to-sky-600 text-white shadow-2xl shadow-sky-500/50 scale-110 ring-3 ring-sky-300/70' 
+                      : 'bg-black/40 text-white/80 hover:bg-black/50 hover:text-white hover:scale-105 backdrop-blur-lg border-2 border-white/40'
                   }`}
+                  title="Male model fit"
                 >
-                  Front
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <svg className="w-5 h-5 mb-1 relative z-10" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm8 7V7l-6-1.5V4c0-.55-.45-1-1-1h-2c-.55 0-1 .45-1 1v1.5L4 7v2l6-1.5V22h2v-6h2v6h2V7.5L22 9z"/>
+                  </svg>
+                  <span className="leading-none text-xs font-bold relative z-10">MALE</span>
                 </button>
                 <button
-                  onClick={() => handleToggleChange('view', 'back')}
-                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition ${
-                    viewMode === 'back' 
-                      ? 'bg-white text-black' 
-                      : 'text-white/80 hover:text-white'
+                  onClick={() => handleToggleChange('model', 'female')}
+                  className={`group relative flex flex-col items-center justify-center w-18 h-18 rounded-full text-xs font-bold transition-all duration-300 ${
+                    model === 'female' 
+                      ? 'bg-gradient-to-br from-pink-400 via-pink-500 to-pink-600 text-white shadow-2xl shadow-pink-500/50 scale-110 ring-3 ring-pink-300/70' 
+                      : 'bg-black/40 text-white/80 hover:bg-black/50 hover:text-white hover:scale-105 backdrop-blur-lg border-2 border-white/40'
                   }`}
+                  title="Female model fit"
                 >
-                  Back
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <svg className="w-5 h-5 mb-1 relative z-10" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm1 20h-2v-6H9.5c-.83 0-1.5-.67-1.5-1.5S8.67 15 9.5 15h5c.83 0 1.5.67 1.5 1.5S15.33 17 14.5 17H13v5zm-1-7c-1.1 0-2-.9-2-2V9.5C10 8.12 8.88 7 7.5 7S5 8.12 5 9.5 6.12 12 7.5 12H8v1c0 1.1.9 2 2 2s2-.9 2-2v-1h.5c1.38 0 2.5-1.12 2.5-2.5S12.88 7 11.5 7 9 8.12 9 9.5V13c0 1.1.9 2 2 2z"/>
+                  </svg>
+                  <span className="leading-none text-xs font-bold relative z-10">FEMALE</span>
                 </button>
               </div>
 
-              {/* Male/Female Toggle */}
-              <div className="flex bg-black/70 backdrop-blur-md rounded-full border border-white/20 p-1">
+              {/* Right Side: Front/Back Toggle */}
+              <div className="flex flex-col gap-4">
               <button
-                  onClick={() => handleToggleChange('model', 'male')}
-                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition ${
-                    model === 'male' 
-                      ? 'bg-white text-black' 
-                      : 'text-white/80 hover:text-white'
+                  onClick={() => handleToggleChange('view', 'front')}
+                  className={`group relative flex flex-col items-center justify-center w-18 h-18 rounded-full text-xs font-bold transition-all duration-300 ${
+                    viewMode === 'front' 
+                      ? 'bg-gradient-to-br from-emerald-400 via-emerald-500 to-emerald-600 text-white shadow-2xl shadow-emerald-500/50 scale-110 ring-3 ring-emerald-300/70' 
+                      : 'bg-black/40 text-white/80 hover:bg-black/50 hover:text-white hover:scale-105 backdrop-blur-lg border-2 border-white/40'
                   }`}
+                  title="View front of t-shirt"
                 >
-                  Male
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <svg className="w-5 h-5 mb-1 relative z-10" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 2L7 4v2h1v12c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V6h1V4l-2-2H9zm1 2h4l1 1v1H9V5l1-1zm4 14h-4V6h4v12z"/>
+                    <circle cx="10.5" cy="8" r="0.5"/>
+                    <circle cx="13.5" cy="8" r="0.5"/>
+                  </svg>
+                  <span className="leading-none text-xs font-bold relative z-10">FRONT</span>
               </button>
               <button
-                  onClick={() => handleToggleChange('model', 'female')}
-                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition ${
-                    model === 'female' 
-                      ? 'bg-white text-black' 
-                      : 'text-white/80 hover:text-white'
+                  onClick={() => handleToggleChange('view', 'back')}
+                  className={`group relative flex flex-col items-center justify-center w-18 h-18 rounded-full text-xs font-bold transition-all duration-300 ${
+                    viewMode === 'back' 
+                      ? 'bg-gradient-to-br from-emerald-400 via-emerald-500 to-emerald-600 text-white shadow-2xl shadow-emerald-500/50 scale-110 ring-3 ring-emerald-300/70' 
+                      : 'bg-black/40 text-white/80 hover:bg-black/50 hover:text-white hover:scale-105 backdrop-blur-lg border-2 border-white/40'
                   }`}
+                  title="View back of t-shirt"
                 >
-                  Female
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <svg className="w-5 h-5 mb-1 relative z-10" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 2L7 4v2h1v12c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V6h1V4l-2-2H9zm1 2h4l1 1v1H9V5l1-1zm4 14h-4V6h4v12z"/>
+                    <rect x="10" y="7" width="4" height="1" rx="0.5"/>
+                    <rect x="10" y="9" width="4" height="1" rx="0.5"/>
+                    <rect x="10" y="11" width="4" height="1" rx="0.5"/>
+                  </svg>
+                  <span className="leading-none text-xs font-bold relative z-10">BACK</span>
               </button>
           </div>
 
@@ -611,23 +650,31 @@ function MobileShopCard() {
               <div className="flex bg-black/70 backdrop-blur-md rounded-full border border-white/20 p-1">
                             <button
                   onClick={() => handleVariantChange('borderline')}
-                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition ${
+                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition flex items-center gap-1 ${
                     variant === 'borderline' 
                       ? 'bg-emerald-400 text-black' 
                       : 'text-white/80 hover:text-white'
                   }`}
+                  title="Borderline collection"
                 >
-                  Borderline
+                  <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  <span className="hidden sm:inline">Borderline</span>
               </button>
               <button
                   onClick={() => handleVariantChange('spin')}
-                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition ${
+                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition flex items-center gap-1 ${
                     variant === 'spin' 
                       ? 'bg-sky-400 text-black' 
                       : 'text-white/80 hover:text-white'
                   }`}
+                  title="Spin collection"
                 >
-                  Spin
+                  <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  <span className="hidden sm:inline">Spin</span>
               </button>
           </div>
         </div>
@@ -640,10 +687,9 @@ function MobileShopCard() {
 
 // Desktop Product Showcase - Premium Desktop Experience
 function DesktopProductShowcase({ products }: { products: Product[] }) {
-  const [currentView, setCurrentView] = useState<'borderline' | 'spin'>('borderline');
+  const [highlightedCard, setHighlightedCard] = useState<'borderline' | 'spin'>('borderline');
   const [currentSide, setCurrentSide] = useState<'front' | 'back'>('front');
   const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
-  const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
   const scrollLockYRefDesktop = useRef<number>(0);
 
   const borderlineProduct = products.find(p => p.id.includes('borderline'));
@@ -687,158 +733,154 @@ function DesktopProductShowcase({ products }: { products: Product[] }) {
   }, [isFullscreenOpen]);
 
   return (
-    <div className="space-y-8">
-      {/* Product Showcase Grid - Desktop Layout */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* Borderline Black Showcase */}
-        <div 
-          className={`group relative rounded-2xl overflow-hidden transition-all duration-500 cursor-pointer ${
-            currentView === 'borderline' 
-              ? 'ring-2 ring-emerald-500/20 scale-105 shadow-2xl' 
-              : 'ring-1 ring-white/10 hover:ring-white/30 hover:scale-102'
-          }`}
-          onClick={() => setCurrentView('borderline')}
-        >
-            <div className="aspect-[4/5] relative">
-              <Image 
-              src={currentView === 'borderline' && currentSide === 'back' && borderlineProduct?.backImage ? borderlineProduct.backImage : borderlineProduct?.image || '/images/p8.png'} 
-              alt="Borderline Black"
-                fill 
-              sizes="(max-width: 768px) 100vw, 50vw" 
-              className="object-cover transition-transform duration-700 group-hover:scale-105 will-change-transform"
-                priority
-              quality={85}
-              />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-              
-            {/* Fullscreen Button - Borderline */}
-            {currentView === 'borderline' && (
-                <button
-                onClick={() => setIsFullscreenOpen(true)}
-                className="absolute top-3 right-3 z-20 w-8 h-8 bg-black/50 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-black/70 transition-all duration-200 opacity-0 group-hover:opacity-100"
-                aria-label="View fullscreen"
-                >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                </svg>
-                </button>
-              )}
-              
-            {/* Content Overlay */}
-            <div className="absolute bottom-0 left-0 right-0 p-6">
-              <div className="text-xs uppercase tracking-wider text-emerald-400 mb-2">
-                Green glow print
+    <div className="space-y-16">
+
+
+      {/* Product Navigation & Controls - Side by Side Layout */}
+      <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 max-w-7xl mx-auto">
+        {/* Left Side - Product Showcase Cards */}
+        <div className="flex-1 w-full lg:w-auto max-w-4xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
+            {/* Borderline Card */}
+            <div 
+              onClick={() => setHighlightedCard('borderline')}
+              className={`relative rounded-2xl overflow-hidden backdrop-blur-sm border p-6 transition-all duration-300 w-full max-w-sm cursor-pointer ${
+              highlightedCard === 'borderline' 
+                  ? 'bg-emerald-500/20 border-emerald-400/40 scale-105 shadow-xl shadow-emerald-500/10' 
+                  : 'bg-black/40 border-white/20 opacity-60 hover:opacity-80 hover:scale-102'
+              }`}>
+              <div className="aspect-[4/5] relative mb-4">
+                              <Image 
+                  src={highlightedCard === 'borderline' && currentSide === 'back' && borderlineProduct?.backImage 
+                    ? borderlineProduct.backImage 
+                    : borderlineProduct?.image || "/images/placeholders/borderline-black-male-front.png"}
+                  alt={`Borderline Black ${highlightedCard === 'borderline' ? currentSide : 'front'}`}
+                  fill 
+                  className="object-cover rounded-xl transition-opacity duration-300"
+                />
           </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Borderline Black</h3>
-              <p className="text-white/80 text-sm leading-relaxed">
-                Our signature black tee with a neon-green border glow.
-              </p>
-            </div>
-            </div>
+              <h3 className="text-xl font-bold text-white mb-2">Borderline Black</h3>
+              <p className="text-sm text-white/80 font-medium">Green glow print, premium streetwear</p>
           </div>
 
-        {/* Spin White Showcase */}
-        <div 
-          className={`group relative rounded-2xl overflow-hidden transition-all duration-500 cursor-pointer ${
-            currentView === 'spin' 
-              ? 'ring-2 ring-sky-500/20 scale-105 shadow-2xl' 
-              : 'ring-1 ring-white/10 hover:ring-white/30 hover:scale-102'
-          }`}
-          onClick={() => setCurrentView('spin')}
-        >
-          <div className="aspect-[4/5] relative">
+            {/* Spin Card */}
+            <div 
+              onClick={() => setHighlightedCard('spin')}
+              className={`relative rounded-2xl overflow-hidden backdrop-blur-sm border p-6 transition-all duration-300 w-full max-w-sm cursor-pointer ${
+              highlightedCard === 'spin' 
+                  ? 'bg-sky-500/20 border-sky-400/40 scale-105 shadow-xl shadow-sky-500/10' 
+                  : 'bg-black/40 border-white/20 opacity-60 hover:opacity-80 hover:scale-102'
+              }`}>
+              <div className="aspect-[4/5] relative mb-4">
                 <Image 
-              src={currentView === 'spin' && currentSide === 'back' && spinProduct?.backImage ? spinProduct.backImage : spinProduct?.image || '/images/p5.png'} 
-              alt="Spin White"
-              fill 
-              sizes="(max-width: 768px) 100vw, 50vw" 
-              className="object-cover transition-transform duration-700 group-hover:scale-105 will-change-transform"
-              priority
-              quality={85}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-            
-            {/* Fullscreen Button - Spin */}
-            {currentView === 'spin' && (
-              <button
-                onClick={() => setIsFullscreenOpen(true)}
-                className="absolute top-3 right-3 z-20 w-8 h-8 bg-black/50 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-black/70 transition-all duration-200 opacity-0 group-hover:opacity-100"
-                aria-label="View fullscreen"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                </svg>
-              </button>
-            )}
-            
-            {/* Content Overlay */}
-            <div className="absolute bottom-0 left-0 right-0 p-6">
-              <div className="text-xs uppercase tracking-wider text-sky-400 mb-2">
-                Blue/Orange print
-          </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Spin for Purpose White</h3>
-              <p className="text-white/80 text-sm leading-relaxed">
-                Clean white base with kinetic blue and orange spin graphic.
-              </p>
-          </div>
-        </div>
+                  src={highlightedCard === 'spin' && currentSide === 'back' && spinProduct?.backImage 
+                    ? spinProduct.backImage 
+                    : spinProduct?.image || "/images/placeholders/spin-white-male-front.png"}
+                  alt={`Spin White ${highlightedCard === 'spin' ? currentSide : 'front'}`}
+                  fill 
+                  className="object-cover rounded-xl transition-opacity duration-300"
+                />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Spin White</h3>
+              <p className="text-sm text-white/80 font-medium">Blue/orange kinetic print</p>
             </div>
           </div>
-
-      {/* View Toggle for Selected Product */}
-      {((currentView === 'borderline' && borderlineProduct?.backImage) || (currentView === 'spin' && spinProduct?.backImage)) && (
-        <div className="flex justify-center">
-          <div className="inline-flex p-1 rounded-full bg-black/50 backdrop-blur border border-white/20">
-              <button
-              onClick={() => setCurrentSide('front')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition ${
-                currentSide === 'front' 
-                  ? 'bg-white text-black' 
-                  : 'text-white/80 hover:text-white'
-              }`}
-            >
-              Front View
-              </button>
-              <button
-              onClick={() => setCurrentSide('back')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition ${
-                currentSide === 'back' 
-                  ? 'bg-white text-black' 
-                  : 'text-white/80 hover:text-white'
-              }`}
-            >
-              Back View
-              </button>
-          </div>
         </div>
-      )}
+
+                {/* Right Side - Controls */}
+        <div className="w-full lg:w-auto flex flex-col items-center space-y-6">
+          {/* View Toggle - Only Front/Back buttons */}
+          {((highlightedCard === 'borderline' && borderlineProduct?.backImage) || (highlightedCard === 'spin' && spinProduct?.backImage)) && (
+            <div className="flex flex-col gap-4 bg-black/60 backdrop-blur-xl rounded-3xl border border-white/30 p-3 shadow-2xl">
+              <button
+                onClick={() => setCurrentSide('front')}
+                className={`px-8 py-3 rounded-2xl text-base font-semibold transition-all duration-300 flex items-center gap-3 ${
+                  currentSide === 'front' 
+                    ? 'bg-white text-black shadow-lg scale-105' 
+                    : 'text-white/90 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                Front View
+              </button>
+              <button
+                onClick={() => setCurrentSide('back')}
+                className={`px-8 py-3 rounded-2xl text-base font-semibold transition-all duration-300 flex items-center gap-3 ${
+                  currentSide === 'back' 
+                    ? 'bg-white text-black shadow-lg scale-105' 
+                    : 'text-white/90 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                </svg>
+                Back View
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Product Story Section */}
-      <div className="text-center space-y-4">
-        <div className={`font-mono text-sm tracking-wider ${currentView === 'borderline' ? 'text-emerald-400' : 'text-sky-400'}`}>
-          {currentView === 'borderline' ? 'Drop 01 — Borderline Collection' : 'Drop 01 — Spin Collection'}
+      <div className="text-center space-y-8 max-w-2xl mx-auto">
+        <div className={`font-mono text-sm tracking-[0.2em] ${highlightedCard === 'borderline' ? 'text-emerald-400' : 'text-sky-400'} font-medium`}>
+          {highlightedCard === 'borderline' ? 'BORDERLINE' : 'SPIN'} — {highlightedCard === 'borderline' ? 'The Night Vision' : 'Kinetic Energy'}
         </div>
-        <h3 className="text-3xl md:text-4xl font-bold text-white">
-          {currentView === 'borderline' ? 'The Night Vision' : 'Kinetic Energy'}
-        </h3>
-        <p className="text-white/70 text-lg max-w-2xl mx-auto leading-relaxed">
-          {currentView === 'borderline' 
-            ? 'For those who stand out in the darkness. Premium streetwear with a neon edge.'
-            : 'Keep spinning, keep moving. Energy in motion, captured in fabric.'
+        <p className="text-xs md:text-sm text-white/80 max-w-lg mx-auto leading-relaxed">
+          {highlightedCard === 'borderline' 
+            ? 'For those who stand out in the darkness. Premium streetwear with a neon edge that defines the night.'
+            : 'Keep spinning, keep moving. Energy in motion, captured in fabric that never stops.'
           }
         </p>
+        
+        {/* Product Features Grid */}
+        <div className="grid md:grid-cols-3 gap-6 mt-12">
+          <div className="text-center p-5 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
+            <div className="w-14 h-14 bg-emerald-500/20 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <svg className="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h4 className="text-lg font-semibold text-white mb-2">Premium Quality</h4>
+            <p className="text-white/70 text-sm">220 GSM heavyweight cotton with tight stitching</p>
+          </div>
+          
+          <div className="text-center p-5 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
+            <div className="w-14 h-14 bg-sky-500/20 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <svg className="w-6 h-6 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h4 className="text-lg font-semibold text-white mb-2">Made in Morocco</h4>
+            <p className="text-white/70 text-sm">Authentic craftsmanship from local artisans</p>
+          </div>
+          
+          <div className="text-center p-5 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
+            <div className="w-14 h-14 bg-purple-500/20 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h4 className="text-lg font-semibold text-white mb-2">Limited Edition</h4>
+            <p className="text-white/70 text-sm">Only 50 units made - exclusive and rare</p>
+          </div>
+        </div>
         </div>
 
       {/* Desktop Fullscreen Modal */}
       {isFullscreenOpen && (
-        <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[100] bg-black/98 backdrop-blur-lg flex items-center justify-center p-8">
           {/* Close Button */}
           <button
             onClick={() => setIsFullscreenOpen(false)}
-            className="absolute top-4 right-4 z-10 w-12 h-12 bg-black/50 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-black/70 transition-all duration-200"
+            className="absolute top-8 right-8 z-10 w-16 h-16 bg-black/80 backdrop-blur-xl border border-white/40 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:bg-black/90 transition-all duration-300 shadow-2xl"
             aria-label="Close fullscreen"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -847,15 +889,15 @@ function DesktopProductShowcase({ products }: { products: Product[] }) {
           <div className="relative w-full h-full max-w-6xl max-h-full flex items-center justify-center">
             <div className="relative w-full h-full">
               <Image 
-                src={currentView === 'borderline' && currentSide === 'back' && borderlineProduct?.backImage 
+                src={highlightedCard === 'borderline' && currentSide === 'back' && borderlineProduct?.backImage 
                   ? borderlineProduct.backImage 
-                  : currentView === 'spin' && currentSide === 'back' && spinProduct?.backImage
+                  : highlightedCard === 'spin' && currentSide === 'back' && spinProduct?.backImage
                   ? spinProduct.backImage
-                  : currentView === 'borderline' 
-                  ? borderlineProduct?.image || '/images/p8.png'
-                  : spinProduct?.image || '/images/p5.png'
+                  : highlightedCard === 'borderline' 
+                  ? borderlineProduct?.image || '/images/placeholders/borderline-black-male-front.png'
+                  : spinProduct?.image || '/images/placeholders/spin-white-male-front.png'
                 } 
-                alt={`${currentView === 'borderline' ? 'Borderline Black' : 'Spin White'} ${currentSide} - Fullscreen`} 
+                alt={`${highlightedCard === 'borderline' ? 'Borderline Black' : 'Spin White'} ${currentSide} - Fullscreen`} 
                 fill 
                 sizes="100vw" 
                 className="object-contain"
@@ -864,53 +906,74 @@ function DesktopProductShowcase({ products }: { products: Product[] }) {
         </div>
 
             {/* Navigation Controls Overlay */}
-            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-4">
+            <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex items-center gap-6">
               {/* Product Toggle */}
-              <div className="flex bg-black/70 backdrop-blur-md rounded-full border border-white/20 p-1">
+              <div className="flex bg-black/80 backdrop-blur-xl rounded-2xl border border-white/30 p-2 shadow-2xl">
             <button
-                  onClick={() => setCurrentView('borderline')}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition ${
-                    currentView === 'borderline' 
-                      ? 'bg-emerald-400 text-black' 
-                      : 'text-white/80 hover:text-white'
+                  onClick={() => setHighlightedCard('borderline')}
+                  className={`px-6 py-3 rounded-xl text-base font-semibold transition-all duration-300 flex items-center gap-3 ${
+                    highlightedCard === 'borderline' 
+                      ? 'bg-emerald-500 text-black shadow-lg scale-105' 
+                      : 'text-white/90 hover:text-white hover:bg-white/10'
                   }`}
+                  title="Borderline collection"
                 >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
                   Borderline
             </button>
               <button
-                  onClick={() => setCurrentView('spin')}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition ${
-                    currentView === 'spin' 
-                      ? 'bg-sky-400 text-black' 
-                      : 'text-white/80 hover:text-white'
+                  onClick={() => setHighlightedCard('spin')}
+                  className={`px-6 py-3 rounded-xl text-base font-semibold transition-all duration-300 flex items-center gap-3 ${
+                    highlightedCard === 'spin' 
+                      ? 'bg-sky-500 text-black shadow-lg scale-105' 
+                      : 'text-white/90 hover:text-white hover:bg-white/10'
                   }`}
+                  title="Spin collection"
                 >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
                   Spin
               </button>
         </div>
 
               {/* Front/Back Toggle */}
-              {((currentView === 'borderline' && borderlineProduct?.backImage) || (currentView === 'spin' && spinProduct?.backImage)) && (
-                <div className="flex bg-black/70 backdrop-blur-md rounded-full border border-white/20 p-1">
+              {((highlightedCard === 'borderline' && borderlineProduct?.backImage) || (highlightedCard === 'spin' && spinProduct?.backImage)) && (
+                <div className="flex gap-4">
           <button
                     onClick={() => setCurrentSide('front')}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                    className={`flex items-center gap-3 px-6 py-3 rounded-xl text-base font-semibold ring-2 transition-all duration-300 ${
                       currentSide === 'front' 
-                        ? 'bg-white text-black' 
-                        : 'text-white/80 hover:text-white'
+                        ? 'bg-emerald-500 text-white ring-emerald-400 shadow-lg shadow-emerald-500/25 scale-105' 
+                        : 'bg-white/10 text-white ring-white/30 hover:bg-white/20 hover:ring-white/50 backdrop-blur-sm'
                     }`}
+                    title="View front of t-shirt"
                   >
-                    Front
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M9 2L7 4v2h1v12c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V6h1V4l-2-2H9zm1 2h4l1 1v1H9V5l1-1zm4 14h-4V6h4v12z"/>
+                      <circle cx="10.5" cy="8" r="0.5"/>
+                      <circle cx="13.5" cy="8" r="0.5"/>
+                    </svg>
+                    FRONT
           </button>
                   <button
                     onClick={() => setCurrentSide('back')}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                    className={`flex items-center gap-3 px-6 py-3 rounded-xl text-base font-semibold ring-2 transition-all duration-300 ${
                       currentSide === 'back' 
-                        ? 'bg-white text-black' 
-                        : 'text-white/80 hover:text-white'
+                        ? 'bg-emerald-500 text-white ring-emerald-400 shadow-lg shadow-emerald-500/25 scale-105' 
+                        : 'bg-white/10 text-white ring-white/30 hover:bg-white/20 hover:ring-white/50 backdrop-blur-sm'
                     }`}
+                    title="View back of t-shirt"
                   >
-                    Back
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M9 2L7 4v2h1v12c0 1.1.9 2 2 2h4c1.5 0 2-1 2-2.5V4s0-2 4-2zm2 16h-4v4h4v-4zm2-6v6h-2v-6h2zM8 12v6H6v-6h2zm8-1c.5 0 1-.5 1-1V6c0-1-1-2-2-2H9c-1 0-2 1-2 2v4c0 .5.5 1 1 1h8z"/>
+                      <rect x="10" y="7" width="4" height="1" rx="0.5"/>
+                      <rect x="10" y="9" width="4" height="1" rx="0.5"/>
+                      <rect x="10" y="11" width="4" height="1" rx="0.5"/>
+                    </svg>
+                    BACK
                   </button>
           </div>
               )}
@@ -922,118 +985,6 @@ function DesktopProductShowcase({ products }: { products: Product[] }) {
   );
 }
 
-// Legacy ProductCard component for mobile (keeping for backwards compatibility)
-function ProductCard({ product }: { product: Product }) {
-  const [selectedSize, setSelectedSize] = useState<string>("");
-  const [isSizeChartOpen, setIsSizeChartOpen] = useState(false);
-
-  const handleWhatsAppOrder = () => {
-    if (!selectedSize) {
-      alert("Please select a size first!");
-      return;
-    }
-    
-    const message = `Hi! I want to order the ${product.name} in size ${selectedSize}. Please let me know the price and availability.`;
-    const whatsappUrl = `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-  };
-
-  return (
-    <div className="gta-copy h-auto md:h-[72vh] p-4 sm:p-6 md:p-8 rounded-3xl ring-1 ring-white/10 bg-black/60 backdrop-blur-md flex flex-col justify-center">
-      {/* Mobile: Compact header with price */}
-      <div className="md:hidden flex items-start justify-between mb-3">
-        <div>
-          {product.subtitle && (
-            <p className={`text-xs uppercase tracking-[0.2em] ${product.theme.accentTextClass}`}>{product.subtitle}</p>
-          )}
-          <h3 className="mt-1 text-2xl font-semibold">{product.name}</h3>
-        </div>
-        <div className="text-right">
-          <p className="text-2xl font-bold text-white">$45</p>
-        </div>
-      </div>
-
-      {/* Desktop: Original header */}
-      <div className="hidden md:block">
-        {product.subtitle && (
-          <p className={`text-xs uppercase tracking-[0.2em] ${product.theme.accentTextClass}`}>{product.subtitle}</p>
-        )}
-        <h3 className="mt-2 text-3xl md:text-5xl font-semibold">{product.name}</h3>
-      </div>
-
-      {/* Description - more concise on mobile */}
-      <p className="mt-2 md:mt-3 text-white/80 leading-relaxed text-sm md:text-base">{product.description}</p>
-      
-      {/* Mobile: Horizontal scrolling features */}
-      <div className="md:hidden mt-3 -mx-4 px-4 overflow-x-auto">
-        <div className="flex gap-2 pb-2">
-          {product.bullets.map((b, i) => (
-            <div key={i} className="flex-none px-3 py-1.5 bg-white/5 rounded-full text-xs text-white/70 whitespace-nowrap">
-              {b}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Desktop: Bullet list */}
-      <ul className="hidden md:block mt-3 list-disc list-inside text-white/70 space-y-1">
-        {product.bullets.map((b, i) => (
-          <li key={i}>{b}</li>
-        ))}
-      </ul>
-      
-      {/* Size Selection - optimized for mobile */}
-      <div className="mt-4">
-        <div className="flex items-center justify-between mb-2">
-          <p className="text-xs md:text-sm text-white/80 font-medium">Select Size:</p>
-          <button
-            type="button"
-            onClick={() => setIsSizeChartOpen(true)}
-            className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full border border-white/15 text-[11px] text-white/80 hover:bg-white/10"
-            aria-label="Open size chart"
-          >
-            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01"/><path d="M11 12h1v4h1"/></svg>
-            Size chart
-          </button>
-        </div>
-        <div className="grid grid-cols-3 gap-1.5 md:gap-2">
-          {SIZES.map((size) => (
-            <button
-              key={size}
-              onClick={() => setSelectedSize(size)}
-              className={`px-2 md:px-3 py-2 text-xs md:text-sm rounded-lg border transition font-medium ${
-                selectedSize === size
-                  ? `${product.theme.buttonClass} border-transparent`
-                  : "border-white/20 bg-black/40 text-white hover:border-white/40"
-              }`}
-            >
-              {size}
-            </button>
-          ))}
-        </div>
-        <div className="mt-2 text-[12px] md:text-sm text-white/70 min-h-[1rem]">
-          {selectedSize
-            ? `Chest: ${SIZE_CHART[selectedSize].chest} cm • Length: ${SIZE_CHART[selectedSize].length} cm`
-            : 'Tap a size to see measurements'}
-        </div>
-      </div>
-
-      {/* Mobile: Fixed bottom action */}
-      <div className="mt-4 md:mt-4">
-        <button
-          onClick={handleWhatsAppOrder}
-          className={`w-full inline-flex items-center justify-center rounded-full px-4 md:px-5 py-3 text-sm font-medium ring-1 ring-white/10 transition ${product.theme.buttonClass}`}
-        >
-          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.787"/>
-          </svg>
-          Order via WhatsApp
-        </button>
-      </div>
-      {isSizeChartOpen && <SizeChartModal onClose={() => setIsSizeChartOpen(false)} />}
-    </div>
-  );
-}
 
 type Product = {
   id: string;
@@ -1058,14 +1009,17 @@ const products: Product[] = [
     name: "Borderline Black",
     subtitle: "Green glow print",
     description:
-      "Our signature black tee with a neon-green border glow. Heavyweight cotton with a matte finish.",
+      "220 GSM heavyweight cotton. Glow-in-the-dark green border print. Tight stitching. Made in Morocco.",
     bullets: [
-      "100% cotton heavyweight",
-      "Soft hand green neon print",
-      "Relaxed, slightly boxy fit",
+      "220 GSM heavyweight cotton",
+      "Glow-in-the-dark green border print",
+      "Oversize unisex fit",
+      "Made in Morocco",
+      "Care: Cold wash, do not iron print",
+      "Limited Drop — Only 50 units made",
     ],
-    image: "/images/p8.png", // Front view
-    backImage: "/images/p9.png", // Back view
+    image: "/images/placeholders/borderline-black-male-front.png", // Front view
+    backImage: "/images/placeholders/borderline-black-female-back.png", // Back view
     align: "left",
     theme: {
       accentTextClass: "text-emerald-400",
@@ -1080,14 +1034,17 @@ const products: Product[] = [
     name: "Spin for Purpose White",
     subtitle: "Blue/Orange print",
     description:
-      "Clean white base with kinetic blue and orange spin graphic. Light and breathable for every day.",
+      "Premium cotton. Kinetic blue/orange spin graphic. Tight stitching. Made in Morocco.",
     bullets: [
-      "Midweight premium cotton",
-      "Dual-tone screen print",
-      "Standard fit, true to size",
+      "Premium cotton",
+      "Glow-in-the-dark spin details",
+      "Oversize unisex fit",
+      "Made in Morocco",
+      "Care: Cold wash, do not iron print",
+      "Limited Drop — Only 50 units made",
     ],
-    image: "/images/p5.png", // Front view - using the provided image
-    backImage: "/images/p6.png", // Back view - using the provided image
+    image: "/images/placeholders/spin-white-male-front.png", // Front view
+    backImage: "/images/placeholders/spin-white-male-back.png", // Back view
     align: "right",
     theme: {
       accentTextClass: "text-sky-400",
@@ -1111,25 +1068,26 @@ export default function ZolarShowcase() {
 
     const mm = gsap.matchMedia();
 
-    // Animate header text on entry
+    // Set header text visible immediately, then enhance on scroll
     if (header) {
-      gsap.fromTo(
-        header.querySelectorAll(".shop-word"),
-        {
-          y: 50,
-          opacity: 0,
-          scale: 0.8,
-        },
-        {
+      // Set initial visible state
+      gsap.set(header.querySelectorAll(".shop-word"), {
           y: 0,
           opacity: 1,
           scale: 1,
-          duration: 1,
-          stagger: 0.15,
-          ease: "power3.out",
+      });
+      
+      // Optional enhancement animation when in view
+      gsap.to(
+        header.querySelectorAll(".shop-word"),
+        {
+          scale: 1.02,
+          duration: 0.3,
+          ease: "power2.out",
+          stagger: 0.05,
           scrollTrigger: {
             trigger: header,
-            start: "top 75%",
+            start: "top 80%",
             toggleActions: "play none none reverse"
           }
         }
@@ -1318,17 +1276,16 @@ export default function ZolarShowcase() {
 
   return (
     <section ref={scopeRef} aria-label="Zolar product showcase" className="relative">
-      {/* Animated section header */}
-      <div ref={headerRef} className="relative z-10 mx-auto max-w-6xl md:max-w-4xl px-4 md:px-8 pt-8 md:pt-16 pb-4 md:pb-8 text-center">
-        <div className="font-mono text-xs md:text-sm tracking-[0.3em] text-emerald-400/80 mb-4">
-          <span className="shop-word inline-block">Exclusive</span>{" "}
-          <span className="shop-word inline-block">Release</span>
+      {/* Animated section header - Initially visible */}
+      <div ref={headerRef} className="relative z-10 mx-auto max-w-7xl px-4 md:px-8 pt-0 md:pt-0 pb-6 md:pb-8 text-center opacity-100">
+        <div className="font-mono text-xs md:text-sm tracking-[0.3em] text-emerald-400/80 mb-4 md:mb-6">
+          <span className="shop-word inline-block">EXCLUSIVE</span>{" "}
+          <span className="shop-word inline-block">RELEASE</span>
         </div>
-        <h2 className="font-display text-4xl md:text-4xl lg:text-5xl text-white text-glow">
-          <span className="shop-word inline-block">Borderline</span>{" "}
-          <span className="shop-word inline-block">Collection</span>
+        <h2 className="font-display text-2xl md:text-4xl lg:text-5xl xl:text-6xl text-white text-glow leading-tight whitespace-nowrap">
+          <span className="shop-word inline-block">Borderline Collection</span>
         </h2>
-        <p className="mt-6 font-body text-white/70 text-lg md:text-lg">
+        <p className="mt-4 md:mt-6 font-body text-white/70 text-base md:text-lg">
           <span className="shop-word inline-block">Limited</span>{" "}
           <span className="shop-word inline-block">Drop</span>{" "}
           <span className="shop-word inline-block text-emerald-400">01</span>

@@ -3,6 +3,7 @@ export default function Footer() {
     <footer className="relative">
       <div className="max-w-7xl mx-auto px-6 md:px-8 py-8 md:py-12">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6">
+
           {/* Logo and tagline */}
           <div className="text-center md:text-left">
             <h3 className="text-white font-bold text-xl md:text-2xl mb-1">ZOLAR</h3>
@@ -28,6 +29,26 @@ export default function Footer() {
             </a>
           </div>
           
+          {/* Info Links */}
+          <div className="text-center md:text-right text-white/70 text-sm">
+            <details className="mb-2">
+              <summary className="cursor-pointer text-white hover:text-white/90">About Zolar</summary>
+              <p className="mt-2 text-white/60">Glow-inspired Moroccan streetwear, built for night energy and everyday comfort.</p>
+            </details>
+            <details className="mb-2">
+              <summary className="cursor-pointer text-white hover:text-white/90">Return Policy</summary>
+              <p className="mt-2 text-white/60">Free returns within 7 days in Morocco. Items must be unworn and in original condition.</p>
+            </details>
+            <details className="mb-2">
+              <summary className="cursor-pointer text-white hover:text-white/90">Size Help</summary>
+              <p className="mt-2 text-white/60">Oversize unisex fit. Model is 180cm wearing L. If unsure, size down.</p>
+            </details>
+            <details>
+              <summary className="cursor-pointer text-white hover:text-white/90">Secure Checkout</summary>
+              <p className="mt-2 text-white/60">Orders are confirmed via WhatsApp. Pay cash on delivery (COD) with trusted couriers.</p>
+            </details>
+          </div>
+
           {/* Copyright */}
           <div className="text-center md:text-right">
             <p className="text-white/40 text-xs md:text-sm">© 2025 Zolar. All rights reserved.</p>

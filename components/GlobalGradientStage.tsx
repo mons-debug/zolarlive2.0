@@ -20,14 +20,15 @@ export default function GlobalGradientStage() {
     if (prefersReduced) return;
 
     const ctx = gsap.context(() => {
-      gsap.set(bg, { filter: "hue-rotate(0deg)" });
-      gsap.to(bg, {
-        filter: "hue-rotate(360deg)",
+      // Start with white emphasis at the top; fade to green as user scrolls
+      gsap.set(bg, { filter: "none" });
+      gsap.fromTo(document.documentElement, { "--w1": 0.55 }, {
+        "--w1": 0,
         ease: "none",
         scrollTrigger: {
           trigger: document.documentElement,
           start: "top top",
-          end: "bottom bottom",
+          end: "30% top",
           scrub: true,
         },
       });
@@ -35,16 +36,32 @@ export default function GlobalGradientStage() {
       // exposing black borders at the viewport edges. All drift comes from
       // small changes to CSS vars in section timelines instead.
       const docEl = document.documentElement;
-      // Keep gradient visible on load; drift hues subtly across scroll
+      // Keep gradient visible on load; maintain blue theme during main scroll
       gsap.to(docEl, {
-        "--h1": 190, // shift towards yellow/green
-        "--h2": 540, // shift towards magenta/sky
+        "--h1": 200, // sky blue
+        "--h2": 230, // deeper azure blue
         ease: "none",
         scrollTrigger: {
           trigger: document.documentElement,
-          start: "top top",
-          end: "bottom bottom",
+          start: "10% top",
+          end: "60% top",
           scrub: true,
+        },
+      });
+
+      // Transition to white/neutral theme when reaching outro section
+      gsap.to(docEl, {
+        "--h1": 0, // white/neutral
+        "--h2": 240, // subtle blue tint
+        "--ga1": 0.15, // reduced intensity for white theme
+        "--ga2": 0.08,
+        "--ga3": 0.03,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: "#outro",
+          start: "top 80%",
+          end: "top 20%",
+          scrub: 1,
         },
       });
     }, bg);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -14,21 +14,97 @@ export default function LookbookStrip() {
   const wrap = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [endX, setEndX] = useState(0);
+
+  const getItemsPerView = () => {
+    if (typeof window === "undefined") return 1;
+    if (window.innerWidth >= 1024) return 3; // Desktop: 3 images
+    if (window.innerWidth >= 768) return 2;  // Tablet: 2 images
+    return 1; // Mobile: 1 image
+  };
+  
+  const [itemsPerView, setItemsPerView] = useState(getItemsPerView());
+  const maxIndex = LOOKS.length - itemsPerView;
+
+  // Navigation functions
+  const goToSlide = useCallback((index: number) => {
+    const clampedIndex = Math.max(0, Math.min(index, maxIndex));
+    setCurrentIndex(clampedIndex);
+    
+    // Calculate the exact position for each slide group
+    const slideGroupWidth = 100 / itemsPerView;
+    const translateX = -clampedIndex * slideGroupWidth;
+    
+    if (trackRef.current) {
+      gsap.to(trackRef.current, {
+        x: `${translateX}%`,
+        duration: 0.5,
+        ease: "power2.out"
+      });
+    }
+  }, [maxIndex, itemsPerView]);
+
+  const nextSlide = useCallback(() => {
+    goToSlide(currentIndex + 1);
+  }, [currentIndex, goToSlide]);
+
+  const prevSlide = useCallback(() => {
+    goToSlide(currentIndex - 1);
+  }, [currentIndex, goToSlide]);
+
+  // Touch/Mouse handlers - Simple swipe detection
+  const handleStart = (clientX: number) => {
+    setIsDragging(true);
+    setStartX(clientX);
+    setEndX(clientX);
+  };
+
+  const handleMove = (clientX: number) => {
+    if (!isDragging) return;
+    setEndX(clientX);
+  };
+
+  const handleEnd = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    
+    const threshold = 50; // pixels
+    const distance = startX - endX;
+    
+    // Swipe left (next group of images)
+    if (distance > threshold && currentIndex < maxIndex) {
+      goToSlide(currentIndex + 1);
+    }
+    // Swipe right (previous group of images)  
+    else if (distance < -threshold && currentIndex > 0) {
+      goToSlide(currentIndex - 1);
+    }
+    // If no significant swipe, stay on current slide
+  };
+
+  // Update items per view on resize
+  useEffect(() => {
+    const handleResize = () => {
+      const newItemsPerView = getItemsPerView();
+      setItemsPerView(newItemsPerView);
+      setCurrentIndex(0); // Reset to start when layout changes
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
-    const section = document.querySelector("#lookbook") as HTMLElement;
-    const el = wrap.current;
-    const track = trackRef.current;
     const title = titleRef.current;
-    if (!el || !track || !section || typeof window === "undefined") return;
+    if (!title || typeof window === "undefined") return;
 
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
 
-    const mm = gsap.matchMedia();
-
     // Animate title on entry
-    if (title && !reduce) {
       gsap.fromTo(
         title.querySelectorAll(".word"),
         { 
@@ -50,61 +126,14 @@ export default function LookbookStrip() {
           }
         }
       );
-    }
-
-          // Desktop: Pin entire section and horizontal scroll
-      mm.add("(min-width: 900px)", () => {
-        const total = track.scrollWidth - el.clientWidth;
-        
-        // Create timeline for better control
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: () => `+=${total * 0.8 + window.innerHeight * 0.2}`, // Start horizontal much earlier
-            scrub: 1.2,
-            pin: true,
-            anticipatePin: 1,
-          },
-        });
-        
-        // Hold title visible for first 5% of scroll
-        tl.to(track, { x: 0, duration: 0.05, ease: "none" });
-        // Then slide horizontally for remaining 95%
-        tl.to(track, { x: -total, duration: 0.95, ease: "none" });
-      });
-
-      // Mobile: Pin entire section and horizontal scroll
-      mm.add("(max-width: 899px)", () => {
-        const total = track.scrollWidth - el.clientWidth;
-        
-        // Create timeline for better control on mobile
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: () => `+=${total * 0.7 + window.innerHeight * 0.15}`, // Start horizontal much earlier on mobile
-            scrub: 1.2, // Smooth scrub
-            pin: true,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-          },
-        });
-        
-        // Hold title visible for first 5% of scroll on mobile
-        tl.to(track, { x: 0, duration: 0.05, ease: "none" });
-        // Then slide horizontally for remaining 95%
-        tl.to(track, { x: -total, duration: 0.95, ease: "none" });
-      });
 
     return () => {
-      mm.revert();
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, []);
 
     return (
-    <section id="lookbook" className="relative min-h-[60vh] md:min-h-[80vh] flex flex-col">
+    <section id="lookbook" className="relative py-8 md:py-16">
       {/* Fixed title that stays at top */}
       <div ref={titleRef} className="text-center pt-8 xs:pt-12 pb-4 xs:pb-6 md:pt-16 md:pb-12 px-4 perspective-1000">
         <div className="font-mono text-xs md:text-sm tracking-[0.3em] text-emerald-400/80 mb-4">
@@ -122,24 +151,90 @@ export default function LookbookStrip() {
           <span className="word inline-block">pieces</span>
         </p>
       </div>
-      {/* Gallery that pins below the title */}
-      <div ref={wrap} className="lb-wrap relative overflow-hidden flex-1 min-h-[35vh] md:min-h-[50vh]">
-        <div
-          ref={trackRef}
-          className="lb-track flex gap-4 md:gap-6 px-6 md:px-8 h-full items-center"
+
+      {/* Manual Carousel Gallery */}
+      <div className="relative px-4 md:px-8">
+        {/* Navigation Buttons - Desktop */}
+        <button
+          onClick={prevSlide}
+          disabled={currentIndex === 0}
+          className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-black/70 backdrop-blur-md border border-white/20 rounded-full items-center justify-center text-white/80 hover:text-white hover:bg-black/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          aria-label="Previous images"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <button
+          onClick={nextSlide}
+          disabled={currentIndex >= maxIndex}
+          className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-black/70 backdrop-blur-md border border-white/20 rounded-full items-center justify-center text-white/80 hover:text-white hover:bg-black/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          aria-label="Next images"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+
+        {/* Carousel Container */}
+        <div 
+          ref={wrap} 
+          className="overflow-hidden cursor-grab active:cursor-grabbing"
+          onMouseDown={(e) => handleStart(e.clientX)}
+          onMouseMove={(e) => handleMove(e.clientX)}
+          onMouseUp={handleEnd}
+          onMouseLeave={handleEnd}
+          onTouchStart={(e) => handleStart(e.touches[0].clientX)}
+          onTouchMove={(e) => handleMove(e.touches[0].clientX)}
+          onTouchEnd={handleEnd}
+        >
+          <div
+            ref={trackRef}
+            className="flex gap-3 md:gap-8 lg:gap-10 transition-transform duration-500 ease-out"
+            style={{ width: `${(LOOKS.length / itemsPerView) * 100}%` }}
         >
           {LOOKS.map((src, i) => (
             <div
               key={i}
-              className="shrink-0 rounded-2xl md:rounded-3xl border border-white/10 bg-black/40 overflow-hidden shadow-2xl w-[85vw] xs:w-[80vw] h-[40vh] xs:h-[50vh] md:w-[40vw] md:h-[50vh] transition-transform hover:scale-[1.02] hover:border-white/20"
+                className="shrink-0 rounded-2xl md:rounded-3xl border border-white/10 bg-black/40 overflow-hidden shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:border-white/30 hover:shadow-emerald-500/20"
+                style={{ width: `${100 / LOOKS.length}%` }}
             >
+                <div className="aspect-[3/4] md:aspect-[4/5] lg:aspect-[3/4]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={src} alt={`Look ${i + 1}`} className="w-full h-full object-cover" />
+                  <img 
+                    src={src} 
+                    alt={`Look ${i + 1}`} 
+                    className="w-full h-full object-cover select-none transition-transform duration-300 hover:scale-105" 
+                    draggable={false}
+                  />
+                </div>
             </div>
           ))}
         </div>
       </div>
 
+        {/* Indicator Dots */}
+        <div className="flex justify-center mt-6 gap-2">
+          {Array.from({ length: Math.ceil(LOOKS.length / itemsPerView) }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => goToSlide(i)}
+              className={`w-2 h-2 rounded-full transition-all ${
+                i === currentIndex 
+                  ? 'bg-emerald-400 w-6' 
+                  : 'bg-white/30 hover:bg-white/50'
+              }`}
+              aria-label={`Go to slide group ${i + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Mobile Swipe Hint */}
+        <div className="md:hidden text-center mt-4">
+          <p className="text-white/50 text-sm">Swipe to explore more</p>
+        </div>
+      </div>
     </section>
   );
 }

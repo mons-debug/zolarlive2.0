@@ -7,6 +7,7 @@ const BREVO_LIST_ID = process.env.BREVO_LIST_ID || '1'; // Default list ID, you 
 interface OrderData {
   customerName: string;
   customerCity: string;
+  customerPhone?: string;
   selectedProducts: {
     borderlineBlack?: {
       selected: boolean;
@@ -42,7 +43,7 @@ export async function POST(request: NextRequest) {
       attributes: {
         FIRSTNAME: orderData.customerName,
         LASTNAME: '', // We can split name later if needed
-        SMS: '', // We don't collect phone, could add this field later
+        SMS: orderData.customerPhone || '',
         CITY: orderData.customerCity,
         ORDER_TOTAL: orderData.orderTotal,
         ORDER_SUBTOTAL: orderData.subtotal,

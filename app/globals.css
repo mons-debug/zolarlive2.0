@@ -15,6 +15,8 @@
   --ga1: 0.42; /* stronger primary color alpha */
   --ga2: 0.32; /* stronger secondary color alpha */
   --ga3: 0.12; /* enhanced white sheen alpha */
+  /* White overlay intensity for top-of-page clarity */
+  --w1: 0; /* 0..1 controls white radial overlay */
 }
 
 @theme inline {
@@ -64,12 +66,13 @@ body {
 /* Var-driven gradient using shared CSS vars for color and anchor */
 .zolar-gradient-vars {
   /* Use viewport-based maxima + fixed attachment so it doesn't shrink while scrolling */
-  background: radial-gradient(120vmax 120vmax at var(--gx, 50%) var(--gy, 50%), hsla(var(--h1, 160), 90%, 55%, var(--ga1, 0.32)), transparent 60%),
+  background: radial-gradient(120vmax 120vmax at var(--gx, 50%) var(--gy, 50%), hsla(0, 0%, 100%, var(--w1, 0)), transparent 60%),
+    radial-gradient(120vmax 120vmax at var(--gx, 50%) var(--gy, 50%), hsla(var(--h1, 160), 90%, 55%, var(--ga1, 0.32)), transparent 60%),
     radial-gradient(100vmax 100vmax at var(--gx, 50%) var(--gy, 50%), hsla(var(--h2, 520), 90%, 55%, var(--ga2, 0.22)), transparent 60%),
     radial-gradient(90vmax 90vmax at var(--gx, 50%) var(--gy, 50%), hsla(var(--h1, 160), 90%, 55%, var(--ga3, 0.06)), transparent 60%),
     linear-gradient(180deg, #060708 0%, #0a0b0f 100%);
   background-attachment: fixed;
-  background-size: 200% 200%, 180% 180%, 160% 160%, 100% 100%;
+  background-size: 200% 200%, 200% 200%, 180% 180%, 160% 160%, 100% 100%;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   transform: translateZ(0);
@@ -491,4 +494,106 @@ body {
   .cursor-interactive:hover {
     transform: scale(1.05);
   }
+}
+
+/* Enhanced Hero Typography Styles */
+.hero-title {
+  text-shadow: 
+    0 0 20px rgba(16, 185, 129, 0.3),
+    0 0 40px rgba(56, 189, 248, 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.3);
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+}
+
+.hero-title span:nth-child(3) {
+  color: white;
+  text-shadow: 
+    0 0 20px rgba(255, 255, 255, 0.3),
+    0 0 40px rgba(255, 255, 255, 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Text glow effects */
+.text-glow {
+  text-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.1),
+    0 0 20px rgba(16, 185, 129, 0.2),
+    0 0 30px rgba(56, 189, 248, 0.1);
+}
+
+/* Animation delays */
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-400 {
+  animation-delay: 400ms;
+}
+
+/* Enhanced fade in animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease-out forwards;
+  opacity: 0;
+}
+
+/* Responsive typography adjustments */
+@media (max-width: 640px) {
+  .hero-title {
+    text-shadow: 
+      0 0 15px rgba(16, 185, 129, 0.4),
+      0 0 25px rgba(56, 189, 248, 0.3),
+      0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Ultra-wide desktop enhancements */
+@media (min-width: 1440px) {
+  .hero-title {
+    text-shadow: 
+      0 0 30px rgba(16, 185, 129, 0.4),
+      0 0 60px rgba(56, 189, 248, 0.3),
+      0 8px 16px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Enhanced text visibility for hero content */
+.hero-text-enhanced {
+  text-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.8),
+    0 2px 4px rgba(0, 0, 0, 0.6),
+    0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Special glow for collection title */
+.collection-title-glow {
+  text-shadow: 
+    0 2px 6px rgba(0, 0, 0, 0.9),
+    0 4px 12px rgba(0, 0, 0, 0.7),
+    0 0 30px rgba(16, 185, 129, 0.6),
+    0 0 60px rgba(16, 185, 129, 0.3),
+    0 0 100px rgba(16, 185, 129, 0.1);
+}
+
+/* Enhanced visibility for description text */
+.description-enhanced {
+  text-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.9),
+    0 2px 6px rgba(0, 0, 0, 0.8),
+    0 4px 12px rgba(0, 0, 0, 0.6);
 }

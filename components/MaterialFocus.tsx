@@ -33,6 +33,7 @@ export default function MaterialFocus() {
     const el = root.current;
     if (!el || typeof window === "undefined") return;
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return;
 
     const mm = gsap.matchMedia();
 

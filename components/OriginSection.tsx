@@ -13,9 +13,11 @@ export default function OriginSection() {
   const root = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const heroImgRef = useRef<HTMLDivElement>(null);
+  const heroTextRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = root.current;
+    const heroText = heroTextRef.current;
     if (!el || typeof window === "undefined") return;
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -23,10 +25,16 @@ export default function OriginSection() {
       scrollTrigger: {
         trigger: el,
         start: "top top",
-        end: "+=140%",
-        scrub: 0.6,
+        end: "+=100%",
+        scrub: 0.8,
         pin: true,
         anticipatePin: 1,
+        onUpdate: (self) => {
+          // Refresh ScrollTrigger when animation updates
+          if (self.progress === 1) {
+            ScrollTrigger.refresh();
+          }
+        }
       },
     });
 
@@ -65,6 +73,42 @@ export default function OriginSection() {
           { opacity: 0, y: -24, scale: 1.06, ease: "none" },
           0
         );
+      }
+
+      // Cross-fade: Hero text fades out while actual showcase section fades in
+      if (heroText) {
+        // Hero text fades out smoothly
+        tl.to(
+          heroText,
+          {
+            opacity: 0,
+            ease: "power2.inOut",
+            duration: 1,
+          },
+          0.3 // Start fading after a small delay
+        );
+
+        // Setup showcase section for cross-fade
+        const showcaseSection = document.querySelector('#scroll-stage');
+        if (showcaseSection) {
+          // Initially hide showcase
+          gsap.set(showcaseSection, { 
+            opacity: 0,
+            pointerEvents: 'none'
+          });
+          
+          // Fade in showcase as hero fades out
+          tl.to(
+            showcaseSection,
+            {
+              opacity: 1,
+              pointerEvents: 'auto',
+              ease: "power2.inOut",
+              duration: 1,
+            },
+            0.5 // Start slightly after hero starts fading
+          );
+        }
       }
 
       // Animate SVG icons with stagger
@@ -114,21 +158,79 @@ export default function OriginSection() {
           />
         </div>
       </div>
-      {/* Welcome Text Overlay - Better positioned for mobile safe areas */}
-      <div className="absolute top-16 safe-top md:top-16 left-0 right-0 z-50 text-center px-4">
-        <h1 className="font-display text-4xl sm:text-5xl md:text-4xl text-white animate-fade-in mb-3 md:mb-3 text-glow">
-          Welcome to Zolar
+
+
+      {/* Enhanced Hero Typography - Vertical Cinematic Layout */}
+      <div ref={heroTextRef} className="absolute inset-0 z-40 flex flex-col items-center justify-start px-4 text-center pt-2 md:pt-8">
+        <div className="hero-text-container relative max-w-4xl w-full">
+          
+          {/* Brand Introduction with Logo */}
+          <div className="mb-4 md:mb-6">
+            {/* Zolar Wordmark Logo - Large and at top */}
+            <div className="mb-2 md:mb-4 animate-fade-in">
+              <div className="w-28 h-28 md:w-44 md:h-44 lg:w-48 lg:h-48 mx-auto opacity-95 hover:opacity-100 transition-opacity">
+                <Image src="/images/zolar-wordmark.svg" alt="Zolar" width={192} height={192} className="w-full h-auto" />
+              </div>
+            </div>
+            
+            {/* Morocco • 2025 */}
+            <div className="font-mono text-xs md:text-sm tracking-[0.4em] text-white/40 uppercase animate-fade-in animation-delay-200">
+              <span className="inline-block border-l-2 border-emerald-400/60 pl-3 ml-2">Morocco</span>
+              <span className="mx-4 text-white/20">•</span>
+              <span className="inline-block border-r-2 border-sky-400/60 pr-3 mr-2">2025</span>
+            </div>
+          </div>
+
+          {/* Main Title - Vertical Stack */}
+          <div className="relative mb-3 md:mb-6 mt-6">
+            <h1 className="hero-title font-display text-6xl sm:text-7xl md:text-3xl lg:text-4xl font-bold text-white leading-tight animate-fade-in">
+              <span className="block transform hover:scale-105 transition-transform duration-300">WELCOME</span>
+              <span className="block text-5xl sm:text-6xl md:text-2xl lg:text-3xl mt-3 md:mt-2 font-light tracking-wider">TO</span>
+              <span className="block text-7xl sm:text-8xl md:text-4xl lg:text-5xl font-black mt-3 md:mt-2 bg-gradient-to-r from-emerald-400 via-sky-400 to-emerald-400 bg-clip-text text-transparent animate-pulse">ZOLAR</span>
         </h1>
-        <div className="font-mono text-xs md:text-xs tracking-[0.25em] text-white/50 animate-fade-in animation-delay-200 mb-3">
-          Est. 2025 — From Morocco to the World
+            
+            {/* Decorative Elements */}
+            <div className="absolute -top-4 -left-4 w-8 h-8 border-l-2 border-t-2 border-emerald-400/30"></div>
+            <div className="absolute -bottom-4 -right-4 w-8 h-8 border-r-2 border-b-2 border-sky-400/30"></div>
+          </div>
+
+                      {/* Collection Info - Enhanced Shadows */}
+            <div className="mt-6 space-y-4 md:space-y-3">
+              <div className="flex items-center justify-center gap-4 md:gap-4">
+                <div className="h-px w-8 md:w-8 bg-gradient-to-r from-transparent to-emerald-400/80"></div>
+                <div className="font-mono text-base md:text-xs tracking-[0.15em] text-white font-medium uppercase" style={{textShadow: '0 2px 4px rgba(0, 0, 0, 0.8), 0 4px 8px rgba(0, 0, 0, 0.6), 0 0 20px rgba(16, 185, 129, 0.3)'}}>
+                  Drop 01
+                </div>
+                <div className="h-px w-8 md:w-8 bg-gradient-to-l from-transparent to-sky-400/80"></div>
+              </div>
+              
+              <h2 className="font-display text-4xl md:text-base lg:text-lg font-bold text-emerald-400 tracking-wide animate-fade-in animation-delay-200 whitespace-nowrap break-keep-all" style={{textShadow: '0 2px 6px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(16, 185, 129, 0.5), 0 0 60px rgba(16, 185, 129, 0.2)'}}>
+                BORDERLINE
+              </h2>
+              
+              <p className="font-mono text-xl md:text-sm tracking-[0.15em] text-white/90 max-w-lg mx-auto leading-relaxed animate-fade-in animation-delay-400 font-medium" style={{textShadow: '0 2px 4px rgba(0, 0, 0, 0.9), 0 4px 8px rgba(0, 0, 0, 0.7)'}}>
+                Premium streetwear designed for those who stand out.<br/>
+                <span className="text-sky-400 font-semibold" style={{textShadow: '0 2px 4px rgba(0, 0, 0, 0.9), 0 4px 8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.4)'}}>From Morocco to the World</span>
+              </p>
+            </div>
+
+          {/* Scroll Indicator */}
+          <div className="absolute -bottom-12 md:-bottom-16 left-1/2 -translate-x-1/2 animate-bounce">
+            <div className="flex flex-col items-center gap-1 text-white/40">
+              <div className="font-mono text-xs tracking-[0.2em] uppercase">Explore</div>
+              <svg className="w-3 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+            </div>
         </div>
-        <div className="font-mono text-xs md:text-xs tracking-[0.3em] text-emerald-400/80 md:text-sky-400 animate-fade-in animation-delay-400">
-          Drop 01 — Borderline Collection
+
         </div>
       </div>
-      {/* Top clean — global background stays black until this section scrolls in */}
-      {/* No per-section background; global gradient renders behind */}
-      <div className="relative z-10 w-[min(1000px,86vw)] md:w-[min(900px,80vw)] text-center px-4">
+
+
+
+      {/* Hidden old content - replaced by enhanced hero typography */}
+      <div className="hidden relative z-10 w-[min(1000px,86vw)] md:w-[min(900px,80vw)] text-center px-4">
         <div ref={logoRef} className="mx-auto mt-24 sm:mt-26 md:mt-28 mb-6 sm:mb-8 md:mb-8 w-[140px] sm:w-[160px] md:w-[160px] lg:w-[180px] will-change-transform">
           <Image src="/images/zolar-wordmark.svg" alt="Zolar wordmark" width={180} height={74} className="w-full h-auto" />
         </div>
