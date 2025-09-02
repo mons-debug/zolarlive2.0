@@ -11,13 +11,11 @@ if (typeof window !== "undefined") {
 const LOOKS = ["/images/p9.png", "/images/p5.png", "/images/p6.png", "/images/p7.png", "/images/p8.png", "/images/p11.png"];
 
 export default function LookbookStrip() {
-  const wrap = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
-  const [endX, setEndX] = useState(0);
 
   const getItemsPerView = () => {
     if (typeof window === "undefined") return 1;
@@ -27,16 +25,18 @@ export default function LookbookStrip() {
   };
   
   const [itemsPerView, setItemsPerView] = useState(getItemsPerView());
-  const maxIndex = Math.max(0, LOOKS.length - itemsPerView);
+  
+  // Calculate max slides based on items per view
+  const totalSlides = Math.ceil(LOOKS.length / itemsPerView);
+  const maxIndex = totalSlides - 1;
 
   // Navigation functions
-  const goToSlide = useCallback((index: number) => {
-    const clampedIndex = Math.max(0, Math.min(index, maxIndex));
+  const goToSlide = useCallback((slideIndex: number) => {
+    const clampedIndex = Math.max(0, Math.min(slideIndex, maxIndex));
     setCurrentIndex(clampedIndex);
     
-    // Calculate proper translation - move by the width of each image
-    const itemWidth = 100 / itemsPerView;
-    const translateX = -clampedIndex * itemWidth;
+    // Calculate the translation percentage
+    const translateX = -(clampedIndex * 100);
     
     if (trackRef.current) {
       gsap.to(trackRef.current, {
@@ -45,58 +45,52 @@ export default function LookbookStrip() {
         ease: "power2.out"
       });
     }
-  }, [maxIndex, itemsPerView]);
+  }, [maxIndex]);
 
   const nextSlide = useCallback(() => {
-    goToSlide(currentIndex + 1);
-  }, [currentIndex, goToSlide]);
+    if (currentIndex < maxIndex) {
+      goToSlide(currentIndex + 1);
+    }
+  }, [currentIndex, goToSlide, maxIndex]);
 
   const prevSlide = useCallback(() => {
-    goToSlide(currentIndex - 1);
+    if (currentIndex > 0) {
+      goToSlide(currentIndex - 1);
+    }
   }, [currentIndex, goToSlide]);
 
-  // Touch/Mouse handlers - Simple swipe detection
+  // Touch/Mouse handlers
   const handleStart = (clientX: number) => {
     setIsDragging(true);
     setStartX(clientX);
-    setEndX(clientX);
   };
 
-  const handleMove = (clientX: number) => {
-    if (!isDragging) return;
-    setEndX(clientX);
-  };
-
-  const handleEnd = () => {
+  const handleEnd = (clientX: number) => {
     if (!isDragging) return;
     setIsDragging(false);
     
-    const threshold = 50; // pixels
-    const distance = startX - endX;
+    const threshold = 50;
+    const distance = startX - clientX;
     
-    // Swipe left (next group of images)
-    if (distance > threshold && currentIndex < maxIndex) {
-      goToSlide(currentIndex + 1);
+    if (distance > threshold) {
+      nextSlide();
+    } else if (distance < -threshold) {
+      prevSlide();
     }
-    // Swipe right (previous group of images)  
-    else if (distance < -threshold && currentIndex > 0) {
-      goToSlide(currentIndex - 1);
-    }
-    // If no significant swipe, stay on current slide
   };
 
-  // Update items per view on resize
+  // Handle resize
   useEffect(() => {
     const handleResize = () => {
       const newItemsPerView = getItemsPerView();
       setItemsPerView(newItemsPerView);
-      setCurrentIndex(0); // Reset to start when layout changes
-      // Reset transform
+      setCurrentIndex(0);
       if (trackRef.current) {
         gsap.set(trackRef.current, { x: "0%" });
       }
     };
 
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -182,47 +176,48 @@ export default function LookbookStrip() {
         </button>
 
         {/* Carousel Container */}
-        <div 
-          ref={wrap} 
-          className="overflow-hidden cursor-grab active:cursor-grabbing"
+        <div className="overflow-hidden cursor-grab active:cursor-grabbing"
           onMouseDown={(e) => handleStart(e.clientX)}
-          onMouseMove={(e) => handleMove(e.clientX)}
-          onMouseUp={handleEnd}
-          onMouseLeave={handleEnd}
+          onMouseUp={(e) => handleEnd(e.clientX)}
+          onMouseLeave={(e) => handleEnd(e.clientX)}
           onTouchStart={(e) => handleStart(e.touches[0].clientX)}
-          onTouchMove={(e) => handleMove(e.touches[0].clientX)}
-          onTouchEnd={handleEnd}
+          onTouchEnd={(e) => handleEnd(e.touches[0].clientX)}
         >
           <div
             ref={trackRef}
-            className="flex transition-transform duration-500 ease-out"
-            style={{ width: `${LOOKS.length * (100 / itemsPerView)}%` }}
-        >
-          {LOOKS.map((src, i) => (
-            <div
-              key={i}
-              className="flex-shrink-0 px-2 md:px-4"
-              style={{ width: `${100 / LOOKS.length}%` }}
-            >
-              <div className="rounded-2xl md:rounded-3xl border border-white/10 bg-black/40 overflow-hidden shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:border-white/30 hover:shadow-emerald-500/20">
-                <div className="aspect-[3/4] md:aspect-[4/5] lg:aspect-[3/4]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img 
-                    src={src} 
-                    alt={`Look ${i + 1}`} 
-                    className="w-full h-full object-cover select-none transition-transform duration-300 hover:scale-105" 
-                    draggable={false}
-                  />
-                </div>
+            className="flex"
+            style={{ width: `${totalSlides * 100}%` }}
+          >
+            {Array.from({ length: totalSlides }, (_, slideIndex) => (
+              <div
+                key={slideIndex}
+                className="w-full flex gap-3 md:gap-6 lg:gap-8 px-2 md:px-4"
+                style={{ width: `${100 / totalSlides}%` }}
+              >
+                {LOOKS.slice(slideIndex * itemsPerView, (slideIndex + 1) * itemsPerView).map((src, i) => (
+                  <div
+                    key={slideIndex * itemsPerView + i}
+                    className="flex-1 rounded-2xl md:rounded-3xl border border-white/10 bg-black/40 overflow-hidden shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:border-white/30 hover:shadow-emerald-500/20"
+                  >
+                    <div className="aspect-[3/4] md:aspect-[4/5] lg:aspect-[3/4]">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img 
+                        src={src} 
+                        alt={`Look ${slideIndex * itemsPerView + i + 1}`} 
+                        className="w-full h-full object-cover select-none transition-transform duration-300 hover:scale-105" 
+                        draggable={false}
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
 
         {/* Indicator Dots */}
         <div className="flex justify-center mt-6 gap-2">
-          {Array.from({ length: maxIndex + 1 }, (_, i) => (
+          {Array.from({ length: totalSlides }, (_, i) => (
             <button
               key={i}
               onClick={() => goToSlide(i)}
