@@ -198,7 +198,7 @@ export default function LookbookStrip() {
             <div
               key={i}
               className="shrink-0 rounded-2xl md:rounded-3xl border border-white/10 bg-black/40 overflow-hidden shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:border-white/30 hover:shadow-emerald-500/20"
-              style={{ width: `${100 / (LOOKS.length / itemsPerView)}%` }}
+              style={{ width: `${100 / itemsPerView}%` }}
             >
                 <div className="aspect-[3/4] md:aspect-[4/5] lg:aspect-[3/4]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
