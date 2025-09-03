@@ -16,8 +16,10 @@ export default function LookbookStrip() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
+  const [startY, setStartY] = useState(0);
   const [currentX, setCurrentX] = useState(0);
   const [startTime, setStartTime] = useState(0);
+  const [isHorizontalSwipe, setIsHorizontalSwipe] = useState(false);
 
   // Infinite looping carousel
   const getItemWidth = () => {
@@ -79,26 +81,39 @@ export default function LookbookStrip() {
     }
   }, [currentIndex, goToSlide]);
 
-  // Enhanced touch handlers for mobile
-  const handleStart = (clientX: number) => {
+  // Enhanced touch handlers for mobile with scroll conflict prevention
+  const handleStart = (clientX: number, clientY: number) => {
     setIsDragging(true);
     setStartX(clientX);
+    setStartY(clientY);
     setCurrentX(clientX);
     setStartTime(Date.now());
+    setIsHorizontalSwipe(false);
   };
 
-  const handleMove = (clientX: number) => {
+  const handleMove = (clientX: number, clientY: number) => {
     if (!isDragging) return;
-    setCurrentX(clientX);
     
-    // Prevent page scroll on mobile during swipe
-    if (trackRef.current) {
-      const distance = clientX - startX;
-      const slideWidth = itemWidth + 24; // Include gap in calculation
-      const currentTranslateX = -(currentIndex * slideWidth);
-      const newTranslateX = currentTranslateX + distance * 0.3; // Add some resistance
+    const deltaX = Math.abs(clientX - startX);
+    const deltaY = Math.abs(clientY - startY);
+    
+    // Determine if this is a horizontal or vertical swipe
+    if (!isHorizontalSwipe && (deltaX > 10 || deltaY > 10)) {
+      setIsHorizontalSwipe(deltaX > deltaY);
+    }
+    
+    // Only handle horizontal movement and prevent vertical scroll
+    if (isHorizontalSwipe) {
+      setCurrentX(clientX);
       
-      gsap.set(trackRef.current, { x: `${newTranslateX}px` });
+      if (trackRef.current) {
+        const distance = clientX - startX;
+        const slideWidth = itemWidth + 24; // Include gap in calculation
+        const currentTranslateX = -(currentIndex * slideWidth);
+        const newTranslateX = currentTranslateX + distance * 0.3; // Add some resistance
+        
+        gsap.set(trackRef.current, { x: `${newTranslateX}px` });
+      }
     }
   };
 
@@ -106,21 +121,29 @@ export default function LookbookStrip() {
     if (!isDragging) return;
     setIsDragging(false);
     
-    const distance = startX - currentX;
-    const time = Date.now() - startTime;
-    const velocity = Math.abs(distance) / time; // pixels per ms
-    
-    // Lower threshold for faster swipes, higher for slower swipes
-    const threshold = velocity > 0.5 ? 30 : 80;
-    
-    if (distance > threshold) {
-      nextSlide();
-    } else if (distance < -threshold) {
-      prevSlide();
+    // Only process swipe if it was horizontal
+    if (isHorizontalSwipe) {
+      const distance = startX - currentX;
+      const time = Date.now() - startTime;
+      const velocity = Math.abs(distance) / time; // pixels per ms
+      
+      // Lower threshold for faster swipes, higher for slower swipes
+      const threshold = velocity > 0.5 ? 30 : 80;
+      
+      if (distance > threshold) {
+        nextSlide();
+      } else if (distance < -threshold) {
+        prevSlide();
+      } else {
+        // Snap back to current position
+        goToSlide(currentIndex);
+      }
     } else {
-      // Snap back to current position
+      // If not horizontal swipe, just reset position
       goToSlide(currentIndex);
     }
+    
+    setIsHorizontalSwipe(false);
   };
 
   // Handle resize and initialize
@@ -221,32 +244,34 @@ export default function LookbookStrip() {
 
         {/* Carousel Container */}
         <div 
-          className="overflow-hidden touch-pan-y select-none cursor-grab active:cursor-grabbing"
+          className="overflow-hidden select-none"
           style={{ 
-            touchAction: 'pan-y pinch-zoom',
+            touchAction: 'manipulation',
             WebkitUserSelect: 'none',
             userSelect: 'none'
           }}
           onTouchStart={(e) => {
-            e.preventDefault();
-            handleStart(e.touches[0].clientX);
+            const touch = e.touches[0];
+            handleStart(touch.clientX, touch.clientY);
           }}
           onTouchMove={(e) => {
-            e.preventDefault();
-            handleMove(e.touches[0].clientX);
+            if (isHorizontalSwipe) {
+              e.preventDefault(); // Only prevent default for horizontal swipes
+            }
+            const touch = e.touches[0];
+            handleMove(touch.clientX, touch.clientY);
           }}
-          onTouchEnd={(e) => {
-            e.preventDefault();
+          onTouchEnd={() => {
             handleEnd();
           }}
           onMouseDown={(e) => {
             e.preventDefault();
-            handleStart(e.clientX);
+            handleStart(e.clientX, e.clientY);
           }}
           onMouseMove={(e) => {
             if (isDragging) {
               e.preventDefault();
-              handleMove(e.clientX);
+              handleMove(e.clientX, e.clientY);
             }
           }}
           onMouseUp={(e) => {
